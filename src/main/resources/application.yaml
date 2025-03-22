@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: qiliblog-backend
+  profiles:
+    active: dev
+  docker:
+    compose:
+      enabled: true
+
+server:
+  port: 8080
