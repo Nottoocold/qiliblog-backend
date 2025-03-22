@@ -1,4 +1,4 @@
-package com.zqqiliyc.entity;
+package com.zqqiliyc.domain.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

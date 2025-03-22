@@ -1,4 +1,4 @@
-package com.zqqiliyc.entity;
+package com.zqqiliyc.domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
