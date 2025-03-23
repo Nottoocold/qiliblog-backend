@@ -22,9 +22,9 @@ public interface Entity extends Serializable {
 
     void setUpdateTime(LocalDateTime updateTime);
 
-    long getDelFlag();
+    int getDelFlag();
 
-    void setDelFlag(long delFlag);
+    void setDelFlag(int delFlag);
 
     /**
      * 是否可以删除

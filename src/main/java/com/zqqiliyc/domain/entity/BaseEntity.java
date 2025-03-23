@@ -32,7 +32,7 @@ public class BaseEntity implements Entity {
     /**
      * 删除标志 0-未删除 非0-已删除
      */
-    private long delFlag;
+    private int delFlag;
 
     @Override
     public String toString() {
