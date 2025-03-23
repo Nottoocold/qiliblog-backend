@@ -45,7 +45,7 @@ public class SysUser extends BaseEntity {
     /**
      * 部门id
      */
-    private long deptId;
+    private Long deptId;
 
     @Override
     public String toString() {

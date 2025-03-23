@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
  */
 public interface Entity extends Serializable {
 
-    long getId();
+    Long getId();
 
-    void setId(long id);
+    void setId(Long id);
 
     LocalDateTime getCreateTime();
 

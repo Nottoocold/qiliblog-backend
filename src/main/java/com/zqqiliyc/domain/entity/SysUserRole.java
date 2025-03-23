@@ -16,11 +16,11 @@ public class SysUserRole extends BaseEntity {
     /**
      * 用户id
      */
-    private long userId;
+    private Long userId;
     /**
      * 角色id
      */
-    private long roleId;
+    private Long roleId;
     /**
      * 开始时间
      */

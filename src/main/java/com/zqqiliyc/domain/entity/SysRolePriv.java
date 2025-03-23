@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SysRolePriv extends BaseEntity {
-    private long roleId;
+    private Long roleId;
 
-    private long privId;
+    private Long privId;
 }

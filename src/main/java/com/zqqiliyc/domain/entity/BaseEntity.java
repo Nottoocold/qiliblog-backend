@@ -20,7 +20,7 @@ public class BaseEntity implements Entity {
     /**
      * 主键
      */
-    private long id;
+    private Long id;
     /**
      * 创建时间
      */
