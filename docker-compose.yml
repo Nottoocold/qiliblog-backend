@@ -11,6 +11,7 @@ services:
       MYSQL_DATABASE: qiliblog
       MYSQL_USER: qiliblog
       MYSQL_PASSWORD: qiliblog001
+      MYSQL_ROOT_PASSWORD: password
     volumes:
       - mysql_data:/var/lib/mysql
       - ./db/conf:/etc/mysql/conf.d
