@@ -1,0 +1,22 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: qiliblog
+    password: qiliblog001
+    url: jdbc:mysql://localhost:3306/qiliblog?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    hikari:
+      auto-commit: false
+
+mybatis:
+  configuration:
+    auto-mapping-behavior: partial # full，会自动映射，这里设置为partial，只映射一部分
+    default-fetch-size: 500 # 为驱动的结果集获取数量（fetchSize）设置一个建议值。此参数只可以在查询设置中被覆盖。
+    map-underscore-to-camel-case: true # 是否开启驼峰命名自动映射，即从经典数据库列名 A_COLUMN 映射到经典 Java 属性名 aColumn。
+    shrink-whitespaces-in-sql: true # 是否在 SQL 中删除多余的空白。请注意，这也会影响SQL中的文字字符串。
+    arg-name-based-constructor-auto-mapping: true # 是否基于参数名称自动映射构造函数参数。
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zqqiliyc.domain.entity
