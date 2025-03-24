@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
  */
 public interface Entity extends Serializable {
 
+    int DEL_FLAG_NORMAL = 0;
+
+    int DEL_FLAG_DELETED = 1;
+
     Long getId();
 
     void setId(Long id);
@@ -32,7 +36,7 @@ public interface Entity extends Serializable {
      * @return true 可以删除，false 不可以删除
      */
     default boolean canDelete() {
-        return getDelFlag() == 0;
+        return getDelFlag() == DEL_FLAG_NORMAL;
     }
 
     /**
@@ -41,6 +45,6 @@ public interface Entity extends Serializable {
      * @return true 可以更新，false 不可以更新
      */
     default boolean canUpdate() {
-        return getDelFlag() == 0;
+        return getDelFlag() == DEL_FLAG_NORMAL;
     }
 }
