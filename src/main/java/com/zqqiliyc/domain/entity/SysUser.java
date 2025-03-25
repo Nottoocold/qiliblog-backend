@@ -13,7 +13,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-public class SysUser extends BaseEntity {
+public class SysUser extends BaseEntityWithDel {
     /**
      * 用户名 登录名
      */

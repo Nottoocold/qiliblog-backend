@@ -9,8 +9,7 @@ CREATE TABLE sys_role
     remark      TEXT COMMENT '备注',
     create_time TIMESTAMP             DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    del_flag    INT                   DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除',
-    CONSTRAINT UNIQUE (code, del_flag)
+    del_flag    INT                   DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除'
 ) COMMENT ='角色表';
 
 DROP TABLE IF EXISTS sys_permission;
@@ -25,8 +24,7 @@ CREATE TABLE sys_permission
     remark      TEXT COMMENT '备注',
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    del_flag    INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除',
-    CONSTRAINT UNIQUE (code, del_flag)
+    del_flag    INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除'
 ) COMMENT ='权限表';
 
 DROP TABLE IF EXISTS sys_user;
@@ -44,9 +42,9 @@ CREATE TABLE sys_user
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     del_flag    INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除',
-    CONSTRAINT UNIQUE (username, del_flag),
-    CONSTRAINT UNIQUE (email, del_flag),
-    CONSTRAINT UNIQUE (phone, del_flag)
+    INDEX (username),
+    INDEX (email),
+    INDEX (phone)
 ) COMMENT ='系统用户表';
 
 DROP TABLE IF EXISTS sys_user_role;
@@ -57,8 +55,7 @@ CREATE TABLE sys_user_role
     role_id     BIGINT NOT NULL COMMENT '角色ID',
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    del_flag    INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除',
-    CONSTRAINT UNIQUE (user_id, role_id, del_flag)
+    CONSTRAINT UNIQUE (user_id, role_id)
 ) COMMENT ='用户角色关联表';
 
 DROP TABLE IF EXISTS sys_role_permission;
@@ -69,6 +66,5 @@ CREATE TABLE sys_role_permission
     permission_id BIGINT NOT NULL COMMENT '权限ID',
     create_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    del_flag      INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除',
-    CONSTRAINT UNIQUE (role_id, permission_id, del_flag)
+    CONSTRAINT UNIQUE (role_id, permission_id)
 ) COMMENT ='角色权限关联表';

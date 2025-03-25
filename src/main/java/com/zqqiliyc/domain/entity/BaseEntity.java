@@ -18,7 +18,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-public class BaseEntity implements Entity {
+public abstract class BaseEntity implements Entity {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
@@ -36,11 +36,6 @@ public class BaseEntity implements Entity {
      */
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-    /**
-     * 删除标志 0-未删除 非0-已删除
-     */
-    @TableLogic(value = "0", delval = "1")
-    private int delFlag;
 
     @Override
     public String toString() {
@@ -48,7 +43,6 @@ public class BaseEntity implements Entity {
                 .add("id=" + id)
                 .add("createTime=" + createTime)
                 .add("updateTime=" + updateTime)
-                .add("delFlag=" + delFlag)
                 .toString();
     }
 }

@@ -1,6 +1,8 @@
 package com.zqqiliyc.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.zqqiliyc.domain.entity.BaseEntity;
+import com.zqqiliyc.domain.entity.BaseEntityWithDel;
 import com.zqqiliyc.domain.entity.Entity;
 import org.apache.ibatis.reflection.MetaObject;
 import org.slf4j.LoggerFactory;
@@ -23,10 +25,9 @@ public class MetaFieldHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
-        if (metaObject.getOriginalObject() instanceof Entity entity) {
+        if (metaObject.getOriginalObject() instanceof BaseEntity entity) {
             entity.setCreateTime(LocalDateTime.now());
             entity.setUpdateTime(entity.getCreateTime());
-            entity.setDelFlag(Entity.DEL_FLAG_NORMAL);
             logger.debug("insertFill {}'s common fields.", entity.getClass().getSimpleName());
         }
     }
@@ -39,8 +40,8 @@ public class MetaFieldHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         if (metaObject.getOriginalObject() instanceof Entity entity) {
-            if (!entity.canUpdate()) {
-                String msg = "because of " + entity.getClass().getName() + "'s delFlag = " + entity.getDelFlag() + ", so can't update";
+            if (entity instanceof BaseEntityWithDel entityWithDel && !entityWithDel.canUpdate()) {
+                String msg = "because of " + entity.getClass().getName() + "'s delFlag = " + entityWithDel.getDelFlag() + ", so can't update";
                 throw new RuntimeException(msg);
             }
             entity.setUpdateTime(LocalDateTime.now());

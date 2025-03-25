@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-public class SysRole extends BaseEntity {
+public class SysRole extends BaseEntityWithDel {
     /**
      * 角色编码
      */

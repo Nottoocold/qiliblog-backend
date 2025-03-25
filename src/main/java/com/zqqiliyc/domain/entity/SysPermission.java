@@ -11,7 +11,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-public class SysPermission extends BaseEntity {
+public class SysPermission extends BaseEntityWithDel {
     /**
      * 权限标识
      */
