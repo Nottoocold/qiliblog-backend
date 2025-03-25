@@ -1,7 +1,7 @@
 spring:
   docker:
     compose:
-      enabled: true
+      enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,8 +21,15 @@ mybatis-plus:
     arg-name-based-constructor-auto-mapping: true # 是否基于参数名称自动映射构造函数参数。
   type-aliases-package: com.zqqiliyc.domain.entity
   type-aliases-super-type: com.zqqiliyc.domain.entity.BaseEntity
+  mapper-locations: classpath:mapper/*.xml
   global-config:
     banner: false # 是否显示banner
     db-config:
       id-type: assign_id # 主键生成策略 默认雪花算法
       logic-delete-field: del_flag # 逻辑删除字段名 仅在逻辑删除功能打开时有效。
+
+logging:
+  level:
+    com.zqqiliyc: debug
+    com.baomidou.mybatisplus: debug
+    web: debug

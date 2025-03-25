@@ -3,6 +3,7 @@ package com.zqqiliyc.config;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.autoconfigure.SqlSessionFactoryBeanCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author qili
  * @date 2025-03-23
  */
+@MapperScan("com.zqqiliyc.mapper")
 @Configuration
 public class MyBatisPlusConfig {
 
