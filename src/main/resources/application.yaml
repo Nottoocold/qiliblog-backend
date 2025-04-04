@@ -4,5 +4,12 @@ spring:
   profiles:
     active: dev
 
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 1MB
+  file:
+    name: ./log/qiliblog-backend.log
+
 server:
   port: 8080

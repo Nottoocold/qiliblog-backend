@@ -1,6 +1,5 @@
 package com.zqqiliyc.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,6 @@ public abstract class BaseEntityWithDel extends BaseEntity {
     /**
      * 删除标志 0-未删除 非0-已删除
      */
-    @TableLogic(value = "0", delval = "1")
     private int delFlag;
 
     public BaseEntityWithDel() {
