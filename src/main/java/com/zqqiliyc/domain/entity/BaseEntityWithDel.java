@@ -1,18 +1,23 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import io.mybatis.mapper.logical.LogicalColumn;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.ibatis.type.JdbcType;
 
 /**
  * @author qili
  * @date 2025-03-26
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class BaseEntityWithDel extends BaseEntity {
     /**
      * 删除标志 0-未删除 非0-已删除
      */
+    @LogicalColumn(delete = "1")
+    @Entity.Column(value = "del_flag", jdbcType = JdbcType.INTEGER, insertable = false, updatable = false)
     private int delFlag;
 
     public BaseEntityWithDel() {

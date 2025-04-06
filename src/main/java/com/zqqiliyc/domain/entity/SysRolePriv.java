@@ -1,14 +1,16 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author qili
  * @date 2025-03-22
  */
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Entity.Table("sys_role_permission")
 public class SysRolePriv extends BaseEntity {
     private Long roleId;
 

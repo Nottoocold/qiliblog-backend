@@ -1,7 +1,8 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -10,8 +11,9 @@ import java.time.LocalDateTime;
  * @author qili
  * @date 2025-03-22
  */
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Entity.Table("sys_user_role")
 public class SysUserRole extends BaseEntity {
     /**
      * 用户id

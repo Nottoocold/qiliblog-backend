@@ -23,8 +23,7 @@ CREATE TABLE sys_permission
     state       INT       DEFAULT 0 COMMENT '状态 0:正常 1:禁用',
     remark      TEXT COMMENT '备注',
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    del_flag    INT       DEFAULT 0 COMMENT '删除标志 0:未删除 1:已删除'
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) COMMENT ='权限表';
 
 DROP TABLE IF EXISTS sys_user;

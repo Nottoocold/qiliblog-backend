@@ -3,17 +3,12 @@ spring:
     compose:
       enabled: false
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
     username: qiliblog
     password: qiliblog001
     url: jdbc:mysql://localhost:3306/qiliblog?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    hikari:
-      auto-commit: false
 
 logging:
   level:
     com.zqqiliyc: debug
-    com.baomidou.mybatisplus: debug
     web: info
     sql: debug

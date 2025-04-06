@@ -1,17 +1,17 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.StringJoiner;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author qili
  * @date 2025-03-22
  */
-@Getter
-@Setter
-public class SysPermission extends BaseEntityWithDel {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Entity.Table("sys_permission")
+public class SysPermission extends BaseEntity {
     /**
      * 权限标识
      */
@@ -36,16 +36,4 @@ public class SysPermission extends BaseEntityWithDel {
      * 备注
      */
     private String remark;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", SysPermission.class.getSimpleName() + "[", "]")
-                .add("code='" + code + "'")
-                .add("name='" + name + "'")
-                .add("parentId=" + parentId)
-                .add("sort=" + sort)
-                .add("state=" + state)
-                .add("remark='" + remark + "'")
-                .toString();
-    }
 }

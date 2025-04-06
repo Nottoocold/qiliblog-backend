@@ -3,6 +3,20 @@ spring:
     name: qiliblog-backend
   profiles:
     active: dev
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      auto-commit: false
+      connection-init-sql: SET NAMES utf8mb4;
+
+mybatis:
+  configuration:
+    default-statement-timeout: 10 # 默认超时时间
+    map-underscore-to-camel-case: true # 开启驼峰命名,即从经典数据库列名 A_COLUMN 映射到经典 Java 属性名 aColumn
+    arg-name-based-constructor-auto-mapping: true # 开启构造函数自动映射
+  mapper-locations: classpath:mapper/*.xml
+
 
 logging:
   logback:

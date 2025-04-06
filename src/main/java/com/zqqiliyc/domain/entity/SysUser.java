@@ -1,9 +1,8 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.StringJoiner;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 系统用户
@@ -11,8 +10,9 @@ import java.util.StringJoiner;
  * @author qili
  * @date 2025-03-22
  */
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Entity.Table("sys_user")
 public class SysUser extends BaseEntityWithDel {
     /**
      * 用户名 登录名
@@ -46,18 +46,7 @@ public class SysUser extends BaseEntityWithDel {
      * 部门id
      */
     private Long deptId;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", SysUser.class.getSimpleName() + "[", "]")
-                .add("username='" + username + "'")
-                .add("password='" + password + "'")
-                .add("nickname='" + nickname + "'")
-                .add("state=" + state)
-                .add("email='" + email + "'")
-                .add("phone='" + phone + "'")
-                .add("avatar='" + avatar + "'")
-                .add("deptId=" + deptId)
-                .toString();
-    }
 }
+
+
+

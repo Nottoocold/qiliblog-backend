@@ -1,17 +1,17 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.StringJoiner;
+import io.mybatis.provider.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 角色
  * @author qili
  * @date 2025-03-22
  */
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Entity.Table("sys_role")
 public class SysRole extends BaseEntityWithDel {
     /**
      * 角色编码
@@ -33,15 +33,4 @@ public class SysRole extends BaseEntityWithDel {
      * 备注
      */
     private String remark;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", SysRole.class.getSimpleName() + "[", "]")
-                .add("code='" + code + "'")
-                .add("name='" + name + "'")
-                .add("sort=" + sort)
-                .add("state=" + state)
-                .add("remark='" + remark + "'")
-                .toString();
-    }
 }
