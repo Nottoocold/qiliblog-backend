@@ -12,6 +12,12 @@ import org.apache.ibatis.annotations.Lang;
  */
 public interface IDeleteMapper<T> {
 
+    /**
+     * 根据Example删除数据, 实际的物理删除，用来给那些继承了{@link io.mybatis.mapper.logical.LogicalMapper}的Mapper接口使用
+     *
+     * @param example 查询条件
+     * @return 受影响的行数
+     */
     @Lang(Caching.class)
     @DeleteProvider(type = ExampleProvider.class, method = "deleteByExample")
     int deleteHard(Example<T> example);
