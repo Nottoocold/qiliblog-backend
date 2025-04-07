@@ -3,6 +3,7 @@ package com.zqqiliyc.domain.entity;
 import io.mybatis.provider.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.util.Assert;
 
 /**
  * 系统用户
@@ -29,7 +30,7 @@ public class SysUser extends BaseEntityWithDel {
     /**
      * 状态 0:正常 1:禁用
      */
-    private int state;
+    private Integer state;
     /**
      * 邮箱
      */
@@ -46,6 +47,26 @@ public class SysUser extends BaseEntityWithDel {
      * 部门id
      */
     private Long deptId;
+
+    public SysUser() {
+        super();
+        setState(0);
+    }
+
+    public void setUsername(String username) {
+        Assert.hasText(username, "用户名不能为空");
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        Assert.hasText(password, "密码不能为空");
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        Assert.hasText(nickname, "昵称不能为空");
+        this.nickname = nickname;
+    }
 }
 
 

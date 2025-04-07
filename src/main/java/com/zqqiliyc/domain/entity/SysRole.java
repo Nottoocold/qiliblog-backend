@@ -3,6 +3,7 @@ package com.zqqiliyc.domain.entity;
 import io.mybatis.provider.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.util.Assert;
 
 /**
  * 角色
@@ -24,13 +25,29 @@ public class SysRole extends BaseEntityWithDel {
     /**
      * 排序
      */
-    private int sort;
+    private Integer sort;
     /**
      * 状态 0-启用 1-禁用
      */
-    private int state;
+    private Integer state;
     /**
      * 备注
      */
     private String remark;
+
+    public SysRole() {
+        super();
+        setSort(0);
+        setState(0);
+    }
+
+    public void setCode(String code) {
+        Assert.hasText(code, "角色编码不能为空");
+        this.code = code;
+    }
+
+    public void setName(String name) {
+        Assert.hasText(name, "角色名称不能为空");
+        this.name = name;
+    }
 }
