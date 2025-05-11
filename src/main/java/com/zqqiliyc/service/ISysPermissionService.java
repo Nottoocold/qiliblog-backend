@@ -1,6 +1,6 @@
 package com.zqqiliyc.service;
 
-import com.zqqiliyc.common.IBaseService;
+import com.zqqiliyc.service.base.IBaseService;
 import com.zqqiliyc.domain.entity.SysPermission;
 
 /**

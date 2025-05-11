@@ -1,4 +1,4 @@
-package com.zqqiliyc.common;
+package com.zqqiliyc.service.base;
 
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
