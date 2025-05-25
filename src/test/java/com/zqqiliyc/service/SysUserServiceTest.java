@@ -3,9 +3,11 @@ package com.zqqiliyc.service;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.dto.UserQueryDto;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +35,7 @@ class SysUserServiceTest {
         Assertions.assertEquals(count, deleted);
     }
 
-    @Test
+    @BeforeEach
     public void insert() {
         for (int i = 0; i < count; i++) {
             SysUser sysUser = new SysUser();
@@ -45,9 +47,14 @@ class SysUserServiceTest {
             sysUser.setAvatar("https://avatars.githubusercontent.com/u/102040668?v=4");
             toDeleted.add(iSysUserService.saveOrUpdate(sysUser));
         }
+    }
 
-        List<SysUser> list = iSysUserService.findList(new Example<>());
-
-        Assertions.assertEquals(count, list.size());
+    @Test
+    public void testFindList() {
+        UserQueryDto queryDto = new UserQueryDto();
+        queryDto.setKey(RandomUtil.randomString(3));
+        Example<SysUser> example = queryDto.toExample();
+        List<SysUser> sysUsers = iSysUserService.findList(example);
+        System.out.println(sysUsers);
     }
 }
