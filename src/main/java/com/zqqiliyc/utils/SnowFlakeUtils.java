@@ -3,9 +3,6 @@ package com.zqqiliyc.utils;
 import com.github.yitter.contract.IIdGenerator;
 import com.github.yitter.contract.IdGeneratorOptions;
 import com.github.yitter.idgen.DefaultIdGenerator;
-import io.mybatis.provider.EntityColumn;
-import io.mybatis.provider.EntityTable;
-import io.mybatis.provider.keysql.GenId;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -13,25 +10,18 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2025-04-05
  */
 @Slf4j
-public class SnowFlakeUtils implements GenId<Long> {
-    private static IIdGenerator idGenInstance = null;
+public class SnowFlakeUtils {
+    private static final IIdGenerator idGenInstance = init();
 
-    public static synchronized void init() {
-        if (idGenInstance == null) {
-            try {
-                idGenInstance = new DefaultIdGenerator(new IdGeneratorOptions((short) 1));
-            } catch (Exception e) {
-                log.error("初始化雪花算法失败", e);
-            }
-        }
+    private static synchronized IIdGenerator init() {
+        return new DefaultIdGenerator(new IdGeneratorOptions((short) 1));
     }
 
-    public SnowFlakeUtils() {
-        init();
-    }
-
-    @Override
-    public Long genId(EntityTable table, EntityColumn column) {
+    public static long genId() {
         return idGenInstance.newLong();
+    }
+
+    public static String genIdStr() {
+        return Long.toString(genId());
     }
 }

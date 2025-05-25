@@ -1,6 +1,5 @@
 package com.zqqiliyc.domain.entity;
 
-import com.zqqiliyc.utils.SnowFlakeUtils;
 import lombok.Data;
 
 import java.io.Serial;
@@ -18,7 +17,7 @@ public abstract class BaseEntity implements Entity {
     /**
      * 主键
      */
-    @io.mybatis.provider.Entity.Column(value = "id", id = true, genId = SnowFlakeUtils.class, updatable = false, remark = "主键")
+    @io.mybatis.provider.Entity.Column(value = "id", id = true, updatable = false, remark = "主键")
     private Long id;
     /**
      * 创建时间

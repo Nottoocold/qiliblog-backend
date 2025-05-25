@@ -2,16 +2,16 @@ package com.zqqiliyc.domain.entity;
 
 import io.mybatis.mapper.logical.LogicalColumn;
 import io.mybatis.provider.Entity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.ibatis.type.JdbcType;
 
 /**
  * @author qili
  * @date 2025-03-26
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public abstract class BaseEntityWithDel extends BaseEntity {
     /**
      * 删除标志 0-未删除 非0-已删除

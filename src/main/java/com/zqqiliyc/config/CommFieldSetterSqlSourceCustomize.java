@@ -1,10 +1,10 @@
 package com.zqqiliyc.config;
 
 import com.zqqiliyc.domain.entity.BaseEntity;
+import com.zqqiliyc.utils.SnowFlakeUtils;
 import io.mybatis.provider.EntityTable;
 import io.mybatis.provider.SqlSourceCustomize;
 import org.apache.ibatis.builder.annotation.ProviderContext;
-import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
@@ -13,12 +13,15 @@ import org.apache.ibatis.reflection.MetaObject;
 import java.time.LocalDateTime;
 
 /**
+ * 实体类通用字段自动填充
+ *
  * @author qili
  * @date 2025-05-25
  */
 public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
     private static final String createdTime = "createTime";
     private static final String updatedTime = "updateTime";
+    private static final String id = "id";
 
     @Override
     public SqlSource customize(SqlSource sqlSource, EntityTable entity, MappedStatement ms, ProviderContext context) {
@@ -30,6 +33,7 @@ public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
                 if (parameterObject instanceof BaseEntity && sqlCommandType == SqlCommandType.INSERT) {
                     setCommonField(metaObject, createdTime, now);
                     setCommonField(metaObject, updatedTime, now);
+                    setCommonField(metaObject, id, SnowFlakeUtils.genId());
                 }
                 if (sqlCommandType == SqlCommandType.UPDATE) {
                     if (parameterObject instanceof BaseEntity) {
