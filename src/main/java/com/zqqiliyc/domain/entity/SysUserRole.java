@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import io.mybatis.provider.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  * @date 2025-03-22
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
+@Setter
 @Entity.Table("sys_user_role")
 public class SysUserRole extends BaseEntity {
     /**

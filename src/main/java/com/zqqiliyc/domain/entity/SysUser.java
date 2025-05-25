@@ -3,6 +3,8 @@ package com.zqqiliyc.domain.entity;
 import io.mybatis.provider.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.Assert;
 
 /**
@@ -11,8 +13,8 @@ import org.springframework.util.Assert;
  * @author qili
  * @date 2025-03-22
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @Entity.Table("sys_user")
 public class SysUser extends BaseEntityWithDel {
     /**

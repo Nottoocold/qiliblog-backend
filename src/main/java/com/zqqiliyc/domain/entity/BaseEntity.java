@@ -23,11 +23,11 @@ public abstract class BaseEntity implements Entity {
     /**
      * 创建时间
      */
-    @io.mybatis.provider.Entity.Column(value = "create_time", insertable = false, updatable = false, remark = "创建时间")
+    @io.mybatis.provider.Entity.Column(value = "create_time", updatable = false, remark = "创建时间")
     private LocalDateTime createTime;
     /**
      * 更新时间
      */
-    @io.mybatis.provider.Entity.Column(value = "update_time", insertable = false, updatable = false, remark = "更新时间")
+    @io.mybatis.provider.Entity.Column(value = "update_time", remark = "更新时间")
     private LocalDateTime updateTime;
 }
