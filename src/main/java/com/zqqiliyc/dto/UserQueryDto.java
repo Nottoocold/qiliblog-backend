@@ -16,11 +16,8 @@ public class UserQueryDto extends AbstractQueryDto<SysUser> {
     private String key;
 
     @Override
-    public Example<SysUser> toExample() {
-        Example<SysUser> example = new Example<>();
-        Example.Criteria<SysUser> userCriteria = example.createCriteria();
-        userCriteria.andLike(StrUtil.isNotBlank(key), SysUser::getNickname, "%" + key + "%");
-        example.or().andLike(StrUtil.isNotBlank(key), SysUser::getUsername, "%" + key + "%");
-        return example;
+    protected void fillExample(Example<SysUser> example) {
+        example.createCriteria().andLike(StrUtil.isNotBlank(key), SysUser::getUsername, "%" + key + "%");
+        example.or().andLike(StrUtil.isNotBlank(key), SysUser::getNickname, "%" + key + "%");
     }
 }

@@ -3,6 +3,7 @@ package com.zqqiliyc.service;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.dto.QueryDto;
 import com.zqqiliyc.dto.UserQueryDto;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.AfterEach;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author qili
