@@ -78,10 +78,6 @@
                     <groupId>org.mybatis</groupId>
                     <artifactId>mybatis-spring</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>io.mybatis</groupId>
-                    <artifactId>mybatis-common</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <!-- snow flake id generator -->
