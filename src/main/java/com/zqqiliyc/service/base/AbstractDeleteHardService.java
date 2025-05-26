@@ -1,5 +1,6 @@
 package com.zqqiliyc.service.base;
 
+import com.zqqiliyc.domain.entity.BaseEntityWithDel;
 import com.zqqiliyc.mapper.base.IDeleteMapper;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
@@ -14,8 +15,8 @@ import java.util.Collections;
  * @author qili
  * @date 2025-05-25
  */
-public abstract class AbstractDelHardService<T, I extends Serializable, M extends BaseMapper<T, I>>
-        extends AbstractService<T, I, M> implements IBaseDelService<T, I> {
+public abstract class AbstractDeleteHardService<T extends BaseEntityWithDel, I extends Serializable, M extends BaseMapper<T, I>>
+        extends AbstractService<T, I, M> implements IBaseDeleteHardService<T, I> {
 
     @Override
     public int deleteHardById(I id) {
