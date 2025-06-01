@@ -1,7 +1,7 @@
 package com.zqqiliyc.service;
 
-import com.zqqiliyc.service.base.IBaseService;
 import com.zqqiliyc.domain.entity.SysUserRole;
+import com.zqqiliyc.service.base.IBaseService;
 
 /**
  * @author qili

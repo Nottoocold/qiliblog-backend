@@ -3,7 +3,6 @@ package com.zqqiliyc.domain.entity;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.mybatis.provider.Entity;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.Assert;

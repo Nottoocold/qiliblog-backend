@@ -1,8 +1,6 @@
 package com.zqqiliyc.domain.entity;
 
 import io.mybatis.provider.Entity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.Assert;
