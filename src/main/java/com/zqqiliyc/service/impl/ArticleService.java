@@ -3,13 +3,15 @@ package com.zqqiliyc.service.impl;
 import com.zqqiliyc.domain.entity.Article;
 import com.zqqiliyc.mapper.ArticleMapper;
 import com.zqqiliyc.service.IArticleService;
-import io.mybatis.service.AbstractService;
+import com.zqqiliyc.service.base.AbstractExtendService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author qili
  * @date 2025-06-02
  */
 @Service
-public class ArticleService extends AbstractService<Article, Long, ArticleMapper> implements IArticleService {
+@Transactional(rollbackFor = Exception.class)
+public class ArticleService extends AbstractExtendService<Article, Long, ArticleMapper> implements IArticleService {
 }

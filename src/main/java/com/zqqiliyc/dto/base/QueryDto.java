@@ -1,4 +1,4 @@
-package com.zqqiliyc.dto;
+package com.zqqiliyc.dto.base;
 
 import com.zqqiliyc.domain.entity.Entity;
 import io.mybatis.mapper.example.Example;

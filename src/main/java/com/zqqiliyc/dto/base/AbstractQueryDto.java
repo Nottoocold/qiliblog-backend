@@ -1,4 +1,4 @@
-package com.zqqiliyc.dto;
+package com.zqqiliyc.dto.base;
 
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.domain.entity.Entity;

@@ -2,6 +2,7 @@ package com.zqqiliyc.dto;
 
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.dto.base.AbstractQueryDto;
 import io.mybatis.mapper.example.Example;
 import lombok.Getter;
 import lombok.Setter;

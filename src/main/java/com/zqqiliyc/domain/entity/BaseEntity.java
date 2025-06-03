@@ -1,16 +1,19 @@
 package com.zqqiliyc.domain.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.time.LocalDateTime;
+import java.util.StringJoiner;
 
 /**
  * 基础实体
  * @author qili
  * @date 2025-03-22
  */
-@Data
+@Getter
+@Setter
 public abstract class BaseEntity implements Entity {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,4 +32,11 @@ public abstract class BaseEntity implements Entity {
      */
     @io.mybatis.provider.Entity.Column(value = "update_time", remark = "更新时间")
     private LocalDateTime updateTime;
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", BaseEntity.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .toString();
+    }
 }

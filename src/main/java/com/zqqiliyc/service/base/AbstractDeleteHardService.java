@@ -5,7 +5,6 @@ import com.zqqiliyc.mapper.base.IDeleteMapper;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
-import io.mybatis.service.AbstractService;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -16,7 +15,7 @@ import java.util.Collections;
  * @date 2025-05-25
  */
 public abstract class AbstractDeleteHardService<T extends BaseEntityWithDel, I extends Serializable, M extends BaseMapper<T, I>>
-        extends AbstractService<T, I, M> implements IBaseDeleteHardService<T, I> {
+        extends AbstractExtendService<T, I, M> implements IBaseDeleteHardService<T, I> {
 
     @Override
     public int deleteHardById(I id) {

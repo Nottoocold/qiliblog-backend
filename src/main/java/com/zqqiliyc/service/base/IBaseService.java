@@ -1,8 +1,12 @@
 package com.zqqiliyc.service.base;
 
+import com.zqqiliyc.domain.entity.BaseEntity;
+import com.zqqiliyc.dto.base.CreateDto;
+import com.zqqiliyc.dto.base.UpdateDto;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,7 +14,7 @@ import java.util.List;
  * @author qili
  * @date 2025-04-05
  */
-public interface IBaseService<T, I> {
+public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T findById(I id);
 
@@ -22,7 +26,11 @@ public interface IBaseService<T, I> {
 
     <F> List<T> findByFieldList(Fn<T, F> field, Collection<F> fieldValueList);
 
+    T create(CreateDto<T> dto);
+
     T save(T entity);
+
+    T update(UpdateDto<T> dto);
 
     T update(T entity);
 
