@@ -28,15 +28,11 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T create(CreateDto<T> dto);
 
-    T save(T entity);
-
     T update(UpdateDto<T> dto);
 
     T update(T entity);
 
     T updateSelective(T entity);
-
-    T saveOrUpdate(T entity);
 
     int deleteById(I id);
 
