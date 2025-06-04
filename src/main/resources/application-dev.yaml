@@ -12,3 +12,11 @@ logging:
     com.zqqiliyc: debug
     web: info
     sql: debug
+    org.springframework.transaction: trace
+    org.springframework.jdbc: trace
+    org.springframework.dao: trace
+#    org.springframework.aop: trace
+#    org.springframework.cglib: trace
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
