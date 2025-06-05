@@ -1,7 +1,7 @@
 spring:
   docker:
     compose:
-      enabled: false
+      enabled: true
   datasource:
     username: qiliblog
     password: qiliblog001
@@ -10,7 +10,7 @@ spring:
 logging:
   level:
     com.zqqiliyc: debug
-    web: info
+    web: debug
     sql: debug
     org.springframework.transaction: trace
     org.springframework.jdbc: trace
@@ -19,4 +19,4 @@ logging:
 #    org.springframework.cglib: trace
 mybatis:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

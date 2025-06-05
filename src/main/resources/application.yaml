@@ -14,6 +14,11 @@ spring:
     proxy-target-class: true # 使用cglib代理
   transaction:
     rollback-on-commit-failure: true # 在事务commit失败时回滚
+  jackson:
+    time-zone: Asia/Shanghai # 时区
+    date-format: yyyy-MM-dd HH:mm:ss # 日期格式
+    default-property-inclusion: non_null # 属性为null时不输出
+
 
 mybatis:
   configuration:
@@ -29,6 +34,15 @@ logging:
       max-file-size: 1MB
   file:
     name: ./log/qiliblog-backend.log
-
 server:
   port: 8080
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+    application-display-name: qiliblog-backend
+    context-path: /
+  error:
+    include-path: never
+    include-stacktrace: never
+    include-message: never
