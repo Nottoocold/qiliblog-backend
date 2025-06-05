@@ -3,7 +3,6 @@ package com.zqqiliyc.domain.entity;
 import io.mybatis.provider.Entity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.Assert;
 
 /**
  * 系统用户
@@ -51,21 +50,6 @@ public class SysUser extends BaseEntityWithDel {
     public SysUser() {
         super();
         setState(0);
-    }
-
-    public void setUsername(String username) {
-        Assert.hasText(username, "用户名不能为空");
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        Assert.hasText(password, "密码不能为空");
-        this.password = password;
-    }
-
-    public void setNickname(String nickname) {
-        Assert.hasText(nickname, "昵称不能为空");
-        this.nickname = nickname;
     }
 }
 

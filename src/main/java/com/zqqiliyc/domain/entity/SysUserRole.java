@@ -5,7 +5,6 @@ import cn.hutool.core.util.ObjectUtil;
 import io.mybatis.provider.Entity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
@@ -36,19 +35,7 @@ public class SysUserRole extends BaseEntity {
     private LocalDateTime endTime;
 
     public SysUserRole(Long userId, Long roleId) {
-        setUserId(userId);
-        setRoleId(roleId);
-        setStartTime(null);
-        setEndTime(getStartTime().plusDays(365));
-    }
-
-    public void setUserId(Long userId) {
-        Assert.isTrue(userId != null, "userId不能为空");
         this.userId = userId;
-    }
-
-    public void setRoleId(Long roleId) {
-        Assert.isTrue(roleId != null, "roleId不能为空");
         this.roleId = roleId;
     }
 
