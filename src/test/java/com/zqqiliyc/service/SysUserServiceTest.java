@@ -3,6 +3,7 @@ package com.zqqiliyc.service;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.dto.UserCreateDto;
 import com.zqqiliyc.dto.UserQueryDto;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.AfterEach;
@@ -38,14 +39,14 @@ class SysUserServiceTest {
     @BeforeEach
     public void insert() {
         for (int i = 0; i < count; i++) {
-            SysUser sysUser = new SysUser();
+            UserCreateDto sysUser = new UserCreateDto();
             sysUser.setUsername(RandomUtil.randomString(6));
             sysUser.setNickname(RandomUtil.randomString(6));
             sysUser.setPassword(RandomUtil.randomString(18));
             sysUser.setEmail(RandomUtil.randomString(6) + "@qq.com");
             sysUser.setPhone(RandomUtil.randomNumbers(11));
             sysUser.setAvatar("https://avatars.githubusercontent.com/u/102040668?v=4");
-            toDeleted.add(iSysUserService.saveOrUpdate(sysUser));
+            toDeleted.add(iSysUserService.create(sysUser));
         }
     }
 
