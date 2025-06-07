@@ -50,10 +50,6 @@
                         <groupId>org.mybatis</groupId>
                         <artifactId>mybatis</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>io.mybatis</groupId>
-                        <artifactId>mybatis-common</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <!-- mybatis-common-service -->
@@ -95,27 +91,6 @@
         <dependency>
             <groupId>io.mybatis</groupId>
             <artifactId>mybatis-mapper</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mybatis</groupId>
-                    <artifactId>mybatis</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>io.mybatis</groupId>
-                    <artifactId>mybatis-common</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- mybatis-common-service -->
-        <dependency>
-            <groupId>io.mybatis</groupId>
-            <artifactId>mybatis-service</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mybatis</groupId>
-                    <artifactId>mybatis-spring</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- snow flake id generator -->
         <dependency>
