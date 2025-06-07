@@ -1,7 +1,10 @@
 package com.zqqiliyc.service.base;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.dto.base.CreateDto;
+import com.zqqiliyc.dto.base.QueryDto;
 import com.zqqiliyc.dto.base.UpdateDto;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
@@ -19,6 +22,10 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
     T findById(I id);
 
     T findOne(Example<T> example);
+
+    Page<T> findPage(QueryDto<T> queryDto);
+
+    PageInfo<T> findPageInfo(QueryDto<T> queryDto);
 
     List<T> findList(Example<T> example);
 

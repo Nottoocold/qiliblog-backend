@@ -17,9 +17,9 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> {
-    private int pageNo = 1;
+    private Integer pageNum;
 
-    private int pageSize = 15;
+    private Integer pageSize;
 
     private String orderBy;
 
@@ -35,6 +35,11 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
             }
         }
         fillExample(example);
+    }
+
+    @Override
+    public boolean isPageRequest() {
+        return pageNum != null && pageSize != null;
     }
 
     @SuppressWarnings("unchecked")

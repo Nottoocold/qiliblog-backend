@@ -23,6 +23,7 @@
         <mybatis.common.mapper.version>2.2.3</mybatis.common.mapper.version>
         <id.generator.version>1.0.6</id.generator.version>
         <hutool.version>5.8.26</hutool.version>
+        <pagehelper.version>6.1.0</pagehelper.version>
     </properties>
 
     <repositories>
@@ -64,6 +65,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!--mybatis pagehelper-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
             <!-- snow flake id generator -->
             <dependency>
                 <groupId>com.github.yitter</groupId>
@@ -91,6 +98,10 @@
         <dependency>
             <groupId>io.mybatis</groupId>
             <artifactId>mybatis-mapper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
         </dependency>
         <!-- snow flake id generator -->
         <dependency>

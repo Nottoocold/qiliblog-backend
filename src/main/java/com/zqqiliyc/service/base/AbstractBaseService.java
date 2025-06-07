@@ -1,7 +1,11 @@
 package com.zqqiliyc.service.base;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.dto.base.CreateDto;
+import com.zqqiliyc.dto.base.QueryDto;
 import com.zqqiliyc.dto.base.UpdateDto;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
@@ -47,6 +51,28 @@ public class AbstractBaseService<T extends BaseEntity, I extends Serializable, M
     @Override
     public T findOne(Example<T> example) {
         return baseMapper.selectOneByExample(example).orElse(null);
+    }
+
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    public Page<T> findPage(QueryDto<T> queryDto) {
+        if (queryDto.isPageRequest()) {
+            try (Page<T> page = PageHelper.startPage(queryDto.getPageNum(), queryDto.getPageSize())) {
+                return page.doSelectPage(() -> baseMapper.selectByExample(queryDto.toExample()));
+            }
+        }
+        return new Page<>();
+    }
+
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
+    @Override
+    public PageInfo<T> findPageInfo(QueryDto<T> queryDto) {
+        if (queryDto.isPageRequest()) {
+            try (Page<T> page = PageHelper.startPage(queryDto.getPageNum(), queryDto.getPageSize())) {
+                return page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
+            }
+        }
+        return PageInfo.emptyPageInfo();
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)

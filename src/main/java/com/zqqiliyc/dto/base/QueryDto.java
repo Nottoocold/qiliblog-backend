@@ -15,5 +15,11 @@ public interface QueryDto<T extends Entity> {
         return example;
     }
 
+    boolean isPageRequest();
+
+    Integer getPageNum();
+
+    Integer getPageSize();
+
     void addConditionToExample(Example<T> example);
 }
