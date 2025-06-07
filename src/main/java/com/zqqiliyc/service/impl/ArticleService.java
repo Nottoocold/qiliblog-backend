@@ -3,7 +3,7 @@ package com.zqqiliyc.service.impl;
 import com.zqqiliyc.domain.entity.Article;
 import com.zqqiliyc.mapper.ArticleMapper;
 import com.zqqiliyc.service.IArticleService;
-import com.zqqiliyc.service.base.AbstractExtendService;
+import com.zqqiliyc.service.base.AbstractBaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,5 +13,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class ArticleService extends AbstractExtendService<Article, Long, ArticleMapper> implements IArticleService {
+public class ArticleService extends AbstractBaseService<Article, Long, ArticleMapper> implements IArticleService {
 }

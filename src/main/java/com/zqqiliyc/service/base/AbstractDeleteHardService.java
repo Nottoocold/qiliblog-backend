@@ -16,7 +16,7 @@ import java.util.Collection;
  */
 @Transactional(rollbackFor = Exception.class)
 public abstract class AbstractDeleteHardService<T extends BaseEntityWithDel, I extends Serializable, M extends BaseMapper<T, I>>
-        extends AbstractExtendService<T, I, M> implements IBaseDeleteHardService<T, I> {
+        extends AbstractBaseService<T, I, M> implements IBaseDeleteHardService<T, I> {
 
     @Override
     public int deleteHardById(I id) {

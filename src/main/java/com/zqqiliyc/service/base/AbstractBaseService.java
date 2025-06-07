@@ -19,7 +19,8 @@ import java.util.List;
  * @author qili
  * @date 2025-06-03
  */
-public class AbstractExtendService<T extends BaseEntity, I extends Serializable, M extends BaseMapper<T, I>> implements IBaseService<T, I> {
+public class AbstractBaseService<T extends BaseEntity, I extends Serializable, M extends BaseMapper<T, I>>
+        implements IBaseService<T, I> {
     protected M baseMapper;
 
     @Autowired
