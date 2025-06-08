@@ -174,7 +174,7 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
+            <!--<plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
@@ -185,6 +185,47 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- 运行时需要额外加载读取 jar 包的位置 -->
+                            <classpathPrefix>libs/</classpathPrefix>
+                            <mainClass>com.zqqiliyc.BlogApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 将 jar 包复制到 mvn 项目的构建路径下，例如 项目名/target/libs/ 目录下-->
+                             <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <!-- 将 jar 放到固定的位置，方便管理 -->
+<!--                            <outputDirectory>C:/Users/wangbin1/Desktop/libs</outputDirectory>-->
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
