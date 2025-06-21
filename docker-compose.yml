@@ -15,20 +15,20 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./db/conf:/etc/mysql/conf.d
-  redis:
-    image: bitnami/redis:6.2.16
-    ports:
-      - "6379:6379"
-    networks:
-      - default
-    environment:
-      ALLOW_EMPTY_PASSWORD: yes
-    volumes:
-      - redis_data:/bitnami/redis/data
+#  redis:
+#    image: bitnami/redis:6.2.16
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - default
+#    environment:
+#      ALLOW_EMPTY_PASSWORD: yes
+#    volumes:
+#      - redis_data:/bitnami/redis/data
 
 volumes:
   mysql_data:
-  redis_data:
+#  redis_data:
 
 networks:
   default:
