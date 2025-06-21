@@ -1,8 +1,7 @@
-package com.zqqiliyc.mapper;
+package com.zqqiliyc.repository.mapper;
 
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.domain.entity.SysUser;
-import com.zqqiliyc.repository.mapper.SysUserMapper;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
