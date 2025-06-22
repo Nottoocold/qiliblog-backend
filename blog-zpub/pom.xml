@@ -21,10 +21,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-docker-compose</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
         <dependency>
@@ -40,7 +36,7 @@
     </dependencies>
 
     <build>
-        <finalName>qiliblog-server</finalName>
+        <finalName>qiliblog-server-${project.version}</finalName>
         <plugins>
             <!-- 1. 首先正常打包包含依赖的Fat JAR -->
             <plugin>

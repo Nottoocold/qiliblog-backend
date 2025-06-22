@@ -1,7 +1,4 @@
 spring:
-  docker:
-    compose:
-      enabled: true
   datasource:
     username: qiliblog
     password: qiliblog001
