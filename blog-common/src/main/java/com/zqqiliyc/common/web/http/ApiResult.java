@@ -46,6 +46,10 @@ public class ApiResult<T> {
         this.requestId = IdUtil.simpleUUID();
     }
 
+    public static <T> ApiResult<T> success() {
+        return new ApiResult<>(0, "success");
+    }
+
     public static <T> ApiResult<T> success(T data) {
         return new ApiResult<>(0, "success", data);
     }

@@ -30,7 +30,7 @@ public class JwtTokenRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        BearerToken bearerToken = (BearerToken) principals.getPrimaryPrincipal();
+        String bearerToken = (String) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         authorizationInfo.setRoles(Set.of("admin"));
         authorizationInfo.setStringPermissions(Set.of("user:read"));
