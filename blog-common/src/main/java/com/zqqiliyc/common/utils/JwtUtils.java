@@ -25,6 +25,15 @@ public class JwtUtils {
     /**
      * 创建token
      * @param subject token主体
+     * @return token
+     */
+    public String create(String subject) {
+        return create(subject, jwtProperties.getExpire());
+    }
+
+    /**
+     * 创建token
+     * @param subject token主体
      * @param expireIn 过期时间 单位秒
      * @return token
      */
@@ -32,6 +41,13 @@ public class JwtUtils {
         return create(subject, Collections.emptyMap(), expireIn);
     }
 
+    /**
+     * 创建token
+     * @param subject token主体
+     * @param claims 载荷
+     * @param expireIn 过期时间 单位秒
+     * @return token
+     */
     public String create(String subject, Map<String, Object> claims, long expireIn) {
         JWT jwt = JWT.create();
         jwt.setIssuedAt(new Date()); // 签发时间

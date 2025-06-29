@@ -54,6 +54,7 @@ public class JwtTokenRealm extends AuthorizingRealm {
             throw new AuthenticationException("token is invalid");
         }
         log.info("get authentication info, jwt token valid.");
-        return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), bearerToken.getCredentials(), getName());
+        // jwt token 没有密码
+        return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), null, getName());
     }
 }

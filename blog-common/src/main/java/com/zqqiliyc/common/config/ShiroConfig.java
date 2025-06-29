@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Setter
 @Getter
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @ConfigurationProperties(prefix = "qiliblog.security")
 public class ShiroConfig {
