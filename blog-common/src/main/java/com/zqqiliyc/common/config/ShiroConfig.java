@@ -39,7 +39,7 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager(List<Realm> realms) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealms(realms);
-
+        manager.setRememberMeManager(null); // 不使用记住我
         // 禁用Session存储（无状态）
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator storageEvaluator = new DefaultSessionStorageEvaluator();
