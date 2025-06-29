@@ -19,6 +19,7 @@
         <module>blog-service</module>
         <module>blog-api-admin</module>
         <module>blog-zpub</module>
+        <module>blog-auth</module>
     </modules>
 
     <properties>
