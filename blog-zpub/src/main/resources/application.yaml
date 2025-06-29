@@ -46,3 +46,17 @@ server:
     include-path: never
     include-stacktrace: never
     include-message: never
+
+qiliblog:
+  security:
+    jwt:
+      secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥
+      expire: 3600 # 过期时间 单位秒
+    allowed-urls:
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /v2/api-docs
+      - /error
+      - /webjars/**
+      - /api/auth/**
+      - /api/public/**
