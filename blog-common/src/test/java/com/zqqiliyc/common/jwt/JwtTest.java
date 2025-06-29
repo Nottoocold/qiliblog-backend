@@ -1,9 +1,15 @@
 package com.zqqiliyc.common.jwt;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.KeyUtil;
+import cn.hutool.crypto.digest.HmacAlgorithm;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.signers.JWTSignerUtil;
 import org.junit.jupiter.api.*;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +20,17 @@ import java.util.Map;
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class JwtTest {
-    static final byte[] KEY = "qili9iliq".getBytes();
+    static byte[] KEY;
+
+    @BeforeAll
+    public static void beforeAll() {
+        SecretKey secretKey = KeyUtil.generateKey(HmacAlgorithm.HmacSHA256.getValue(), 256);
+        String encoded = Base64.encode(secretKey.getEncoded());
+        Assertions.assertArrayEquals(secretKey.getEncoded(), Base64.decode(encoded));
+        System.out.println(StrUtil.format("secretKey alg {}, format {}, value->{}",
+                secretKey.getAlgorithm(), secretKey.getFormat(), encoded));
+        KEY = secretKey.getEncoded();
+    }
 
     @Order(0)
     @Test
@@ -44,25 +60,18 @@ public class JwtTest {
 
     private String getToken() {
         JWT jwt = JWT.create();
-        long cur = System.currentTimeMillis(); // 当前时间戳
-        Date date = new Date(cur); // 当前时间
-        Date exp = new Date(cur + 3600 * 1000); // 3600秒后过期
-        jwt.setIssuedAt(date); // 签发时间
-        jwt.setExpiresAt(exp); // 过期时间
+        jwt.setIssuedAt(new Date()); // 签发时间
+        jwt.setExpiresAt(new Date(System.currentTimeMillis() + 3600 * 1000)); // 过期时间
         jwt.addPayloads(getPayload());
-        jwt.setKey(KEY);
+        jwt.setSigner(JWTSignerUtil.hs256(KEY));
         return jwt.sign();
     }
 
     private Map<String, Object> getPayload() {
         Map<String, Object> payload = new HashMap<>();
-        /*LocalDateTime now = LocalDateTime.now(); // 当前时间
-        LocalDateTime exp = LocalDateTimeUtil.offset(now, 3600, ChronoUnit.SECONDS);// 3600秒后过期
-        payload.put(JWT.ISSUED_AT, now); // jwt签发时间
-        payload.put(JWT.EXPIRES_AT, exp); // jwt过期时间*/
-
         payload.put("name", "qili");
-        payload.put("other", "info");
+        payload.put("roles", "admin,user");
+        payload.put(JWT.SUBJECT, "testsub");
         return payload;
     }
 }

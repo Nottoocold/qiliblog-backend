@@ -21,6 +21,12 @@ import java.util.Set;
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class JwtTokenRealm extends AuthorizingRealm {
+    private final JwtUtils jwtUtils;
+
+    public JwtTokenRealm(JwtUtils jwtUtils) {
+        super();
+        this.jwtUtils = jwtUtils;
+    }
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -44,7 +50,7 @@ public class JwtTokenRealm extends AuthorizingRealm {
         if (bearerToken.getToken() == null) {
             throw new AuthenticationException("token is null");
         }
-        if (!JwtUtils.verify(bearerToken.getToken())) {
+        if (!jwtUtils.verify(bearerToken.getToken())) {
             throw new AuthenticationException("token is invalid");
         }
         log.info("get authentication info, jwt token valid.");

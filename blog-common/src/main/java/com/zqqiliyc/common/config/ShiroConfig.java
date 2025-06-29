@@ -9,16 +9,13 @@ import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.spring.web.ShiroUrlPathHelper;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Role;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,13 +71,5 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**", "authJWT");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;
-    }
-
-    @Bean
-    @Primary
-    public RequestMappingHandlerMapping overridedRequestMappingHandlerMapping() {
-        RequestMappingHandlerMapping mapping = new RequestMappingHandlerMapping();
-        mapping.setUrlPathHelper(new ShiroUrlPathHelper());
-        return mapping;
     }
 }
