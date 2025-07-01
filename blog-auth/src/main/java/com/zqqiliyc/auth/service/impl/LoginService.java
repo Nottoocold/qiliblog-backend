@@ -6,9 +6,10 @@ import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.service.AuthStrategy;
 import com.zqqiliyc.auth.service.ILoginService;
 import com.zqqiliyc.auth.token.AuthRequestToken;
+import com.zqqiliyc.common.enums.AuthState;
+import com.zqqiliyc.common.exception.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +27,10 @@ public class LoginService implements ILoginService {
     public AuthResult login(LoginDto loginDto) {
         AuthStrategy strategy = CollectionUtil.findOne(authStrategies, authStrategy -> authStrategy.support(loginDto.getLoginType()));
         if (null == strategy) {
-            return new AuthResult(0, false, "不支持的登录方式");
+            throw new AuthException(AuthState.UNSUPPORTED_LOGIN_TYPE);
         }
         if (log.isDebugEnabled()) {
-            log.debug("will use {} authenticator with {}", strategy.getClass().getName(), loginDto);
+            log.debug("will use {} for request token {}", strategy.getClass().getSimpleName(), loginDto);
         }
         AuthRequestToken requestToken = strategy.createToken(loginDto);
         return strategy.authenticate(requestToken);

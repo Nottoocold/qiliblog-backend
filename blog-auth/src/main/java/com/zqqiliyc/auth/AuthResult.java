@@ -10,23 +10,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResult {
-
-    private int status;
-
-    private boolean error;
-
-    private String message;
-
+    /** 访问令牌 */
     private String accessToken;
-
+    /** 有效时间,单位秒 */
     private long expiresIn;
 
     public AuthResult() {
     }
 
-    public AuthResult(int status, boolean error, String message) {
-        this.status = status;
-        this.error = error;
-        this.message = message;
+    public AuthResult(String accessToken, long expiresIn) {
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
     }
 }
