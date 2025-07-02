@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.zqqiliyc.common.config.config.JwtProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Date;
@@ -14,7 +13,6 @@ import java.util.Map;
  * @author qili
  * @date 2025-06-22
  */
-@Component
 public class JwtUtils {
     private final JwtProperties jwtProperties;
 

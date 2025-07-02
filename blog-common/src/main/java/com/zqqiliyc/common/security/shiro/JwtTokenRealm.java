@@ -18,8 +18,6 @@ import java.util.Set;
  * @date 2025-06-28
  */
 @Slf4j
-@Component
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class JwtTokenRealm extends AuthorizingRealm {
     private final JwtUtils jwtUtils;
 

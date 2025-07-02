@@ -1,6 +1,8 @@
 package com.zqqiliyc.common.config;
 
 import com.zqqiliyc.common.security.shiro.JwtTokenFilter;
+import com.zqqiliyc.common.security.shiro.JwtTokenRealm;
+import com.zqqiliyc.common.utils.JwtUtils;
 import jakarta.servlet.Filter;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,8 +36,16 @@ public class ShiroConfig {
 
     private List<String> allowedUrls;
 
+    // 自定义Realm
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public Realm jwtTokenRealm(JwtUtils jwtUtils) {
+        return new JwtTokenRealm(jwtUtils);
+    }
+
     // 安全管理器
     @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public DefaultWebSecurityManager securityManager(List<Realm> realms) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealms(realms);
@@ -52,7 +62,7 @@ public class ShiroConfig {
 
     // 过滤器链
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager)  {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(securityManager);
 
