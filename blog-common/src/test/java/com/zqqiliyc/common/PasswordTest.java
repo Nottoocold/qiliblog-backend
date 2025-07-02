@@ -5,10 +5,10 @@ import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import com.zqqiliyc.common.security.BCryptPasswordEncoder;
+import com.zqqiliyc.common.security.PasswordEncoder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -19,15 +19,13 @@ import java.security.PublicKey;
  * @since 2025-07-02
  */
 public class PasswordTest {
-
-    private static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Test
     public void test0() {
         String rawPassword = "<PASSWORD>";
-        String encodedPassword = PASSWORD_ENCODER.encode(rawPassword);
+        String encodedPassword = passwordEncoder.encode(rawPassword);
         System.out.println(encodedPassword);
-        System.out.println(PASSWORD_ENCODER.matches(rawPassword, encodedPassword));
+        Assertions.assertTrue(passwordEncoder.matches(rawPassword, encodedPassword));
     }
 
     @Test
