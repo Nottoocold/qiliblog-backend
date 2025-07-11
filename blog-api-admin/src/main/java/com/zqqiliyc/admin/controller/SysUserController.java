@@ -9,7 +9,6 @@ import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,13 +23,11 @@ public class SysUserController {
     private final ISysUserService userService;
 
     @GetMapping
-    @RequiresPermissions("user:read")
     public ApiResult<PageInfo<SysUser>> query(UserQueryDto queryDto) {
         return ApiResult.success(userService.findPageInfo(queryDto));
     }
 
     @PostMapping
-    @RequiresPermissions("sys:user:create")
     public ApiResult<SysUser> create(@RequestBody UserCreateDto dto) {
         return ApiResult.success(userService.create(dto));
     }

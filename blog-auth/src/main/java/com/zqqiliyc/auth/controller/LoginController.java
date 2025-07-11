@@ -6,8 +6,6 @@ import com.zqqiliyc.common.constant.WebApiConstants;
 import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
