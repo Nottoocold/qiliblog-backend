@@ -72,11 +72,6 @@ CREATE TABLE sys_role_permission
     CONSTRAINT UNIQUE (role_id, permission_id)
 ) COMMENT ='角色权限关联表';
 
-DELETE FROM sys_user WHERE id > 0;
-INSERT INTO sys_user (id, username, password, nickname, state, email, phone, avatar)
-VALUES (1, 'admin', '123456', '管理员', 0, '<EMAIL>', '13800138000',
-        'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif');
-
 DROP TABLE IF EXISTS `category`;
 -- 创建分类表 (`category`)
 CREATE TABLE `category`
@@ -91,7 +86,7 @@ CREATE TABLE `category`
     UNIQUE KEY `idx_slug` (`slug`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='文章分类表';
+    COMMENT ='文章分类表';
 
 DROP TABLE IF EXISTS `tags`;
 -- 创建标签表 (`tags`)
@@ -107,7 +102,7 @@ CREATE TABLE `tags`
     UNIQUE KEY `idx_tag_slug` (`slug`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='文章标签表';
+    COMMENT ='文章标签表';
 
 DROP TABLE IF EXISTS `article`;
 -- 创建文章表 (`article`)
@@ -134,6 +129,6 @@ CREATE TABLE `article`
     UNIQUE KEY `idx_slug` (`slug`) -- Slug 必须唯一
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='文章核心信息表';
+    COMMENT ='文章核心信息表';
 
 
