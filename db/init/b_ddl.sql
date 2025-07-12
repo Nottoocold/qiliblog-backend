@@ -70,7 +70,9 @@ CREATE TABLE sys_role_permission
     CONSTRAINT UNIQUE (role_id, permission_id)
 ) COMMENT ='角色权限关联表';
 
-DELETE FROM sys_user WHERE id > 0;
+DELETE
+FROM sys_user
+WHERE id > 0;
 INSERT INTO sys_user (id, username, password, nickname, state, email, phone, avatar)
 VALUES (1, 'admin', '123456', '管理员', 0, '<EMAIL>', '13800138000',
         'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif');
@@ -83,8 +85,8 @@ CREATE TABLE `category`
     `name`         VARCHAR(64) NOT NULL COMMENT '分类名称 (必须唯一，如 "技术", "生活")',
     `slug`         VARCHAR(64) NOT NULL COMMENT '分类 URL 友好标识符 (必须唯一，如 "tech", "life")',
     `description`  VARCHAR(255) DEFAULT NULL COMMENT '分类描述',
-    `created_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    `create_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     UNIQUE KEY `idx_name` (`name`),
     UNIQUE KEY `idx_slug` (`slug`)
 ) ENGINE = InnoDB
@@ -99,8 +101,8 @@ CREATE TABLE `tags`
     `name`         VARCHAR(64) NOT NULL COMMENT '标签名称 (必须唯一，如 "Java", "Spring Boot")',
     `slug`         VARCHAR(64) NOT NULL COMMENT '标签 URL 友好标识符 (必须唯一，如 "java", "spring-boot")',
     `description`  VARCHAR(255)         DEFAULT NULL COMMENT '标签描述',
-    `created_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+    `create_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
     UNIQUE KEY `idx_tag_name` (`name`),
     UNIQUE KEY `idx_tag_slug` (`slug`)
 ) ENGINE = InnoDB
@@ -127,11 +129,36 @@ CREATE TABLE `article`
     `like_count`     INT                   DEFAULT 0 COMMENT '文章点赞次数',
     `word_count`     INT                   DEFAULT 0 COMMENT '文章字数统计',
     `read_time`      VARCHAR(64)           DEFAULT NULL COMMENT '预计阅读时间',
-    `created_time`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
-    `updated_time`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+    `create_time`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+    `update_time`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
     UNIQUE KEY `idx_slug` (`slug`) -- Slug 必须唯一
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='文章核心信息表';
 
-
+DROP TABLE IF EXISTS `sys_token`;
+CREATE TABLE `sys_token`
+(
+    `id`                 bigint               NOT NULL COMMENT '主键ID',
+    `access_token`       varchar(512)         NOT NULL COMMENT '访问令牌字符串',
+    `refresh_token`      varchar(512)         NOT NULL COMMENT '刷新令牌字符串',
+    `token_style`        enum ('JWT', 'UUID') NOT NULL COMMENT '令牌风格',
+    `user_id`            bigint               NOT NULL COMMENT '关联用户ID',
+    `issued_at`          datetime             NOT NULL COMMENT '颁发时间',
+    `expired_at`         datetime             NOT NULL COMMENT '过期时间',
+    `refresh_expired_at` datetime                      DEFAULT NULL COMMENT '刷新令牌过期时间',
+    `revoked`            tinyint(1)                    DEFAULT '0' COMMENT '是否已撤销（1-是，0-否）',
+    `revoked_at`         datetime                      DEFAULT NULL COMMENT '撤销时间',
+    `revoked_reason`      varchar(255)                  DEFAULT NULL COMMENT '撤销原因',
+    `ip_address`         varchar(45)                   DEFAULT NULL COMMENT '客户端IP',
+    `additional_info`    json                          DEFAULT NULL COMMENT '扩展信息（JSON格式）',
+    `create_time`        datetime             NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+    `update_time`        datetime             NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_access_token` (`access_token`),
+    UNIQUE KEY `uk_refresh_token` (`refresh_token`),
+    KEY `idx_user_status` (`user_id`, `revoked`, `expired_at`),
+    KEY `idx_refresh_expiry` (`refresh_expired_at`, `revoked`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci COMMENT ='系统令牌表';

@@ -8,10 +8,12 @@ logging:
   level:
     com.zqqiliyc: debug
     web: debug
-    sql: debug
-    org.springframework.transaction: debug
-    org.springframework.jdbc: debug
-    org.springframework.dao: debug
+    sql: info
+    org.springframework.transaction: info
+    org.springframework.jdbc: info
+    org.springframework.dao: info
+    org.apache.shiro: debug
+    org.springframework.security: debug
 #    org.springframework.aop: trace
 #    org.springframework.cglib: trace
 mybatis:
