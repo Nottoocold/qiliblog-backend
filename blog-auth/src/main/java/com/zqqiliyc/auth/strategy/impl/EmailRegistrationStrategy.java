@@ -73,7 +73,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
         iSysUserService.create(userCreateDto);
 
         log.info("{}注册成功，用户：{}", LOG_PREFIX, registerDto.getUsername());
-        return new AuthResult(0, false, "注册成功");
+        return new AuthResult();
     }
 
     /**
