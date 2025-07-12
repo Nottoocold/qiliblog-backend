@@ -2,6 +2,7 @@ package com.zqqiliyc.common.web.http;
 
 import com.zqqiliyc.common.exception.AuthException;
 import lombok.extern.slf4j.Slf4j;
+import com.zqqiliyc.common.exception.AuthException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.HttpStatus;
@@ -65,4 +66,11 @@ public class GlobalErrorHandler {
                 .collect(Collectors.joining(", "));
         return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
     }
+
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResult<?> handleAuthException(AuthException e) {
+        return ApiResult.error(e.getStatus(), e.getMessage());
+    }
+
 }
