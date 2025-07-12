@@ -53,7 +53,8 @@ public class RegisterController {
      */
     @PostMapping
     public ApiResult<?> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
-        return ApiResult.success(registerService.register(userRegisterDto));
+        registerService.register(userRegisterDto);
+        return ApiResult.success();
     }
 
 }

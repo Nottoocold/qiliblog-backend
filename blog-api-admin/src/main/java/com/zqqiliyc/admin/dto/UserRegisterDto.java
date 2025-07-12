@@ -1,6 +1,7 @@
 package com.zqqiliyc.admin.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,14 +11,9 @@ import lombok.experimental.Accessors;
  * @datetime 2025-07-01 11:42
  * @description
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
 public class UserRegisterDto {
-
     /**
      * 用户名
      */
@@ -31,8 +27,8 @@ public class UserRegisterDto {
     /**
      * 密码
      */
-    @Size(max = 255, message = "密码长度不能超过{max}")
-    @NotBlank(message = "请填写注册密码")
+    @Size(min = 8, max = 32, message = "密码长度必须在{min}-{max}位之间")
+    @NotBlank(message = "请填写密码")
     private String password;
 
     /**
@@ -57,6 +53,7 @@ public class UserRegisterDto {
      *
      * @see com.zqqiliyc.admin.enums.RegistrationType
      */
+    @NotNull(message = "注册类型不能为空")
     private Integer registerType;
 
 }

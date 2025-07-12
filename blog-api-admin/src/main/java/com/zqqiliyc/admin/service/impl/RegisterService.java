@@ -41,7 +41,7 @@ public class RegisterService implements IRegisterService {
      * @throws AuthException 如果注册类型为空或不被支持
      */
     @Override
-    public RegisterResult register(UserRegisterDto userRegisterDto) {
+    public void register(UserRegisterDto userRegisterDto) {
         if (userRegisterDto.getRegisterType() == null) {
             log.warn("{}注册类型为空", LOG_PREFIX);
             throw new AuthException(AuthState.REGISTER_TYPE_EMPTY);
@@ -54,6 +54,6 @@ public class RegisterService implements IRegisterService {
             log.warn("{}不支持的注册类型: {}", LOG_PREFIX, userRegisterDto.getRegisterType());
             throw new AuthException(AuthState.UNSUPPORTED_REGISTER_TYPE);
         }
-        return strategy.register(userRegisterDto);
+        strategy.register(userRegisterDto);
     }
 }

@@ -32,6 +32,6 @@ public interface RegistrationStrategy {
      * @return 返回注册结果封装对象 {@link RegisterResult}
      * @throws IllegalArgumentException 如果传入参数非法或业务规则不满足
      */
-    RegisterResult register(UserRegisterDto userRegisterDto);
+    void register(UserRegisterDto userRegisterDto);
 
 }    

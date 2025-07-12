@@ -10,8 +10,10 @@ import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
 import com.zqqiliyc.common.enums.AuthState;
 import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.generate.VirtualPhoneGenerator;
 import com.zqqiliyc.common.security.PasswordEncoder;
 import com.zqqiliyc.common.strategy.VerificationCodeService;
+import com.zqqiliyc.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,18 +65,23 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * @throws AuthException 如果注册失败，如参数不合法或验证失败
      */
     @Override
-    public RegisterResult register(UserRegisterDto userRegisterDto) {
+    public void register(UserRegisterDto userRegisterDto) {
         log.debug("{}开始执行邮箱注册流程", LOG_PREFIX);
 
         validateRegisterDto(userRegisterDto);
+        // 邮箱注册场景下，用户只需要要提供邮箱、密码、验证码，其他字段由系统自动生成
+        userRegisterDto.setPhone(VirtualPhoneGenerator.generate());
+        // 使用雪花算法生成的ID取最后8位作为随机用户名后缀
+        userRegisterDto.setUsername(StrUtil.format("user_{}", SnowFlakeUtils.genId() % 100000000));
+
         checkUniqueness(userRegisterDto);
+
         verifyCode(userRegisterDto);
 
         UserCreateDto userCreateDto = createUser(userRegisterDto);
         iSysUserService.create(userCreateDto);
 
         log.info("{}注册成功，用户：{}", LOG_PREFIX, userRegisterDto.getUsername());
-        return new RegisterResult();
     }
 
     /**

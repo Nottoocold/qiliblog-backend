@@ -18,6 +18,6 @@ public interface IRegisterService {
      * @return 返回注册操作的结果，包括状态码、错误标识，具体结构见 {@link RegisterResult}
      * @throws AuthException 如果注册类型为空或不被支持时抛出异常
      */
-    RegisterResult register(UserRegisterDto userRegisterDto);
+    void register(UserRegisterDto userRegisterDto);
 
 }
