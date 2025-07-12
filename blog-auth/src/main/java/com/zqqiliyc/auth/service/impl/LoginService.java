@@ -6,8 +6,8 @@ import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.service.AuthStrategy;
 import com.zqqiliyc.auth.service.ILoginService;
 import com.zqqiliyc.auth.token.AuthRequestToken;
-import com.zqqiliyc.common.enums.AuthState;
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.enums.GlobalErrorDict;
+import com.zqqiliyc.common.exception.ClientException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class LoginService implements ILoginService {
     public AuthResult login(LoginDto loginDto) {
         AuthStrategy strategy = CollectionUtil.findOne(authStrategies, authStrategy -> authStrategy.support(loginDto.getLoginType()));
         if (null == strategy) {
-            throw new AuthException(AuthState.UNSUPPORTED_LOGIN_TYPE);
+            throw new ClientException(GlobalErrorDict.UNSUPPORTED_LOGIN_TYPE);
         }
         if (log.isDebugEnabled()) {
             log.debug("will use {} for request token {}", strategy.getClass().getSimpleName(), loginDto);

@@ -8,8 +8,8 @@ import com.zqqiliyc.admin.dto.UserRegisterDto;
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
-import com.zqqiliyc.common.enums.AuthState;
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.enums.GlobalErrorDict;
+import com.zqqiliyc.common.exception.ClientException;
 import com.zqqiliyc.common.generate.VirtualPhoneGenerator;
 import com.zqqiliyc.common.security.PasswordEncoder;
 import com.zqqiliyc.common.strategy.VerificationCodeService;
@@ -62,7 +62,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      *
      * @param userRegisterDto 注册请求数据传输对象
      * @return 返回注册结果封装对象 {@link RegisterResult}
-     * @throws AuthException 如果注册失败，如参数不合法或验证失败
+     * @throws ClientException 如果注册失败，如参数不合法或验证失败
      */
     @Override
     public void register(UserRegisterDto userRegisterDto) {
@@ -90,7 +90,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * 包括：邮箱格式、密码长度、非空判断等
      *
      * @param userRegisterDto 注册请求数据
-     * @throws AuthException 参数非法时抛出
+     * @throws ClientException 参数非法时抛出
      */
     private void validateRegisterDto(UserRegisterDto userRegisterDto) {
         String email = userRegisterDto.getEmail();
@@ -99,23 +99,23 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
         // 邮箱非空 + 格式正确
         if (StrUtil.isBlank(email)) {
             log.warn("{}邮箱为空", LOG_PREFIX);
-            throw new AuthException(AuthState.INVALID_EMAIL_FORMAT);
+            throw new ClientException(GlobalErrorDict.INVALID_EMAIL_FORMAT);
         }
         if (!Validator.isEmail(email)) {
             log.warn("{}邮箱格式不正确: {}", LOG_PREFIX, email);
-            throw new AuthException(AuthState.INVALID_EMAIL_FORMAT);
+            throw new ClientException(GlobalErrorDict.INVALID_EMAIL_FORMAT);
         }
 
         // 密码非空
         if (StrUtil.isBlank(password)) {
             log.warn("{}密码为空", LOG_PREFIX);
-            throw new AuthException(AuthState.PASSWORD_EMPTY);
+            throw new ClientException(GlobalErrorDict.PASSWORD_EMPTY);
         }
 
         // 密码长度
         if (password.length() < 6) {
             log.warn("{}密码长度小于6位", LOG_PREFIX);
-            throw new AuthException(AuthState.PASSWORD_TOO_SHORT);
+            throw new ClientException(GlobalErrorDict.PASSWORD_TOO_SHORT);
         }
 
         log.debug("{}基础字段校验通过", LOG_PREFIX);
@@ -125,7 +125,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * 检查邮箱、用户名、手机号是否已被注册
      *
      * @param userRegisterDto 注册请求数据
-     * @throws AuthException 如果存在重复字段
+     * @throws ClientException 如果存在重复字段
      */
     private void checkUniqueness(UserRegisterDto userRegisterDto) {
         String email = userRegisterDto.getEmail();
@@ -134,17 +134,17 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
 
         if (iSysUserService.isEmailRegistered(email)) {
             log.warn("{}邮箱已存在: {}", LOG_PREFIX, email);
-            throw new AuthException(AuthState.EMAIL_EXISTS);
+            throw new ClientException(GlobalErrorDict.EMAIL_EXISTS);
         }
 
         if (iSysUserService.isUsernameTaken(username)) {
             log.warn("{}用户名已存在: {}", LOG_PREFIX, username);
-            throw new AuthException(AuthState.USERNAME_EXISTS);
+            throw new ClientException(GlobalErrorDict.USERNAME_EXISTS);
         }
 
         if (iSysUserService.isPhoneBound(phone)) {
             log.warn("{}手机号已存在: {}", LOG_PREFIX, phone);
-            throw new AuthException(AuthState.PHONE_EXISTS);
+            throw new ClientException(GlobalErrorDict.PHONE_EXISTS);
         }
 
         log.debug("{}唯一性校验通过", LOG_PREFIX);
@@ -154,13 +154,13 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * 验证码校验
      *
      * @param userRegisterDto 注册请求数据
-     * @throws AuthException 验证码无效时抛出
+     * @throws ClientException 验证码无效时抛出
      */
     private void verifyCode(UserRegisterDto userRegisterDto) {
         boolean isValid = verificationCodeService.verifyCode(userRegisterDto.getEmail(), userRegisterDto.getCode());
         if (!isValid) {
             log.warn("{}验证码校验失败", LOG_PREFIX);
-            throw new AuthException(AuthState.INVALID_CODE);
+            throw new ClientException(GlobalErrorDict.INVALID_CODE);
         }
 
         log.debug("{}验证码校验通过", LOG_PREFIX);

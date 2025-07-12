@@ -1,21 +1,16 @@
 package com.zqqiliyc.common.web.http;
 
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.exception.ClientException;
 import lombok.extern.slf4j.Slf4j;
-import com.zqqiliyc.common.exception.AuthException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
-import org.springframework.web.ErrorResponseException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -38,9 +33,9 @@ public class GlobalErrorHandler {
         return ApiResult.error(HttpStatus.FORBIDDEN.value(), e.getMessage());
     }
 
-    @ExceptionHandler(AuthException.class)
+    @ExceptionHandler(ClientException.class)
     @ResponseStatus(value = HttpStatus.OK)
-    public ApiResult<?> handleException(AuthException e) {
+    public ApiResult<?> handleException(ClientException e) {
         return ApiResult.error(e.getStatus(), e.getMessage());
     }
 

@@ -1,12 +1,11 @@
 package com.zqqiliyc.admin.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zqqiliyc.admin.RegisterResult;
 import com.zqqiliyc.admin.dto.UserRegisterDto;
 import com.zqqiliyc.admin.service.IRegisterService;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
-import com.zqqiliyc.common.enums.AuthState;
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.enums.GlobalErrorDict;
+import com.zqqiliyc.common.exception.ClientException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,13 +37,13 @@ public class RegisterService implements IRegisterService {
      *
      * @param userRegisterDto 注册信息
      * @return 注册结果
-     * @throws AuthException 如果注册类型为空或不被支持
+     * @throws ClientException 如果注册类型为空或不被支持
      */
     @Override
     public void register(UserRegisterDto userRegisterDto) {
         if (userRegisterDto.getRegisterType() == null) {
             log.warn("{}注册类型为空", LOG_PREFIX);
-            throw new AuthException(AuthState.REGISTER_TYPE_EMPTY);
+            throw new ClientException(GlobalErrorDict.REGISTER_TYPE_EMPTY);
         }
         RegistrationStrategy strategy = CollectionUtil.findOne(
                 registrationStrategyList,
@@ -52,7 +51,7 @@ public class RegisterService implements IRegisterService {
 
         if (null == strategy) {
             log.warn("{}不支持的注册类型: {}", LOG_PREFIX, userRegisterDto.getRegisterType());
-            throw new AuthException(AuthState.UNSUPPORTED_REGISTER_TYPE);
+            throw new ClientException(GlobalErrorDict.UNSUPPORTED_REGISTER_TYPE);
         }
         strategy.register(userRegisterDto);
     }

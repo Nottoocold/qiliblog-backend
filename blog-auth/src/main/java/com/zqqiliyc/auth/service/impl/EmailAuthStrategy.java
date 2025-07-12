@@ -8,8 +8,8 @@ import com.zqqiliyc.auth.enums.LoginType;
 import com.zqqiliyc.auth.service.AuthStrategy;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.auth.token.EmailAuthRequestToken;
-import com.zqqiliyc.common.enums.AuthState;
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.enums.GlobalErrorDict;
+import com.zqqiliyc.common.exception.ClientException;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import io.mybatis.mapper.example.Example;
@@ -42,13 +42,13 @@ public class EmailAuthStrategy implements AuthStrategy {
     public AuthResult authenticate(AuthRequestToken authenticationToken) {
         // 参数校验
         if (!Validator.isEmail(authenticationToken.identifier())) {
-            throw new AuthException(AuthState.PARAM_ERROR, "invalid email");
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "invalid email");
         }
         Example<SysUser> example = new Example<>();
         example.createCriteria().andEqualTo(SysUser::getEmail, authenticationToken.identifier());
         SysUser user = userService.findOne(example);
         if (null == user) {
-            throw new AuthException(AuthState.EMAIL_NOT_EXIST);
+            throw new ClientException(GlobalErrorDict.EMAIL_NOT_EXIST);
         }
         return new AuthResult(IdUtil.fastSimpleUUID(), 3600);
     }

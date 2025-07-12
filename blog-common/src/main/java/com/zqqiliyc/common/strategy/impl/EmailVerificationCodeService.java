@@ -1,8 +1,8 @@
 package com.zqqiliyc.common.strategy.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.common.enums.AuthState;
-import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.enums.GlobalErrorDict;
+import com.zqqiliyc.common.exception.ClientException;
 import com.zqqiliyc.common.strategy.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -59,7 +59,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
             log.info("验证码已发送至邮箱：{}", email);
         } catch (MessagingException | IOException e) {
             log.error("验证码发送失败: {}", e.getMessage(), e);
-            throw new AuthException(AuthState.PARAM_ERROR);
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR);
         }
     }
 
@@ -73,7 +73,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
         String storedCode = redisTemplate.opsForValue().get(getRedisKey(email));
         if (storedCode == null) {
             log.warn("验证码不存在或已过期: {}", email);
-            throw new AuthException(AuthState.INVALID_CODE);
+            throw new ClientException(GlobalErrorDict.INVALID_CODE);
         }
 
         boolean isValid = storedCode.equals(code);

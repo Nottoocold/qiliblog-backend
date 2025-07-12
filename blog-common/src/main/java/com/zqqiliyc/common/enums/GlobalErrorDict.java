@@ -3,11 +3,13 @@ package com.zqqiliyc.common.enums;
 import lombok.Getter;
 
 /**
+ * 全局错误码
+ *
  * @author qili
  * @date 2025-07-01
  */
 @Getter
-public enum AuthState {
+public enum GlobalErrorDict {
     /**
      * 邮箱格式不符/手机号无效/缺少必要参数
      */
@@ -33,7 +35,7 @@ public enum AuthState {
     private final int code;
     private final String message;
 
-    AuthState(int code, String message) {
+    GlobalErrorDict(int code, String message) {
         this.code = code;
         this.message = message;
     }
