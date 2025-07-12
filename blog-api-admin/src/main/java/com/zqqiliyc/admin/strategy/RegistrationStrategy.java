@@ -1,8 +1,8 @@
-package com.zqqiliyc.auth.strategy;
+package com.zqqiliyc.admin.strategy;
 
-import com.zqqiliyc.auth.AuthResult;
-import com.zqqiliyc.auth.dto.RegisterDTO;
-import com.zqqiliyc.auth.enums.RegistrationType;
+import com.zqqiliyc.admin.RegisterResult;
+import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.admin.enums.RegistrationType;
 
 /**
  * 注册策略接口。
@@ -28,10 +28,10 @@ public interface RegistrationStrategy {
     /**
      * 执行注册流程。
      *
-     * @param registerDto 注册请求数据传输对象，封装了用户提交的注册信息
-     * @return 返回注册结果封装对象 {@link AuthResult}
+     * @param userRegisterDto 注册请求数据传输对象，封装了用户提交的注册信息
+     * @return 返回注册结果封装对象 {@link RegisterResult}
      * @throws IllegalArgumentException 如果传入参数非法或业务规则不满足
      */
-    AuthResult register(RegisterDTO registerDto);
+    RegisterResult register(UserRegisterDto userRegisterDto);
 
 }    

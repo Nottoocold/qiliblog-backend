@@ -19,7 +19,7 @@ public class SysUser extends BaseEntityWithDel {
      */
     private String username;
     /**
-     * 密码 sha256加密
+     * 密码 使用passwordEncoder加密
      */
     private String password;
     /**

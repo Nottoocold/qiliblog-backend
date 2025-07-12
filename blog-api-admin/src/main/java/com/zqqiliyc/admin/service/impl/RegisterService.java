@@ -1,10 +1,10 @@
-package com.zqqiliyc.auth.service.impl;
+package com.zqqiliyc.admin.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zqqiliyc.auth.AuthResult;
-import com.zqqiliyc.auth.dto.RegisterDTO;
-import com.zqqiliyc.auth.service.IRegisterService;
-import com.zqqiliyc.auth.strategy.RegistrationStrategy;
+import com.zqqiliyc.admin.RegisterResult;
+import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.admin.service.IRegisterService;
+import com.zqqiliyc.admin.strategy.RegistrationStrategy;
 import com.zqqiliyc.common.enums.AuthState;
 import com.zqqiliyc.common.exception.AuthException;
 import lombok.RequiredArgsConstructor;
@@ -36,24 +36,24 @@ public class RegisterService implements IRegisterService {
      * <p>
      * 查找匹配的注册策略，若未找到则抛出异常
      *
-     * @param registerDto 注册信息
+     * @param userRegisterDto 注册信息
      * @return 注册结果
      * @throws AuthException 如果注册类型为空或不被支持
      */
     @Override
-    public AuthResult register(RegisterDTO registerDto) {
-        if (registerDto.getRegisterType() == null) {
+    public RegisterResult register(UserRegisterDto userRegisterDto) {
+        if (userRegisterDto.getRegisterType() == null) {
             log.warn("{}注册类型为空", LOG_PREFIX);
             throw new AuthException(AuthState.REGISTER_TYPE_EMPTY);
         }
         RegistrationStrategy strategy = CollectionUtil.findOne(
                 registrationStrategyList,
-                s -> s.support(registerDto.getRegisterType()));
+                s -> s.support(userRegisterDto.getRegisterType()));
 
         if (null == strategy) {
-            log.warn("{}不支持的注册类型: {}", LOG_PREFIX, registerDto.getRegisterType());
+            log.warn("{}不支持的注册类型: {}", LOG_PREFIX, userRegisterDto.getRegisterType());
             throw new AuthException(AuthState.UNSUPPORTED_REGISTER_TYPE);
         }
-        return strategy.register(registerDto);
+        return strategy.register(userRegisterDto);
     }
 }

@@ -1,4 +1,4 @@
-package com.zqqiliyc.auth.dto;
+package com.zqqiliyc.admin.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.Data;
  * @datetime 2025-07-01 18:18
  */
 @Data
-public class EmailDTO {
+public class EmailDto {
 
     /**
      * 用户的电子邮箱地址。

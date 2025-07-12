@@ -1,8 +1,8 @@
-package com.zqqiliyc.auth.controller;
+package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.auth.dto.EmailDTO;
-import com.zqqiliyc.auth.dto.RegisterDTO;
-import com.zqqiliyc.auth.service.IRegisterService;
+import com.zqqiliyc.admin.dto.EmailDto;
+import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.admin.service.IRegisterService;
 import com.zqqiliyc.common.constant.WebApiConstants;
 import com.zqqiliyc.common.strategy.VerificationCodeService;
 import com.zqqiliyc.common.web.http.ApiResult;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(WebApiConstants.API_AUTH_PREFIX + "/register")
+@RequestMapping(WebApiConstants.API_ADMIN_PREFIX + "/register")
 public class RegisterController {
 
     private final IRegisterService registerService;
@@ -38,7 +38,7 @@ public class RegisterController {
      * @return 返回一个ApiResult对象，包含操作结果的成功信息
      */
     @PostMapping("/send-code")
-    public ApiResult<String> sendVerificationCode(@Valid @RequestBody EmailDTO emailDTO) {
+    public ApiResult<String> sendVerificationCode(@Valid @RequestBody EmailDto emailDTO) {
         verificationCodeService.generateAndSendCode(emailDTO.getEmail());
         return ApiResult.success("验证码已发送，请查收您的邮箱");
     }
@@ -48,12 +48,12 @@ public class RegisterController {
      * <p>
      * 处理用户注册请求
      *
-     * @param registerDto 用户注册信息的数据传输对象，包含了用户注册所需的信息
+     * @param userRegisterDto 用户注册信息的数据传输对象，包含了用户注册所需的信息
      * @return 返回一个ApiResult对象，包含了注册操作的结果信息
      */
     @PostMapping
-    public ApiResult<?> register(@Valid @RequestBody RegisterDTO registerDto) {
-        return ApiResult.success(registerService.register(registerDto));
+    public ApiResult<?> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+        return ApiResult.success(registerService.register(userRegisterDto));
     }
 
 }

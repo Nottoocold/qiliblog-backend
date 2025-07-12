@@ -6,8 +6,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author qili
- * @date 2025-06-03
+ * 用户创建数据传输对象（DTO）
+ *
+ * <p>用于接收业务层传递的用户创建请求参数</p>
+ *
+ * <h3>字段说明：</h3>
+ * <ul>
+ *     <li>{@link #username}：登录用户名，必须唯一</li>
+ *     <li>{@link #password}：密码，建议已加密形式传入（如 SHA256 加密） </li>
+ *     <li>{@link #nickname}：用户昵称，可选</li>
+ *     <li>{@link #state}：用户状态，0:正常，1:禁用</li>
+ *     <li>{@link #email}：邮箱地址，可用于找回密码</li>
+ *     <li>{@link #phone}：手机号码，可选</li>
+ *     <li>{@link #avatar}：头像图片 URL 地址，可选</li>
+ *     <li>{@link #deptId}：所属部门 ID，系统内部标识</li>
+ * </ul>
+ *
+ * @author hallo
+ * @datetime 2025-07-01 19:00
  */
 @Getter
 @Setter

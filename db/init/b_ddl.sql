@@ -33,7 +33,7 @@ CREATE TABLE sys_user
 (
     id          BIGINT PRIMARY KEY COMMENT '主键ID',
     username    VARCHAR(255) NOT NULL COMMENT '用户名 登录名',
-    password    VARCHAR(255) NOT NULL COMMENT '密码 sha256加密',
+    password    VARCHAR(255) NOT NULL COMMENT '密码 加密',
     nickname    VARCHAR(255) COMMENT '昵称',
     state       INT       DEFAULT 0 COMMENT '状态 0:正常 1:禁用',
     email       VARCHAR(255) COMMENT '邮箱',

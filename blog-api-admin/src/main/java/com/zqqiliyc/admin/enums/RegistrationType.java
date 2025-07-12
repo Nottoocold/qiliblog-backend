@@ -1,4 +1,4 @@
-package com.zqqiliyc.auth.enums;
+package com.zqqiliyc.admin.enums;
 
 import lombok.Getter;
 
