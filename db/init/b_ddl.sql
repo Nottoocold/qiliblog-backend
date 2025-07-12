@@ -1,3 +1,5 @@
+USE `qiliblog`;
+
 DROP TABLE IF EXISTS sys_role;
 CREATE TABLE sys_role
 (
