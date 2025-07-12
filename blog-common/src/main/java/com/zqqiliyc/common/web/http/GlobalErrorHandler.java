@@ -44,18 +44,6 @@ public class GlobalErrorHandler {
         return ApiResult.error(e.getStatus(), e.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ApiResult<?> handleException(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .toList();
-        log.warn("参数校验失败: {}", errors);
-        return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errors.toString());
-    }
-
     // 处理数据校验异常（如 @Valid 失败）
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -65,12 +53,6 @@ public class GlobalErrorHandler {
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
-    }
-
-    @ExceptionHandler(AuthException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResult<?> handleAuthException(AuthException e) {
-        return ApiResult.error(e.getStatus(), e.getMessage());
     }
 
 }

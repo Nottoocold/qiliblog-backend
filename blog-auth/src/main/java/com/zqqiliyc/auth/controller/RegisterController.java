@@ -3,8 +3,8 @@ package com.zqqiliyc.auth.controller;
 import com.zqqiliyc.auth.dto.EmailDTO;
 import com.zqqiliyc.auth.dto.RegisterDTO;
 import com.zqqiliyc.auth.service.IRegisterService;
-import com.zqqiliyc.auth.strategy.VerificationCodeService;
 import com.zqqiliyc.common.constant.WebApiConstants;
+import com.zqqiliyc.common.strategy.VerificationCodeService;
 import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class RegisterController {
      * @param registerDto 用户注册信息的数据传输对象，包含了用户注册所需的信息
      * @return 返回一个ApiResult对象，包含了注册操作的结果信息
      */
-    @PostMapping("/register")
+    @PostMapping
     public ApiResult<?> register(@Valid @RequestBody RegisterDTO registerDto) {
         return ApiResult.success(registerService.register(registerDto));
     }

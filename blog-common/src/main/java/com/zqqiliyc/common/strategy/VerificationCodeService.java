@@ -1,4 +1,4 @@
-package com.zqqiliyc.auth.strategy;
+package com.zqqiliyc.common.strategy;
 
 /**
  * 验证码服务接口

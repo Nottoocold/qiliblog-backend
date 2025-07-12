@@ -1,9 +1,9 @@
-package com.zqqiliyc.auth.strategy.impl;
+package com.zqqiliyc.common.strategy.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.auth.strategy.VerificationCodeService;
-import com.zqqiliyc.common.exception.AuthException;
 import com.zqqiliyc.common.enums.AuthState;
+import com.zqqiliyc.common.exception.AuthException;
+import com.zqqiliyc.common.strategy.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
