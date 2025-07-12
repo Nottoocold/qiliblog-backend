@@ -4,6 +4,40 @@ spring:
     password: qiliblog001
     url: jdbc:mysql://localhost:3306/qiliblog?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
 
+
+  mail:
+    protocol: smtps
+    host: smtp.163.com
+    port: 465
+    username:  # 邮箱
+    password:  # 授权码
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password:
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8   # 最大连接数
+          max-idle: 4     # 最大空闲连接
+          min-idle: 1     # 最小空闲连接
+          max-wait: 2000ms # 获取连接最大等待时间
+
+# 验证码基本配置
+verification:
+  code-length: 4
+  expiration-minutes: 5
+  template-path: classpath:email/verify.html
+
 logging:
   level:
     com.zqqiliyc: debug
