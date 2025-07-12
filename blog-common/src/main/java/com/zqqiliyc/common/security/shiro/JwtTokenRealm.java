@@ -53,6 +53,6 @@ public class JwtTokenRealm extends AuthorizingRealm {
         }
         log.info("get authentication info, jwt token valid.");
         // jwt token 没有密码
-        return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), null, getName());
+        return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), bearerToken.getCredentials(), getName());
     }
 }
