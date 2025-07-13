@@ -136,7 +136,7 @@ CREATE TABLE `sys_token`
 (
     `id`                 bigint               NOT NULL COMMENT '主键ID',
     `access_token`       varchar(512)         NOT NULL COMMENT '访问令牌字符串',
-    `refresh_token`      varchar(512)         NOT NULL COMMENT '刷新令牌字符串',
+    `refresh_token`      varchar(512) COMMENT '刷新令牌字符串',
     `token_style`        enum ('JWT', 'UUID') NOT NULL COMMENT '令牌风格',
     `user_id`            bigint               NOT NULL COMMENT '关联用户ID',
     `issued_at`          datetime             NOT NULL COMMENT '颁发时间',

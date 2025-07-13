@@ -1,5 +1,6 @@
 package com.zqqiliyc.auth.controller;
 
+import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.service.ILoginService;
 import com.zqqiliyc.common.constant.WebApiConstants;
@@ -24,7 +25,7 @@ public class LoginController {
     private final ILoginService loginService;
 
     @PostMapping
-    public ApiResult<?> login(@Valid @RequestBody LoginDto loginDto) {
+    public ApiResult<AuthResult> login(@Valid @RequestBody LoginDto loginDto) {
         return ApiResult.success(loginService.login(loginDto));
     }
 }

@@ -1,7 +1,7 @@
 package com.zqqiliyc.auth.service.impl;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Validator;
-import cn.hutool.core.util.IdUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.enums.LoginType;
@@ -10,10 +10,15 @@ import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.auth.token.EmailAuthRequestToken;
 import com.zqqiliyc.common.enums.GlobalErrorDict;
 import com.zqqiliyc.common.exception.ClientException;
+import com.zqqiliyc.common.security.PasswordEncoder;
+import com.zqqiliyc.common.token.TokenBean;
+import com.zqqiliyc.common.token.TokenProvider;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import io.mybatis.mapper.example.Example;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author qili
@@ -21,11 +26,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EmailAuthStrategy implements AuthStrategy {
-
     private final ISysUserService userService;
+    private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmailAuthStrategy(ISysUserService userService) {
+    public EmailAuthStrategy(ISysUserService userService,
+                             TokenProvider tokenProvider,
+                             PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.tokenProvider = tokenProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -50,6 +60,11 @@ public class EmailAuthStrategy implements AuthStrategy {
         if (null == user) {
             throw new ClientException(GlobalErrorDict.EMAIL_NOT_EXIST);
         }
-        return new AuthResult(IdUtil.fastSimpleUUID(), 3600);
+        if (!passwordEncoder.matches(authenticationToken.credential(), user.getPassword())) {
+            throw new ClientException(GlobalErrorDict.PASSWORD_ERROR);
+        }
+        TokenBean token = tokenProvider.generateToken(user.getId(), Map.of("roles", "user,dev"));
+        long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
+        return new AuthResult(token.getAccessToken(), seconds);
     }
 }
