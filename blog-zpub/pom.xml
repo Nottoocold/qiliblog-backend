@@ -36,85 +36,75 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Actuator -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>1.11.4</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <finalName>qiliblog-server-${project.version}</finalName>
         <plugins>
-            <!-- 1. 首先正常打包包含依赖的Fat JAR -->
+            <!-- 1. 轻量级打包,仅将项目自己的jar打包到启动jar里 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-api-admin</artifactId>
+                        </include>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-auth</artifactId>
+                        </include>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-common</artifactId>
+                        </include>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-domain</artifactId>
+                        </include>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-repository</artifactId>
+                        </include>
+                        <include>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>blog-service</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>package-with-dependencies</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                        <configuration>
-                            <classifier>full</classifier> <!-- 带依赖的包后缀 -->
-                        </configuration>
-                    </execution>
-
-                    <!-- 2. 增加不包含依赖的打包 -->
-                    <execution>
-                        <id>package-without-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip> <!-- 跳过默认打包 -->
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- 3. 生成单独的依赖JAR -->
+            <!--拷贝依赖到jar外面的lib目录-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>copy</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/jarLibs</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
+                            <!--指定的依赖路径-->
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <!--依赖的类型-->
                             <includeScope>runtime</includeScope>
+                            <!--排除依赖-->
+                            <excludeGroupIds>${project.groupId}</excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>jarLibs/</classpathPrefix>
-                            <mainClass>com.zqqiliyc.BlogApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
             </plugin>
         </plugins>
     </build>
