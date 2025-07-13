@@ -1,8 +1,5 @@
-package com.zqqiliyc.common.config;
+package com.zqqiliyc.auth.config.shiro;
 
-import com.zqqiliyc.common.security.shiro.JwtTokenFilter;
-import com.zqqiliyc.common.security.shiro.JwtTokenRealm;
-import com.zqqiliyc.common.utils.JwtUtils;
 import jakarta.servlet.Filter;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +10,9 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Role;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,23 +24,13 @@ import java.util.Map;
  */
 @Setter
 @Getter
-@Configuration(proxyBeanMethods = false)
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+@Configuration
 @ConfigurationProperties(prefix = "qiliblog.security")
 public class ShiroConfig {
-
     private List<String> allowedUrls;
-
-    // 自定义Realm
-    @Bean
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-    public Realm jwtTokenRealm(JwtUtils jwtUtils) {
-        return new JwtTokenRealm(jwtUtils);
-    }
 
     // 安全管理器
     @Bean
-    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public DefaultWebSecurityManager securityManager(List<Realm> realms) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         manager.setRealms(realms);

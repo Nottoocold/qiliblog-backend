@@ -48,6 +48,8 @@ server:
     include-message: never
 
 qiliblog:
+  token:
+    style: JWT # token风格
   security:
     jwt:
       secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥

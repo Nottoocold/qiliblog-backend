@@ -1,14 +1,14 @@
-package com.zqqiliyc.common.security.shiro;
+package com.zqqiliyc.auth.config.shiro;
 
-import com.zqqiliyc.common.utils.JwtUtils;
+import com.zqqiliyc.common.token.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -18,13 +18,10 @@ import java.util.Set;
  * @date 2025-06-28
  */
 @Slf4j
+@Component
 public class JwtTokenRealm extends AuthorizingRealm {
-    private final JwtUtils jwtUtils;
-
-    public JwtTokenRealm(JwtUtils jwtUtils) {
-        super();
-        this.jwtUtils = jwtUtils;
-    }
+    @Autowired @Lazy
+    private TokenProvider tokenProvider;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -48,7 +45,7 @@ public class JwtTokenRealm extends AuthorizingRealm {
         if (bearerToken.getToken() == null) {
             throw new AuthenticationException("token is null");
         }
-        if (!jwtUtils.verify(bearerToken.getToken())) {
+        if (!tokenProvider.validateToken(bearerToken.getToken())) {
             throw new AuthenticationException("token is invalid");
         }
         log.info("get authentication info, jwt token valid.");
