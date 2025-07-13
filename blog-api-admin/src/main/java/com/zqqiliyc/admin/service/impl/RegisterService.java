@@ -17,8 +17,7 @@ import java.util.List;
  *
  * @author hallo
  * @datetime 2025-07-01 11:34
- * @description
- *     提供统一的注册入口，支持多种注册方式（如手机号、邮箱、第三方）。
+ * @description 提供统一的注册入口，支持多种注册方式（如手机号、邮箱、第三方）。
  */
 @Slf4j
 @Service
@@ -41,10 +40,6 @@ public class RegisterService implements IRegisterService {
      */
     @Override
     public void register(UserRegisterDto userRegisterDto) {
-        if (userRegisterDto.getRegisterType() == null) {
-            log.warn("{}注册类型为空", LOG_PREFIX);
-            throw new ClientException(GlobalErrorDict.REGISTER_TYPE_EMPTY);
-        }
         RegistrationStrategy strategy = CollectionUtil.findOne(
                 registrationStrategyList,
                 s -> s.support(userRegisterDto.getRegisterType()));

@@ -22,9 +22,4 @@ public class ClientException extends RuntimeException {
         super(message);
         this.status = globalErrorDict.getCode();
     }
-
-    public ClientException(int status, String message) {
-        super(message);
-        this.status = status;
-    }
 }

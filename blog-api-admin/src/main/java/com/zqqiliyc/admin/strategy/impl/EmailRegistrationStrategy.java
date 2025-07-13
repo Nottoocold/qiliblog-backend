@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.admin.dto.UserRegisterDto;
 import com.zqqiliyc.admin.dto.UserCreateDto;
+import com.zqqiliyc.admin.dto.UserRegisterDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
 import com.zqqiliyc.common.enums.GlobalErrorDict;
@@ -94,31 +94,18 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      */
     private void validateRegisterDto(UserRegisterDto userRegisterDto) {
         String email = userRegisterDto.getEmail();
-        String password = userRegisterDto.getPassword();
 
         // 邮箱非空 + 格式正确
         if (StrUtil.isBlank(email)) {
-            log.warn("{}邮箱为空", LOG_PREFIX);
-            throw new ClientException(GlobalErrorDict.INVALID_EMAIL_FORMAT);
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "邮箱不能为空");
         }
         if (!Validator.isEmail(email)) {
-            log.warn("{}邮箱格式不正确: {}", LOG_PREFIX, email);
-            throw new ClientException(GlobalErrorDict.INVALID_EMAIL_FORMAT);
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "邮箱格式不正确");
         }
 
-        // 密码非空
-        if (StrUtil.isBlank(password)) {
-            log.warn("{}密码为空", LOG_PREFIX);
-            throw new ClientException(GlobalErrorDict.PASSWORD_EMPTY);
+        if (log.isDebugEnabled()) {
+            log.debug("{}基础字段校验通过", LOG_PREFIX);
         }
-
-        // 密码长度
-        if (password.length() < 6) {
-            log.warn("{}密码长度小于6位", LOG_PREFIX);
-            throw new ClientException(GlobalErrorDict.PASSWORD_TOO_SHORT);
-        }
-
-        log.debug("{}基础字段校验通过", LOG_PREFIX);
     }
 
     /**

@@ -52,13 +52,13 @@ public class EmailAuthStrategy implements AuthStrategy {
     public AuthResult authenticate(AuthRequestToken authenticationToken) {
         // 参数校验
         if (!Validator.isEmail(authenticationToken.identifier())) {
-            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "invalid email");
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "邮箱不合法");
         }
         Example<SysUser> example = new Example<>();
         example.createCriteria().andEqualTo(SysUser::getEmail, authenticationToken.identifier());
         SysUser user = userService.findOne(example);
         if (null == user) {
-            throw new ClientException(GlobalErrorDict.EMAIL_NOT_EXIST);
+            throw new ClientException(GlobalErrorDict.IDENTIFIER_NOT_EXIST, "邮箱不存在");
         }
         if (!passwordEncoder.matches(authenticationToken.credential(), user.getPassword())) {
             throw new ClientException(GlobalErrorDict.PASSWORD_ERROR);
