@@ -3,6 +3,7 @@ package com.zqqiliyc.common.strategy.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.common.enums.GlobalErrorDict;
 import com.zqqiliyc.common.exception.ClientException;
+import com.zqqiliyc.common.redis.RedisHandler;
 import com.zqqiliyc.common.strategy.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 基于邮件 + Redis 的验证码服务实现
@@ -47,7 +48,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
     private final ResourceLoader resourceLoader;
     private final JavaMailSender mailSender;
-    private final StringRedisTemplate redisTemplate;
+    private final RedisHandler redisHandler;
 
     @Override
     public void generateAndSendCode(String email) {
@@ -70,7 +71,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
             return true;
         }
 
-        String storedCode = redisTemplate.opsForValue().get(getRedisKey(email));
+        String storedCode = (String) redisHandler.get(getRedisKey(email));
         if (storedCode == null) {
             log.warn("验证码不存在或已过期: {}", email);
             throw new ClientException(GlobalErrorDict.INVALID_CODE);
@@ -78,7 +79,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
         boolean isValid = storedCode.equals(code);
         if (isValid) {
-            redisTemplate.delete(getRedisKey(email));
+            redisHandler.del(getRedisKey(email));
             log.info("验证码验证通过: {}", email);
         } else {
             log.warn("验证码验证失败: {}", email);
@@ -95,7 +96,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
     private void saveCodeToRedis(String email, String code) {
         String key = getRedisKey(email);
-        redisTemplate.opsForValue().set(key, code, Duration.ofMinutes(expirationMinutes));
+        redisHandler.set(key, code, Duration.of(expirationMinutes, ChronoUnit.MINUTES).toSeconds());
         log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);
     }
 
@@ -106,9 +107,9 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * 它使用Spring框架的MailSender接口和MimeMessageHelper类来创建和发送邮件
      *
      * @param email 收件人的电子邮件地址
-     * @param code 验证码，作为邮件内容的一部分
+     * @param code  验证码，作为邮件内容的一部分
      * @throws MessagingException 如果邮件创建或发送过程中发生错误
-     * @throws IOException 如果读取邮件模板时发生错误
+     * @throws IOException        如果读取邮件模板时发生错误
      */
     private void sendVerificationEmail(String email, String code) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -130,7 +131,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * 该方法用于加载一个验证模板，并将代码和过期时间插入到模板中的相应位置
      * 主要用途是生成验证邮件或短信的内容
      *
-     * @param code      验证码，用于用户身份验证的一次性代码
+     * @param code       验证码，用于用户身份验证的一次性代码
      * @param expiration 过期时间，验证码的有效时间（单位：分钟）
      * @return 替换后的模板字符串，包含验证码和过期时间
      * @throws IOException 如果无法读取模板文件，则抛出IOException
