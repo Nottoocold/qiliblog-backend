@@ -18,6 +18,11 @@ spring:
     time-zone: Asia/Shanghai # 时区
     date-format: yyyy-MM-dd HH:mm:ss # 日期格式
     default-property-inclusion: non_null # 属性为null时不输出
+    serialization:
+      write-dates-as-timestamps: false # 不使用时间戳
+      fail-on-empty-beans: false # 序列化没有属性的对象时不报错
+    deserialization:
+      fail-on-unknown-properties: false # 反序列化时允许未知属性
 
 
 mybatis:
@@ -63,3 +68,4 @@ qiliblog:
       - /api/auth/**
       - /api/admin/register/**
       - /api/public/**
+      - /api/test/**

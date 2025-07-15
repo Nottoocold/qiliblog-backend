@@ -2,7 +2,7 @@ package com.zqqiliyc.auth.config.shiro;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import com.zqqiliyc.common.json.JsonHelper;
 import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -26,6 +26,10 @@ import java.io.IOException;
 public class JwtTokenFilter extends AuthenticatingFilter {
     protected static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER = "Bearer";
+    private final JsonHelper jsonHelper;
+    public JwtTokenFilter(JsonHelper jsonHelper) {
+        this.jsonHelper = jsonHelper;
+    }
 
     // 1
     @Override
@@ -73,10 +77,10 @@ public class JwtTokenFilter extends AuthenticatingFilter {
         HttpServletResponse resp = WebUtils.getNativeResponse(response, HttpServletResponse.class);
         resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         resp.setContentType("application/json;charset=utf-8");
-        ApiResult<Object> result = ApiResult.error(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+        ApiResult<?> result = ApiResult.error(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         try {
-            IoUtil.writeUtf8(resp.getOutputStream(), false, JSONUtil.toJsonStr(result));
-        } catch (IOException ex) {
+            jsonHelper.toJson(result, resp.getOutputStream());
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
         return false;

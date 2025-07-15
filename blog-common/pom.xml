@@ -99,10 +99,18 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-jwt</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>cn.hutool</groupId>
+                    <artifactId>hutool-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <!-- hutool json工具包，本项目不使用，这里只是给jwt使用 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-json</artifactId>
+            <optional>true</optional>
         </dependency>
         <!-- 测试 -->
         <dependency>
