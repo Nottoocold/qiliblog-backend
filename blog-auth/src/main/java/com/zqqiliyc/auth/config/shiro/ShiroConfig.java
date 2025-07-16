@@ -1,6 +1,5 @@
 package com.zqqiliyc.auth.config.shiro;
 
-import com.zqqiliyc.common.json.JsonHelper;
 import jakarta.servlet.Filter;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,6 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +28,6 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "qiliblog.security")
 public class ShiroConfig {
     private List<String> allowedUrls;
-    @Autowired
-    private JsonHelper jsonHelper;
 
     // 安全管理器
     @Bean
@@ -57,7 +53,7 @@ public class ShiroConfig {
 
         // 自定义过滤器
         Map<String, Filter> filters = factoryBean.getFilters();
-        filters.put("authJWT", new JwtTokenFilter(jsonHelper));
+        filters.put("authJWT", new JwtTokenFilter());
         factoryBean.setFilters(filters);
 
         // 配置过滤链规则

@@ -24,8 +24,6 @@ import java.util.Objects;
 @RequestMapping("/api/test")
 @Profile("dev")
 public class TestController {
-    @Autowired
-    private JsonHelper jsonHelper;
 
     @GetMapping("/json")
     public ApiResult<?> testJson() {
@@ -34,7 +32,7 @@ public class TestController {
 
     @GetMapping("/jsonhelper")
     public ApiResult<?> testJsonhelper() {
-        System.out.println(jsonHelper.toJson(getBean()));
+        System.out.println(JsonHelper.toJson(getBean()));
         return ApiResult.success(getBean());
     }
 

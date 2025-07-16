@@ -1,6 +1,5 @@
 package com.zqqiliyc.auth.config.shiro;
 
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.common.json.JsonHelper;
 import com.zqqiliyc.common.web.http.ApiResult;
@@ -16,8 +15,6 @@ import org.apache.shiro.authc.BearerToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.springframework.web.util.WebUtils;
 
-import java.io.IOException;
-
 /**
  * @author qili
  * @date 2025-06-28
@@ -26,10 +23,6 @@ import java.io.IOException;
 public class JwtTokenFilter extends AuthenticatingFilter {
     protected static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER = "Bearer";
-    private final JsonHelper jsonHelper;
-    public JwtTokenFilter(JsonHelper jsonHelper) {
-        this.jsonHelper = jsonHelper;
-    }
 
     // 1
     @Override
@@ -79,7 +72,7 @@ public class JwtTokenFilter extends AuthenticatingFilter {
         resp.setContentType("application/json;charset=utf-8");
         ApiResult<?> result = ApiResult.error(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         try {
-            jsonHelper.toJson(result, resp.getOutputStream());
+            JsonHelper.toJson(result, resp.getOutputStream());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
