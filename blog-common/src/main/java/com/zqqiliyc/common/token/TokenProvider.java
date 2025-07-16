@@ -47,4 +47,11 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Environme
      * @return true if valid, false otherwise
      */
     boolean validateToken(String accessToken);
+
+    /**
+     * Get claims from token
+     * @param accessToken accessToken
+     * @return claims
+     */
+    Map<String, Object> getClaims(String accessToken);
 }

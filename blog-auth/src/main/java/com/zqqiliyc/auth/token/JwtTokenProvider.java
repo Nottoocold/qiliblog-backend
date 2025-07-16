@@ -77,4 +77,9 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         SysToken token = tokenService.findOne(example);
         return null != token && token.getRevoked() == 0;
     }
+
+    @Override
+    public Map<String, Object> getClaims(String accessToken) {
+        return JWT.of(accessToken).setKey(Base64.decode(secret)).getPayloads();
+    }
 }
