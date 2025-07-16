@@ -29,9 +29,6 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(valueSerializer);
         redisTemplate.setHashValueSerializer(valueSerializer);
         redisTemplate.afterPropertiesSet();
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set("test", "test");
-        String value = (String) valueOperations.get("test");
         return redisTemplate;
     }
 }
