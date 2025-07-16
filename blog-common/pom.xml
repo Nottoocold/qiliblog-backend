@@ -110,7 +110,6 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-json</artifactId>
-            <optional>true</optional>
         </dependency>
         <!-- 测试 -->
         <dependency>
