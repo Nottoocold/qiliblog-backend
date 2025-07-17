@@ -3,7 +3,7 @@ package com.zqqiliyc.auth.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
-import com.zqqiliyc.auth.service.AuthStrategy;
+import com.zqqiliyc.auth.strategy.AuthStrategy;
 import com.zqqiliyc.auth.service.ILoginService;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.common.enums.GlobalErrorDict;

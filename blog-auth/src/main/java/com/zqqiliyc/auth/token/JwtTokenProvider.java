@@ -31,9 +31,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
     private String secret;
     @Value("${qiliblog.security.jwt.expire}")
     private long expiration;
-
     private String[] profiles;
-
     @Autowired @Lazy
     private ISysTokenService tokenService;
 

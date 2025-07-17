@@ -1,4 +1,4 @@
-package com.zqqiliyc.auth.service;
+package com.zqqiliyc.auth.strategy;
 
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
