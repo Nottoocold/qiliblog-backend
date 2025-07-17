@@ -5,13 +5,13 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import com.zqqiliyc.common.config.prop.TokenProperties;
 import com.zqqiliyc.common.token.AbstractTokenProvider;
 import com.zqqiliyc.common.token.TokenBean;
 import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.service.ISysTokenService;
 import io.mybatis.mapper.example.Example;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
@@ -27,18 +27,19 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty(prefix = "qiliblog.token", name = "style", havingValue = "JWT")
 public class JwtTokenProvider extends AbstractTokenProvider {
-    @Value("${qiliblog.security.jwt.secret}")
     private String secret;
-    @Value("${qiliblog.security.jwt.expire}")
     private long expiration;
     private String[] profiles;
+    @Autowired
+    private TokenProperties tokenProperties;
     @Autowired @Lazy
     private ISysTokenService tokenService;
 
     @Override
     protected void init(Environment environment) {
         profiles = environment.getActiveProfiles();
-        expiration = Math.max(expiration, 0);
+        secret = tokenProperties.getSecret();
+        expiration = Math.max(tokenProperties.getExpire(), 0);
         Assert.notBlank(secret, "JWT secret must be provided");
         Assert.isTrue(expiration > 0, "JWT expire must be greater than zero");
     }

@@ -32,12 +32,6 @@ spring:
           min-idle: 1     # 最小空闲连接
           max-wait: 2000ms # 获取连接最大等待时间
 
-# 验证码基本配置
-verification:
-  code-length: 4
-  expiration-minutes: 5
-  template-path: classpath:email/verify.html
-
 logging:
   level:
     com.zqqiliyc: debug

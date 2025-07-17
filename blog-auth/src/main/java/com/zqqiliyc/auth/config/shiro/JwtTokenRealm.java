@@ -1,7 +1,11 @@
 package com.zqqiliyc.auth.config.shiro;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
+import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.common.token.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,7 +17,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Role;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author qili
@@ -23,12 +30,10 @@ import java.util.Set;
 @Component
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class JwtTokenRealm extends AuthorizingRealm {
-    private TokenProvider tokenProvider;
-
     @Autowired @Lazy
-    public void setTokenProvider(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
+    private TokenProvider tokenProvider;
+    @Autowired @Lazy
+    private AuthManager authManager;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -39,10 +44,18 @@ public class JwtTokenRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String bearerToken = (String) principals.getPrimaryPrincipal();
+        Map<String, Object> claims = tokenProvider.getClaims(bearerToken);
+        long userId = Convert.toLong(claims.get("sub"));
+        Set<String> roles = Arrays.stream(StrUtil.splitToArray(String.valueOf(claims.get("roles")), ","))
+                .filter(StrUtil::isNotBlank)
+                .collect(Collectors.toUnmodifiableSet());
+        Set<String> permissions = authManager.getPermissions(userId);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.setRoles(Set.of("admin"));
-        authorizationInfo.setStringPermissions(Set.of("user:read"));
-        log.info("get authorization info: {}", authorizationInfo);
+        authorizationInfo.setRoles(roles);
+        if (log.isDebugEnabled()) {
+            log.debug("get authorization info, roles: {}", roles);
+            log.debug("get authorization info, permissions: {}", permissions.size());
+        }
         return authorizationInfo;
     }
 

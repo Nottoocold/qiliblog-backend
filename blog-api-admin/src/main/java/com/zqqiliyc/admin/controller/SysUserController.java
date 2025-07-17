@@ -10,6 +10,7 @@ import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,7 +31,7 @@ public class SysUserController {
     }
 
     @PostMapping
-    @RequiresPermissions("sys:user:create")
+    @RequiresRoles("admin")
     public ApiResult<SysUser> create(@RequestBody UserCreateDto dto) {
         return ApiResult.success(userService.create(dto));
     }

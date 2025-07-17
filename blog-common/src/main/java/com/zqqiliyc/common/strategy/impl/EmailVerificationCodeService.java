@@ -1,6 +1,7 @@
 package com.zqqiliyc.common.strategy.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.zqqiliyc.common.config.prop.VerificationProperties;
 import com.zqqiliyc.common.enums.GlobalErrorDict;
 import com.zqqiliyc.common.exception.ClientException;
 import com.zqqiliyc.common.redis.RedisHandler;
@@ -33,19 +34,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationCodeService implements VerificationCodeService {
-
-    @Value("${spring.mail.username}")
-    private String senderEmail;
-
-    @Value("${verification.template-path}")
-    private String templatePath;
-
-    @Value("${verification.expiration-minutes}")
-    private int expirationMinutes;
-
-    @Value("${verification.code-length}")
-    private int codeLength;
-
+    private final VerificationProperties verificationProperties;
     private final ResourceLoader resourceLoader;
     private final JavaMailSender mailSender;
     private final RedisHandler redisHandler;
@@ -89,14 +78,15 @@ public class EmailVerificationCodeService implements VerificationCodeService {
     }
 
     private String generateRandomCode() {
-        String code = RandomUtil.randomNumbers(codeLength);
+        String code = RandomUtil.randomNumbers(verificationProperties.getCodeLength());
         log.debug("生成的验证码为：{}", code);
         return code;
     }
 
     private void saveCodeToRedis(String email, String code) {
         String key = getRedisKey(email);
-        redisHandler.set(key, code, Duration.of(expirationMinutes, ChronoUnit.MINUTES).toSeconds());
+        redisHandler.set(key, code, Duration.of(verificationProperties.getExpirationMinutes(),
+                ChronoUnit.MINUTES).toSeconds());
         log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);
     }
 
@@ -115,11 +105,11 @@ public class EmailVerificationCodeService implements VerificationCodeService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setFrom(senderEmail);
+        helper.setFrom(verificationProperties.getUsername());
         helper.setTo(email);
         helper.setSubject("一次性验证码");
 
-        String content = loadVerificationTemplate(code, expirationMinutes);
+        String content = loadVerificationTemplate(code, verificationProperties.getExpirationMinutes());
         helper.setText(content, true);
 
         mailSender.send(message);
@@ -137,7 +127,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * @throws IOException 如果无法读取模板文件，则抛出IOException
      */
     private String loadVerificationTemplate(String code, int expiration) throws IOException {
-        Resource resource = resourceLoader.getResource(templatePath);
+        Resource resource = resourceLoader.getResource(verificationProperties.getTemplatePath());
         String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
         return template
                 .replace("{{code}}", code)

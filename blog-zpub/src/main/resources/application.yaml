@@ -55,10 +55,16 @@ server:
 qiliblog:
   token:
     style: JWT # token风格
+    secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥
+    expire: 3600 # 过期时间 单位秒
+    refresh-expire: 3600 # 刷新token过期时间 单位秒
+  # 验证码基本配置
+  verification:
+    username: qiliblog@xxx.com
+    code-length: 4
+    expiration-minutes: 5
+    template-path: classpath:email/verify.html
   security:
-    jwt:
-      secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥
-      expire: 3600 # 过期时间 单位秒
     allowed-urls:
       - /swagger-ui.html
       - /swagger-resources/**
