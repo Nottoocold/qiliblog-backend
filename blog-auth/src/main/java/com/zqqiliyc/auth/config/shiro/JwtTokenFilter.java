@@ -27,7 +27,9 @@ public class JwtTokenFilter extends AuthenticatingFilter {
     // 1
     @Override
     public boolean onPreHandle(ServletRequest servletRequest, ServletResponse servletResponse, Object mappedValue) throws Exception {
-        log.info("1. jwt token filter onPreHandle");
+        if (log.isDebugEnabled()) {
+            log.info("1. jwt token filter onPreHandle");
+        }
         HttpServletRequest request = WebUtils.getNativeRequest(servletRequest, HttpServletRequest.class);
         String method = request.getMethod();
         if ("OPTIONS".equals(method)) {
@@ -40,7 +42,9 @@ public class JwtTokenFilter extends AuthenticatingFilter {
     // 2
     @Override
     protected boolean isLoginRequest(ServletRequest request, ServletResponse response) {
-        log.info("2. jwt token filter not handle login request");
+        if (log.isDebugEnabled()) {
+            log.info("2. jwt token filter not handle login request");
+        }
         // jwt过滤器不处理真正的登录请求, 真正的登录请求API接口是白名单，由特定的controller处理
         return false;
     }
@@ -48,7 +52,9 @@ public class JwtTokenFilter extends AuthenticatingFilter {
     // 3
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-        log.info("3. jwt token filter not access allowed, will authentication");
+        if (log.isDebugEnabled()) {
+            log.info("3. jwt token filter not access allowed, will authentication");
+        }
         // isAccessAllowed()方法返回false，需要执行认证逻辑
         // 认证成功，则过滤器链继续执行，否则直接返回正确的HTTP状态码，本次请求结束
         // 这里的方法仅提取认证信息，交给realm的doGetAuthenticationInfo()方法进行认证
@@ -57,8 +63,10 @@ public class JwtTokenFilter extends AuthenticatingFilter {
 
     // 4
     @Override
-    protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-        log.info("4. extract jwt token from request");
+    protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) {
+        if (log.isDebugEnabled()) {
+            log.info("4. extract jwt token from request");
+        }
         HttpServletRequest request = WebUtils.getNativeRequest(servletRequest, HttpServletRequest.class);
         return new BearerToken(getToken(request), getHost(servletRequest));
     }
@@ -66,7 +74,9 @@ public class JwtTokenFilter extends AuthenticatingFilter {
     // 5
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-        log.info("5. jwt token authentication failed");
+        if (log.isDebugEnabled()) {
+            log.info("5. jwt token authentication failed");
+        }
         HttpServletResponse resp = WebUtils.getNativeResponse(response, HttpServletResponse.class);
         resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         resp.setContentType("application/json;charset=utf-8");

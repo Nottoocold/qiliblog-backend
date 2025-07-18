@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 public class JwtTokenRealm extends AuthorizingRealm {
     @Autowired @Lazy
     private TokenProvider tokenProvider;
@@ -52,9 +51,10 @@ public class JwtTokenRealm extends AuthorizingRealm {
         Set<String> permissions = authManager.getPermissions(userId);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         authorizationInfo.setRoles(roles);
+        authorizationInfo.setStringPermissions(permissions);
         if (log.isDebugEnabled()) {
             log.debug("get authorization info, roles: {}", roles);
-            log.debug("get authorization info, permissions: {}", permissions.size());
+            log.debug("get authorization info, permissions size: {}", permissions.size());
         }
         return authorizationInfo;
     }
@@ -68,7 +68,9 @@ public class JwtTokenRealm extends AuthorizingRealm {
         if (!tokenProvider.validateToken(bearerToken.getToken())) {
             throw new AuthenticationException("token is invalid");
         }
-        log.info("get authentication info, jwt token valid.");
+        if (log.isDebugEnabled()) {
+            log.debug("get authentication info, jwt token valid.");
+        }
         // jwt token 没有密码
         return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), bearerToken.getCredentials(), getName());
     }
