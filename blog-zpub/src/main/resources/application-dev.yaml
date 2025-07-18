@@ -45,3 +45,9 @@ logging:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+qiliblog:
+  security:
+    allowed-origins:
+      - http://localhost:${server.port}
+      - http://127.0.0.1:${server.port}
