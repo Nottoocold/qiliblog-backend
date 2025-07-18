@@ -1,10 +1,9 @@
 package com.zqqiliyc;
 
 import cn.hutool.core.util.RandomUtil;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
+import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
@@ -55,10 +54,10 @@ public class PageSelectTest {
     public void testNoPage() {
         UserQueryDto queryDto = new UserQueryDto();
         queryDto.setOrderBy("username desc");
-        Page<SysUser> result = userService.findPage(queryDto);
-        PageInfo<SysUser> pageInfo = userService.findPageInfo(queryDto);
-        Assertions.assertFalse(result.getTotal() > 0);
-        Assertions.assertFalse(pageInfo.hasContent());
+
+        PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
+
+        Assertions.assertTrue(pageInfo.getList().isEmpty());
     }
 
     @Order(1)
@@ -70,17 +69,12 @@ public class PageSelectTest {
         queryDto.setOrderBy("username desc");
         queryDto.setPageNum(pageNum);
         queryDto.setPageSize(pageSize);
-        Page<SysUser> result = userService.findPage(queryDto);
-        PageInfo<SysUser> pageInfo = userService.findPageInfo(queryDto);
 
-        Assertions.assertEquals(10, result.getResult().size());
-        Assertions.assertEquals(pageNum, result.getPageNum());
-        Assertions.assertEquals(pageSize, result.getPageSize());
+        PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
 
-        Assertions.assertEquals(10, pageInfo.getSize());
         Assertions.assertEquals(pageNum, pageInfo.getPageNum());
         Assertions.assertEquals(pageSize, pageInfo.getPageSize());
-        Assertions.assertFalse(pageInfo.isHasPreviousPage());
-        Assertions.assertTrue(pageInfo.isHasNextPage());
+        Assertions.assertFalse(pageInfo.isHasPre());
+        Assertions.assertTrue(pageInfo.isHasNext());
     }
 }

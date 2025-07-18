@@ -3,6 +3,8 @@ package com.zqqiliyc.service.base;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.PageSerializable;
+import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.QueryDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
@@ -54,25 +56,14 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @Override
-    public Page<T> findPage(QueryDto<T> queryDto) {
+    public PageResult<T> findPageInfo(QueryDto<T> queryDto) {
         if (queryDto.isPageRequest()) {
             try (Page<T> page = PageHelper.startPage(queryDto.getPageNum(), queryDto.getPageSize())) {
-                return page.doSelectPage(() -> baseMapper.selectByExample(queryDto.toExample()));
+                PageInfo<T> pageInfo = page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
+                return PageResult.of(pageInfo);
             }
         }
-        return new Page<>();
-    }
-
-    @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @Override
-    public PageInfo<T> findPageInfo(QueryDto<T> queryDto) {
-        if (queryDto.isPageRequest()) {
-            try (Page<T> page = PageHelper.startPage(queryDto.getPageNum(), queryDto.getPageSize())) {
-                return page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
-            }
-        }
-        return PageInfo.emptyPageInfo();
+        return PageResult.emptyPageResult();
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)

@@ -2,6 +2,7 @@ package com.zqqiliyc.service.base;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
+import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.QueryDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
@@ -23,9 +24,7 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T findOne(Example<T> example);
 
-    Page<T> findPage(QueryDto<T> queryDto);
-
-    PageInfo<T> findPageInfo(QueryDto<T> queryDto);
+    PageResult<T> findPageInfo(QueryDto<T> queryDto);
 
     List<T> findList(Example<T> example);
 

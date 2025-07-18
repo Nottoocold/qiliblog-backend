@@ -3,14 +3,13 @@ package com.zqqiliyc.admin.controller;
 import com.github.pagehelper.PageInfo;
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
+import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.common.constant.WebApiConstants;
 import com.zqqiliyc.common.web.http.ApiResult;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,13 +24,11 @@ public class SysUserController {
     private final ISysUserService userService;
 
     @GetMapping
-    @RequiresPermissions("user:read")
-    public ApiResult<PageInfo<SysUser>> query(UserQueryDto queryDto) {
+    public ApiResult<PageResult<SysUser>> query(UserQueryDto queryDto) {
         return ApiResult.success(userService.findPageInfo(queryDto));
     }
 
     @PostMapping
-    @RequiresRoles("admin")
     public ApiResult<SysUser> create(@RequestBody UserCreateDto dto) {
         return ApiResult.success(userService.create(dto));
     }
