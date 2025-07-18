@@ -2,8 +2,13 @@ package com.zqqiliyc.common.config;
 
 import com.zqqiliyc.common.config.prop.SecurityProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.apache.catalina.filters.HttpHeaderSecurityFilter;
+import org.apache.catalina.filters.RequestDumperFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,7 +18,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @RequiredArgsConstructor
-@EnableConfigurationProperties(SecurityProperties.class)
 public class WebMvcConfig implements WebMvcConfigurer {
     private final SecurityProperties securityProperties;
 
@@ -25,5 +29,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedHeaders(securityProperties.getAllowedHeaders().toArray(new String[0]))
                 .allowCredentials(securityProperties.getAllowCredentials())
                 .maxAge(securityProperties.getMaxAge());
+    }
+
+    @Bean
+    public FilterRegistrationBean<HttpHeaderSecurityFilter> headerSecurityFilter() {
+        FilterRegistrationBean<HttpHeaderSecurityFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new HttpHeaderSecurityFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 200);
+        return registrationBean;
+    }
+
+    @Bean
+    @Profile({"dev", "test"})
+    public FilterRegistrationBean<RequestDumperFilter> requestDumperFilter() {
+        FilterRegistrationBean<RequestDumperFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RequestDumperFilter());
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return registrationBean;
     }
 }

@@ -24,7 +24,6 @@ import java.util.Map;
  * @date 2025-06-28
  */
 @Configuration
-@EnableConfigurationProperties(SecurityProperties.class)
 public class ShiroConfig {
 
     // 安全管理器
