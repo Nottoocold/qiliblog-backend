@@ -37,7 +37,7 @@ public class LoginDto {
     public String toString() {
         return new StringJoiner(", ", LoginDto.class.getSimpleName() + "[", "]")
                 .add("loginType=" + loginType)
-                .add("identifier='" + identifier + "'")
+                .add("principal='" + identifier + "'")
                 .toString();
     }
 }

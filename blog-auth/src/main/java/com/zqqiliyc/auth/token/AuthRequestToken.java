@@ -6,7 +6,18 @@ package com.zqqiliyc.auth.token;
  */
 public interface AuthRequestToken {
 
-    String identifier();
+    /**
+     * 身份信息，如用户名、邮箱等
+     * 应用级唯一标识
+     *
+     * @return String
+     */
+    String principal();
 
+    /**
+     * 凭证信息，如密码、验证码等
+     *
+     * @return String
+     */
     String credential();
 }

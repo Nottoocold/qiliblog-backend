@@ -17,6 +17,18 @@ spring:
     proxy-target-class: true # 使用cglib代理
   transaction:
     rollback-on-commit-failure: true # 在事务commit失败时回滚
+  mail:
+    protocol: smtps
+    host: smtp.163.com
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   jackson:
     time-zone: Asia/Shanghai # 时区
     date-format: yyyy-MM-dd HH:mm:ss # 日期格式

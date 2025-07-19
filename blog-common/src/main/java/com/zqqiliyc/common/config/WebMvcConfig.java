@@ -3,11 +3,9 @@ package com.zqqiliyc.common.config;
 import com.zqqiliyc.common.config.prop.SecurityProperties;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.filters.HttpHeaderSecurityFilter;
-import org.apache.catalina.filters.RequestDumperFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -37,16 +35,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registrationBean.setFilter(new HttpHeaderSecurityFilter());
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 200);
-        return registrationBean;
-    }
-
-    @Bean
-    @Profile({"dev", "test"})
-    public FilterRegistrationBean<RequestDumperFilter> requestDumperFilter() {
-        FilterRegistrationBean<RequestDumperFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestDumperFilter());
-        registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }
 }

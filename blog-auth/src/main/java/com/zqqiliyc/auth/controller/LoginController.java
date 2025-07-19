@@ -8,7 +8,7 @@ import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(WebApiConstants.API_AUTH_PREFIX + "/login")
+@RequestMapping(WebApiConstants.API_AUTH_PREFIX)
 public class LoginController {
     private final ILoginService loginService;
 
-    @PostMapping
+    @PostMapping("/login")
     public ApiResult<AuthResult> login(@Valid @RequestBody LoginDto loginDto) {
         return ApiResult.success(loginService.login(loginDto));
+    }
+
+    @PostMapping("/logout")
+    @RequiresAuthentication
+    public ApiResult<Void> logout() {
+        SecurityUtils.getSubject().logout();
+        return ApiResult.success();
     }
 }
