@@ -45,6 +45,9 @@ public class JwtTokenRealm extends AuthorizingRealm {
         Set<String> roles = Arrays.stream(StrUtil.splitToArray(String.valueOf(claims.get(SystemConstants.CLAIM_ROLE)), ","))
                 .filter(StrUtil::isNotBlank)
                 .collect(Collectors.toUnmodifiableSet());
+        if (roles.isEmpty()) {
+            roles = authManager.getRoles(userId);
+        }
         Set<String> permissions = authManager.getPermissions(userId);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         authorizationInfo.setRoles(roles);
@@ -70,5 +73,11 @@ public class JwtTokenRealm extends AuthorizingRealm {
         }
         // jwt token 没有密码
         return new SimpleAuthenticationInfo(bearerToken.getPrincipal(), bearerToken.getCredentials(), getName());
+    }
+
+    @Override
+    protected Object getAuthenticationCacheKey(AuthenticationToken token) {
+        Map<String, Object> claims = tokenProvider.getClaims(((BearerToken) token).getToken());
+        return claims.get(SystemConstants.CLAIM_SUBJECT);
     }
 }

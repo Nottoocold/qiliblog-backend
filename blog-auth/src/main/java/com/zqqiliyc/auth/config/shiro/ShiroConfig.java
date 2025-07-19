@@ -2,17 +2,25 @@ package com.zqqiliyc.auth.config.shiro;
 
 import com.zqqiliyc.common.config.prop.SecurityProperties;
 import jakarta.servlet.Filter;
-import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
-import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.authc.Authenticator;
+import org.apache.shiro.authc.BearerToken;
+import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
+import org.apache.shiro.authz.Authorizer;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
+import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
+import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebAutoConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.AbstractShiroWebConfiguration;
 import org.apache.shiro.web.filter.mgt.DefaultFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.apache.shiro.web.mgt.DefaultWebSessionStorageEvaluator;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,27 +31,39 @@ import java.util.Map;
  * @date 2025-06-28
  */
 @Configuration
-public class ShiroConfig {
+@AutoConfigureBefore(ShiroWebAutoConfiguration.class)
+public class ShiroConfig extends AbstractShiroWebConfiguration {
 
     @Bean
     public JwtTokenRealm jwtTokenRealm() {
-        return new JwtTokenRealm();
+        JwtTokenRealm jwtTokenRealm = new JwtTokenRealm();
+        jwtTokenRealm.setAuthenticationCachingEnabled(true);
+        jwtTokenRealm.setCredentialsMatcher(new AllowAllCredentialsMatcher());
+        jwtTokenRealm.setAuthenticationTokenClass(BearerToken.class);
+        jwtTokenRealm.setCacheManager(new MemoryConstrainedCacheManager());
+        return jwtTokenRealm;
     }
 
-    // 安全管理器
     @Bean
-    public DefaultWebSecurityManager securityManager(List<Realm> realms) {
-        DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        manager.setRealms(realms);
-        manager.setRememberMeManager(null); // 不使用记住我
-        // 禁用Session存储（无状态）
-        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-        DefaultSessionStorageEvaluator storageEvaluator = new DefaultSessionStorageEvaluator();
-        storageEvaluator.setSessionStorageEnabled(false);
-        subjectDAO.setSessionStorageEvaluator(storageEvaluator);
-        manager.setSubjectDAO(subjectDAO);
+    protected Authenticator authenticator() {
+        return super.authenticator();
+    }
 
-        return manager;
+    @Bean
+    protected Authorizer authorizer() {
+        return super.authorizer();
+    }
+
+    @Bean
+    protected SessionStorageEvaluator sessionStorageEvaluator() {
+        DefaultWebSessionStorageEvaluator sessionStorageEvaluator = new DefaultWebSessionStorageEvaluator();
+        sessionStorageEvaluator.setSessionStorageEnabled(false);
+        return sessionStorageEvaluator;
+    }
+
+    @Bean
+    protected RememberMeManager rememberMeManager() {
+        return null;
     }
 
     // 过滤器链
@@ -67,17 +87,5 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**", "authJWT");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;
-    }
-
-    @Bean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        return new DefaultAdvisorAutoProxyCreator();
-    }
-
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
-        return advisor;
     }
 }

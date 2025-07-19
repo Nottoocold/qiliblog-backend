@@ -33,7 +33,7 @@
         <hutool.version>5.8.26</hutool.version>
         <pagehelper.version>6.1.0</pagehelper.version>
         <lombok.version>1.18.36</lombok.version>
-        <shiro.version>1.13.0</shiro.version>
+        <shiro.version>2.0.5</shiro.version>
     </properties>
 
     <repositories>
@@ -137,11 +137,30 @@
                 <artifactId>yitter-idgenerator</artifactId>
                 <version>${id.generator.version}</version>
             </dependency>
+            <!-- Shiro -->
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring-boot-starter</artifactId>
                 <classifier>jakarta</classifier>
                 <version>${shiro.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.shiro</groupId>
+                        <artifactId>shiro-crypto-cipher</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shiro</groupId>
+                        <artifactId>shiro-crypto-hash</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shiro</groupId>
+                        <artifactId>shiro-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.shiro</groupId>
+                        <artifactId>shiro-spring</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.shiro</groupId>
@@ -154,13 +173,18 @@
                 <artifactId>shiro-spring</artifactId>
                 <classifier>jakarta</classifier>
                 <version>${shiro.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.shiro</groupId>
+                        <artifactId>shiro-web</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-bom</artifactId>
                 <version>${hutool.version}</version>
                 <type>pom</type>
-                <!-- 注意这里是import -->
                 <scope>import</scope>
             </dependency>
         </dependencies>

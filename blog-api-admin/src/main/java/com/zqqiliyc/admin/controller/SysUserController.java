@@ -10,6 +10,8 @@ import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,6 +26,7 @@ public class SysUserController {
     private final ISysUserService userService;
 
     @GetMapping
+    @RequiresPermissions("sys:user:query")
     public ApiResult<PageResult<SysUser>> query(UserQueryDto queryDto) {
         return ApiResult.success(userService.findPageInfo(queryDto));
     }
@@ -34,6 +37,7 @@ public class SysUserController {
     }
 
     @PutMapping("/{id}")
+    @RequiresRoles("admin")
     public ApiResult<SysUser> update(@PathVariable("id") Long id) {
         log.info("update user id: {}", id);
         return ApiResult.success();
