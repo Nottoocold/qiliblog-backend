@@ -22,7 +22,8 @@ public enum GlobalErrorDict {
     PASSWORD_ERROR(401002, "密码错误"),
     EMAIL_EXISTS(401003, "邮箱已经存在"),
     USERNAME_EXISTS(401004, "用户名已经存在"),
-    PHONE_EXISTS(401005, "手机号已经存在");
+    PHONE_EXISTS(401005, "手机号已经存在"),
+    INVALID_TOKEN(401006, "无效的token");
     //endregion
 
     /**
