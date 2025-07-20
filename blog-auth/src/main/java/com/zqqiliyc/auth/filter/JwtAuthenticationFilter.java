@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * JWT Token验证过滤器
+ *
  * @author zqqiliyc
  * @since 2025-07-20
  */
@@ -55,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getToken(request);
         if (StrUtil.isNotBlank(token)) {
-            if (!tokenProvider.validateToken(token) ) {
+            if (!tokenProvider.validateToken(token)) {
                 if (isPermitUrl(request)) {
                     // token无效，但是url在白名单中，放行
                     if (log.isDebugEnabled()) {
@@ -81,7 +83,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 
 
     private String getToken(HttpServletRequest request) {
