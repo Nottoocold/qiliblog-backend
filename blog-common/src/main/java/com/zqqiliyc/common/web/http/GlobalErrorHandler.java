@@ -3,8 +3,6 @@ package com.zqqiliyc.common.web.http;
 import cn.hutool.core.util.ArrayUtil;
 import com.zqqiliyc.common.exception.ClientException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -25,17 +23,17 @@ import java.util.stream.Collectors;
 public class GlobalErrorHandler implements EnvironmentAware {
     private String[] profiles;
 
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ApiResult<?> handleException(AuthenticationException e) {
-        return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? e.getMessage() : "认证失败");
-    }
-
-    @ExceptionHandler(AuthorizationException.class)
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ApiResult<?> handleException(AuthorizationException e) {
-        return ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? e.getMessage() : "无权限访问");
-    }
+//    @ExceptionHandler(AuthenticationException.class)
+//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+//    public ApiResult<?> handleException(AuthenticationException e) {
+//        return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? e.getMessage() : "认证失败");
+//    }
+//
+//    @ExceptionHandler(AuthorizationException.class)
+//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+//    public ApiResult<?> handleException(AuthorizationException e) {
+//        return ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? e.getMessage() : "无权限访问");
+//    }
 
     @ExceptionHandler(ClientException.class)
     @ResponseStatus(value = HttpStatus.OK)

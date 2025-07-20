@@ -7,8 +7,6 @@ import com.zqqiliyc.common.constant.WebApiConstants;
 import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +28,7 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    @RequiresAuthentication
     public ApiResult<Void> logout() {
-        SecurityUtils.getSubject().logout();
         return ApiResult.success();
     }
 }

@@ -1,10 +1,8 @@
 package com.zqqiliyc.common.web.http;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +22,11 @@ public class GlobalErrorController implements ErrorController {
     @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResult<?> handleApiError(HttpServletRequest request, HttpServletResponse response) {
         Exception ex = (Exception) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        if (ExceptionUtil.isCausedBy(ex, AuthenticationException.class)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            AuthenticationException exception = (AuthenticationException) ExceptionUtil.getCausedBy(ex, AuthenticationException.class);
-            return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), exception != null ? exception.getMessage() : "Authentication error");
-        }
+//        if (ExceptionUtil.isCausedBy(ex, AuthenticationException.class)) {
+//            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+//            AuthenticationException exception = (AuthenticationException) ExceptionUtil.getCausedBy(ex, AuthenticationException.class);
+//            return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), exception != null ? exception.getMessage() : "Authentication error");
+//        }
         Integer status = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         HttpStatus httpStatus = HttpStatus.resolve(status);
         if (null == httpStatus) {
