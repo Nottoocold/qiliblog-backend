@@ -48,5 +48,13 @@ public class TokenEventListener {
 
     private void refreshToken(TokenBean tokenBean) {}
 
-    private void revokeToken(TokenBean tokenBean) {}
+    private void revokeToken(TokenBean tokenBean) {
+        if (log.isDebugEnabled()) {
+            log.debug("revoke token from db start.");
+        }
+        tokenService.revoke(tokenBean.getAccessToken());
+        if (log.isDebugEnabled()) {
+            log.debug("revoke token from db success.");
+        }
+    }
 }

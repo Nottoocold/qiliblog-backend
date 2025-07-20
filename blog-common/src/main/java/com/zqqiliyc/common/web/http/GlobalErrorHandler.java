@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 
 /**
@@ -23,17 +25,17 @@ import java.util.stream.Collectors;
 public class GlobalErrorHandler implements EnvironmentAware {
     private String[] profiles;
 
-//    @ExceptionHandler(AuthenticationException.class)
-//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-//    public ApiResult<?> handleException(AuthenticationException e) {
-//        return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? e.getMessage() : "认证失败");
-//    }
-//
-//    @ExceptionHandler(AuthorizationException.class)
-//    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-//    public ApiResult<?> handleException(AuthorizationException e) {
-//        return ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? e.getMessage() : "无权限访问");
-//    }
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ApiResult<?> handleException(AuthenticationException e) {
+        return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? e.getMessage() : "认证失败");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ApiResult<?> handleException(AccessDeniedException e) {
+        return ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? e.getMessage() : "无权限访问");
+    }
 
     @ExceptionHandler(ClientException.class)
     @ResponseStatus(value = HttpStatus.OK)

@@ -8,4 +8,6 @@ import com.zqqiliyc.service.base.IBaseService;
  * @date 2025-06-02
  */
 public interface ISysTokenService extends IBaseService<SysToken, Long> {
+
+    void revoke(String accessToken);
 }

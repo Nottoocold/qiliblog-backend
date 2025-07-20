@@ -4,6 +4,7 @@ import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
 import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.common.constant.WebApiConstants;
+import com.zqqiliyc.common.controller.BaseController;
 import com.zqqiliyc.common.web.http.ApiResult;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(WebApiConstants.API_ADMIN_PREFIX + "/user")
 @RequiredArgsConstructor
-public class SysUserController {
+public class SysUserController extends BaseController {
     private final ISysUserService userService;
 
     @GetMapping
@@ -35,6 +36,7 @@ public class SysUserController {
     @PutMapping("/{id}")
     public ApiResult<SysUser> update(@PathVariable("id") Long id) {
         log.info("update user id: {}", id);
+        System.out.println(getCurrentUser());
         return ApiResult.success();
     }
 

@@ -2,12 +2,16 @@ package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.zqqiliyc.common.bean.AuthUserInfoBean;
 import com.zqqiliyc.common.redis.RedisHandler;
 import com.zqqiliyc.domain.entity.*;
 import com.zqqiliyc.service.*;
 import io.mybatis.mapper.example.Example;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -23,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthManager {
+public class AuthManager implements UserDetailsService {
     private final ISysUserService userService;
     private final ISysRoleService roleService;
     private final ISysPermissionService permissionService;
@@ -106,5 +110,21 @@ public class AuthManager {
 
     private String userInfoRedisKey(long userId) {
         return StrUtil.format("auth:userinfo:{}", userId);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        SysUser sysUser = userService.findById(Long.parseLong(userId));
+        if (null == sysUser) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        AuthUserInfoBean authUserInfoBean = new AuthUserInfoBean();
+        authUserInfoBean.setId(sysUser.getId());
+        authUserInfoBean.setUsername(sysUser.getUsername());
+        authUserInfoBean.setNickname(sysUser.getNickname());
+        authUserInfoBean.setAvatar(sysUser.getAvatar());
+        authUserInfoBean.setRoles(getRoles(sysUser.getId()).toArray(new String[0]));
+        authUserInfoBean.setPermissions(getPermissions(sysUser.getId()).toArray(new String[0]));
+        return authUserInfoBean;
     }
 }

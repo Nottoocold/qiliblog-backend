@@ -28,13 +28,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(securityProperties.getAllowCredentials())
                 .maxAge(securityProperties.getMaxAge());
     }
-
-    @Bean
-    public FilterRegistrationBean<HttpHeaderSecurityFilter> headerSecurityFilter() {
-        FilterRegistrationBean<HttpHeaderSecurityFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new HttpHeaderSecurityFilter());
-        registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 200);
-        return registrationBean;
-    }
 }
