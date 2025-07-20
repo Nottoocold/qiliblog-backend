@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    username: qiliblog
+    password: qiliblog001
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/qiliblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+
+  mail:
+    username:  # 邮箱
+    password:  # 授权码
+
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:}
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-wait: 2000ms # 获取连接最大等待时间
+
+server:
+  port: ${SERVER_PORT:8080}
+
+logging:
+  level:
+    com.zqqiliyc: info
+    web: info
+    root: warn
+    sql: error
+  logback:
+    rollingpolicy:
+      clean-history-on-start: true
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+qiliblog:
+  security:
+    allowed-origins:
+      - http://localhost:${server.port}
+      - http://127.0.0.1:${server.port}

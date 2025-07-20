@@ -40,6 +40,19 @@
 
     <build>
         <finalName>qiliblog-server-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>..</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>Dockerfile</include>
+                </includes>
+                <targetPath>${project.build.directory}</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <!-- 1. 轻量级打包,仅将项目自己的jar打包到启动jar里 -->
             <plugin>

@@ -1,0 +1,61 @@
+name: qiliblog
+
+services:
+  db-prod:
+    image: mysql:8.0.29
+    ports:
+      - "3306:3306"
+    networks:
+      - prod_default
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql8029rootpassword
+    volumes:
+      - prod_mysql_data:/var/lib/mysql
+      - ./db/conf:/etc/mysql/conf.d
+      - ./db/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root -pmysql8029rootpassword
+      interval: 5s
+      timeout: 10s
+      retries: 3
+
+  redis-prod:
+    image: bitnami/redis:6.2.16
+    ports:
+      - "6379:6379"
+    networks:
+      - prod_default
+    environment:
+      REDIS_PASSWORD: redis6216rootpassword
+    volumes:
+      - prod_redis_data:/bitnami/redis/data
+
+  api-prod:
+    build:
+      context: ./api
+    ports:
+      - "9090:9090"
+    networks:
+      - prod_default
+    volumes:
+      - ./log:/app/log
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    environment:
+      - SERVER_PORT=9090
+      - DB_HOST=db-prod
+      - DB_PORT=3306
+      - REDIS_HOST=redis-prod
+      - REDIS_PORT=6379
+      - REDIS_PASS=redis6216rootpassword
+
+volumes:
+  prod_mysql_data:
+  prod_redis_data:
+
+networks:
+  prod_default:
