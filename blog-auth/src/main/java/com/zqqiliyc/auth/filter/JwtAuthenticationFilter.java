@@ -65,23 +65,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = getToken(request);
         if (StrUtil.isNotBlank(token)) {
-            try {
-                if (!tokenProvider.validateToken(token)) {
-                    // token无效，后续会被拦截
-                    filterChain.doFilter(request, response);
-                    return;
-                } else {
-                    // token有效，设置用户信息
-                    Map<String, Object> claims = tokenProvider.getClaims(token);
-                    String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
-                    UserDetails userDetails = authManager.loadUserByUsername(userId);
-                    UsernamePasswordAuthenticationToken authenticated =
-                            UsernamePasswordAuthenticationToken.authenticated(userDetails, token, userDetails.getAuthorities());
-                    authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityUtils.setAuthentication(authenticated);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if (!tokenProvider.validateToken(token)) {
+                // token无效，后续会被拦截
+                filterChain.doFilter(request, response);
+                return;
+            } else {
+                // token有效，设置用户信息
+                Map<String, Object> claims = tokenProvider.getClaims(token);
+                String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
+                UserDetails userDetails = authManager.loadUserByUsername(userId);
+                UsernamePasswordAuthenticationToken authenticated =
+                        UsernamePasswordAuthenticationToken.authenticated(userDetails, token, userDetails.getAuthorities());
+                authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityUtils.setAuthentication(authenticated);
             }
         }
 
