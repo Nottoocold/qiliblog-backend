@@ -46,7 +46,8 @@ public class TokenEventListener {
         }
     }
 
-    private void refreshToken(TokenBean tokenBean) {}
+    private void refreshToken(TokenBean tokenBean) {
+    }
 
     private void revokeToken(TokenBean tokenBean) {
         if (log.isDebugEnabled()) {

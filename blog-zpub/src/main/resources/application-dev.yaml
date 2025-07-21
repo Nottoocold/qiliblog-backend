@@ -22,10 +22,10 @@ logging:
   level:
     com.zqqiliyc: debug
     web: debug
-#    sql: debug
-#    org.springframework.transaction: debug
-#    org.springframework.jdbc: debug
-#    org.springframework.dao: debug
+    #    sql: debug
+    #    org.springframework.transaction: debug
+    #    org.springframework.jdbc: debug
+    #    org.springframework.dao: debug
     org.springframework.security: trace
 #    org.springframework.aop: trace
 #    org.springframework.cglib: trace

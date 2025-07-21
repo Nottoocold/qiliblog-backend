@@ -2,11 +2,7 @@ package com.zqqiliyc.common.config;
 
 import com.zqqiliyc.common.config.prop.SecurityProperties;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.filters.HttpHeaderSecurityFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
