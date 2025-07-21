@@ -4,7 +4,6 @@ import com.zqqiliyc.common.bean.AuthUserInfoBean;
 import com.zqqiliyc.common.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -16,8 +15,7 @@ import java.util.Set;
 @Slf4j
 @Component("ac")
 @RequiredArgsConstructor
-public class SpringSecurityAuthcChecker {
-    private final Environment environment;
+public class SecurityChecker {
 
     private AuthUserInfoBean getUserInfo() {
         return SecurityUtils.getCurrentUser();

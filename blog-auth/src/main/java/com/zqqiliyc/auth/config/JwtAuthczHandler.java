@@ -1,14 +1,12 @@
 package com.zqqiliyc.auth.config;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.zqqiliyc.common.json.JsonHelper;
+import com.zqqiliyc.common.spring.SpringEnvUtils;
 import com.zqqiliyc.common.web.http.ApiResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -28,8 +26,6 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class JwtAuthczHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
-    @Autowired
-    private Environment environment;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -52,6 +48,6 @@ public class JwtAuthczHandler implements AuthenticationEntryPoint, AccessDeniedH
     }
 
     private boolean isDev() {
-        return ArrayUtil.contains(environment.getActiveProfiles(), "dev");
+        return SpringEnvUtils.isDev();
     }
 }
