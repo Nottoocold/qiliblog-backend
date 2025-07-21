@@ -1,10 +1,8 @@
 package com.zqqiliyc.common.web.http;
 
-import cn.hutool.core.util.ArrayUtil;
 import com.zqqiliyc.common.exception.ClientException;
+import com.zqqiliyc.common.spring.SpringEnvUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
@@ -22,8 +20,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
-public class GlobalErrorHandler implements EnvironmentAware {
-    private String[] profiles;
+public class GlobalErrorHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
@@ -55,11 +52,6 @@ public class GlobalErrorHandler implements EnvironmentAware {
     }
 
     private boolean isDev() {
-        return ArrayUtil.contains(profiles, "dev");
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.profiles = environment.getActiveProfiles();
+        return SpringEnvUtils.isDev();
     }
 }

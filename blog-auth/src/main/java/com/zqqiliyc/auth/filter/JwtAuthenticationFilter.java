@@ -2,12 +2,9 @@ package com.zqqiliyc.auth.filter;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.jwt.JWTException;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.common.config.prop.SecurityProperties;
 import com.zqqiliyc.common.constant.SystemConstants;
-import com.zqqiliyc.common.enums.GlobalErrorDict;
-import com.zqqiliyc.common.exception.ClientException;
 import com.zqqiliyc.common.token.TokenProvider;
 import com.zqqiliyc.common.utils.SecurityUtils;
 import jakarta.annotation.PostConstruct;
@@ -18,9 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
@@ -60,18 +55,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (isPermitUrl(request)) {
+            // token无效，但是url在白名单中，放行
+            if (log.isDebugEnabled()) {
+                log.info("token invalid but is permit url: {}", request.getRequestURI());
+            }
+            filterChain.doFilter(request, response);
+            return;
+        }
         String token = getToken(request);
         if (StrUtil.isNotBlank(token)) {
             try {
                 if (!tokenProvider.validateToken(token)) {
-                    if (isPermitUrl(request)) {
-                        // token无效，但是url在白名单中，放行
-                        if (log.isDebugEnabled()) {
-                            log.info("token invalid but is permit url: {}", request.getRequestURI());
-                        }
-                        filterChain.doFilter(request, response);
-                        return;
-                    }
                     // token无效，后续会被拦截
                     filterChain.doFilter(request, response);
                     return;
@@ -85,12 +80,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityUtils.setAuthentication(authenticated);
                 }
-            } catch (IOException | ServletException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
-            } catch (JWTException e) {
-                throw new ClientException(GlobalErrorDict.INVALID_TOKEN);
-            } catch (UsernameNotFoundException e) {
-                throw new ClientException(GlobalErrorDict.IDENTIFIER_NOT_EXIST);
             }
         }
 
