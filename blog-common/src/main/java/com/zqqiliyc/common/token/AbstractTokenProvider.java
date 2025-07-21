@@ -2,7 +2,6 @@ package com.zqqiliyc.common.token;
 
 import cn.hutool.core.lang.Assert;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.env.Environment;
 
 import java.util.Map;
 
@@ -12,13 +11,11 @@ import java.util.Map;
  */
 public abstract class AbstractTokenProvider implements TokenProvider {
     private ApplicationEventPublisher eventPublisher;
-    private Environment environment;
 
     @Override
     public void afterPropertiesSet() {
         Assert.notNull(eventPublisher, "ApplicationEventPublisher must not be null");
-        Assert.notNull(environment, "Environment must not be null");
-        init(environment);
+        init();
     }
 
     @Override
@@ -26,12 +23,7 @@ public abstract class AbstractTokenProvider implements TokenProvider {
         this.eventPublisher = applicationEventPublisher;
     }
 
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    protected void init(Environment environment) {
+    protected void init() {
         // let subclasses to do initialization
     }
 

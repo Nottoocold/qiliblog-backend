@@ -14,7 +14,6 @@ import io.mybatis.mapper.example.Example;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -29,15 +28,14 @@ import java.util.Map;
 public class JwtTokenProvider extends AbstractTokenProvider {
     private String secret;
     private long expiration;
-    private String[] profiles;
     @Autowired
     private TokenProperties tokenProperties;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private ISysTokenService tokenService;
 
     @Override
-    protected void init(Environment environment) {
-        profiles = environment.getActiveProfiles();
+    protected void init() {
         secret = tokenProperties.getSecret();
         expiration = Math.max(tokenProperties.getExpire(), 0);
         Assert.notBlank(secret, "JWT secret must be provided");

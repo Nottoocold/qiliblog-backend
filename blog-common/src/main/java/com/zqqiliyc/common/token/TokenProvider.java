@@ -2,7 +2,6 @@ package com.zqqiliyc.common.token;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.context.EnvironmentAware;
 
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import java.util.Map;
  * @author qili
  * @date 2025-07-13
  */
-public interface TokenProvider extends ApplicationEventPublisherAware, EnvironmentAware, InitializingBean {
+public interface TokenProvider extends ApplicationEventPublisherAware, InitializingBean {
 
     /**
      * Generate token, use userId and claims to generate token
@@ -50,6 +49,7 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Environme
 
     /**
      * Get claims from token
+     *
      * @param accessToken accessToken
      * @return claims
      */
