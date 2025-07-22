@@ -1,9 +1,9 @@
 package com.zqqiliyc.service.listener;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.zqqiliyc.common.token.TokenBean;
-import com.zqqiliyc.common.token.TokenEvent;
-import com.zqqiliyc.common.token.TokenEventType;
+import com.zqqiliyc.framework.web.token.TokenBean;
+import com.zqqiliyc.framework.web.token.TokenEvent;
+import com.zqqiliyc.framework.web.token.TokenEventType;
 import com.zqqiliyc.domain.dto.token.SysTokenCreateDto;
 import com.zqqiliyc.service.ISysTokenService;
 import lombok.extern.slf4j.Slf4j;

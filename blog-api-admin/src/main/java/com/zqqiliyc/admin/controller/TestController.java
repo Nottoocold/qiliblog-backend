@@ -1,11 +1,10 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.common.json.JsonHelper;
-import com.zqqiliyc.common.utils.SnowFlakeUtils;
-import com.zqqiliyc.common.web.http.ApiResult;
+import com.zqqiliyc.framework.web.json.JsonHelper;
+import com.zqqiliyc.framework.web.utils.SnowFlakeUtils;
+import com.zqqiliyc.framework.web.http.ApiResult;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

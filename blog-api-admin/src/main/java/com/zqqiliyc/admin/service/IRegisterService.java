@@ -2,7 +2,7 @@ package com.zqqiliyc.admin.service;
 
 import com.zqqiliyc.admin.RegisterResult;
 import com.zqqiliyc.admin.dto.UserRegisterDto;
-import com.zqqiliyc.common.exception.ClientException;
+import com.zqqiliyc.framework.web.exception.ClientException;
 
 /**
  * @author hallo

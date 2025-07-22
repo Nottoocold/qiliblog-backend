@@ -1,7 +1,9 @@
 package com.zqqiliyc.auth.service;
 
-import com.zqqiliyc.common.bean.AuthUserInfoBean;
-import com.zqqiliyc.common.utils.SecurityUtils;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import com.zqqiliyc.framework.web.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

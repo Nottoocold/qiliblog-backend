@@ -14,26 +14,8 @@
     <dependencies>
         <dependency>
             <groupId>com.zqqiliyc</groupId>
-            <artifactId>blog-common</artifactId>
+            <artifactId>blog-framework-web</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- mybatis -->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- mybatis-common-mapper -->
-        <dependency>
-            <groupId>io.mybatis</groupId>
-            <artifactId>mybatis-mapper</artifactId>
-        </dependency>
-
-        <!-- 验证 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <!-- Lombok -->

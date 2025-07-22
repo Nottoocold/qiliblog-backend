@@ -1,12 +1,10 @@
 package com.zqqiliyc.service.base;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
-import com.zqqiliyc.common.bean.PageResult;
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.QueryDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.BaseEntity;
+import com.zqqiliyc.framework.web.PageResult;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 

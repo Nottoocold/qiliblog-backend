@@ -22,11 +22,6 @@
             <groupId>io.mybatis</groupId>
             <artifactId>mybatis-service</artifactId>
         </dependency>
-        <!--mybatis pagehelper-->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-        </dependency>
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>

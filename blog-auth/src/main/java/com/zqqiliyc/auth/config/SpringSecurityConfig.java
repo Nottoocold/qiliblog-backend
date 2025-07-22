@@ -1,7 +1,7 @@
 package com.zqqiliyc.auth.config;
 
 import com.zqqiliyc.auth.filter.JwtAuthenticationFilter;
-import com.zqqiliyc.common.config.prop.SecurityProperties;
+import com.zqqiliyc.framework.web.config.prop.SecurityProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

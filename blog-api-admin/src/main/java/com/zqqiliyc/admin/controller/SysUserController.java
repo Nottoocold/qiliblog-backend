@@ -2,10 +2,10 @@ package com.zqqiliyc.admin.controller;
 
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
-import com.zqqiliyc.common.bean.PageResult;
-import com.zqqiliyc.common.constant.WebApiConstants;
-import com.zqqiliyc.common.controller.BaseController;
-import com.zqqiliyc.common.web.http.ApiResult;
+import com.zqqiliyc.framework.web.PageResult;
+import com.zqqiliyc.framework.web.constant.WebApiConstants;
+import com.zqqiliyc.framework.web.controller.BaseController;
+import com.zqqiliyc.framework.web.http.ApiResult;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;

@@ -2,8 +2,8 @@ package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.common.bean.AuthUserInfoBean;
-import com.zqqiliyc.common.redis.RedisHandler;
+import com.zqqiliyc.framework.web.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.redis.RedisHandler;
 import com.zqqiliyc.domain.entity.*;
 import com.zqqiliyc.service.*;
 import io.mybatis.mapper.example.Example;

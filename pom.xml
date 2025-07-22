@@ -13,7 +13,6 @@
     <description>Blog backend parent module</description>
 
     <modules>
-        <module>blog-common</module>
         <module>blog-domain</module>
         <module>blog-repository</module>
         <module>blog-service</module>
@@ -55,7 +54,13 @@
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-common</artifactId>
+                <artifactId>blog-framework-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zqqiliyc</groupId>
+                <artifactId>blog-framework-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

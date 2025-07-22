@@ -1,8 +1,8 @@
 package com.zqqiliyc.auth.config;
 
-import com.zqqiliyc.common.json.JsonHelper;
-import com.zqqiliyc.common.spring.SpringEnvUtils;
-import com.zqqiliyc.common.web.http.ApiResult;
+import com.zqqiliyc.framework.web.json.JsonHelper;
+import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
+import com.zqqiliyc.framework.web.http.ApiResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

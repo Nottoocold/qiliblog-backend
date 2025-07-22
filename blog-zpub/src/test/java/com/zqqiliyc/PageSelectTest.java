@@ -3,7 +3,7 @@ package com.zqqiliyc;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
-import com.zqqiliyc.common.bean.PageResult;
+import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.service.ISysUserService;
