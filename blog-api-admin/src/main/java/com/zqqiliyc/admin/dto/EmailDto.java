@@ -1,7 +1,8 @@
 package com.zqqiliyc.admin.dto;
 
 import jakarta.validation.constraints.Email;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 数据传输对象，用于封装邮箱相关信息。
@@ -11,7 +12,8 @@ import lombok.Data;
  * @author hallo
  * @datetime 2025-07-01 18:18
  */
-@Data
+@Getter
+@Setter
 public class EmailDto {
 
     /**
