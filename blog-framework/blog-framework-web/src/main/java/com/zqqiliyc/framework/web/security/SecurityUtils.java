@@ -1,6 +1,6 @@
-package com.zqqiliyc.framework.web.utils;
+package com.zqqiliyc.framework.web.security;
 
-import com.zqqiliyc.framework.web.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

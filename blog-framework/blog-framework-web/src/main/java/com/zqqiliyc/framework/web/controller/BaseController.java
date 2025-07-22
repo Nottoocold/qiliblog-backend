@@ -1,7 +1,7 @@
 package com.zqqiliyc.framework.web.controller;
 
-import com.zqqiliyc.framework.web.AuthUserInfoBean;
-import com.zqqiliyc.framework.web.utils.SecurityUtils;
+import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.security.SecurityUtils;
 import org.springframework.security.core.Authentication;
 
 /**

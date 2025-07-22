@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web.utils;
+package com.zqqiliyc.framework.common.utils;
 
 import com.github.yitter.contract.IIdGenerator;
 import com.github.yitter.contract.IdGeneratorOptions;

@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web;
+package com.zqqiliyc.framework.web.bean;
 
 import com.github.pagehelper.PageInfo;
 import lombok.Getter;

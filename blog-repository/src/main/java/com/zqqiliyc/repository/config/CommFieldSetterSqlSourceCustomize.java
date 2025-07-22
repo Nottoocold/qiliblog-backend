@@ -1,6 +1,6 @@
 package com.zqqiliyc.repository.config;
 
-import com.zqqiliyc.framework.web.utils.SnowFlakeUtils;
+import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import io.mybatis.provider.EntityTable;
 import io.mybatis.provider.SqlSourceCustomize;

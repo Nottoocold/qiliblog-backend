@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web;
+package com.zqqiliyc.framework.web.bean;
 
 import cn.hutool.core.util.ArrayUtil;
 import lombok.Getter;

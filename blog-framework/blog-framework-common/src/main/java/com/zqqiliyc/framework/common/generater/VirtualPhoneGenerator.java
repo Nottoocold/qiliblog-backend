@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web.generate;
+package com.zqqiliyc.framework.common.generater;
 
 import cn.hutool.core.util.RandomUtil;
 

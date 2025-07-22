@@ -6,7 +6,7 @@ import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.framework.web.config.prop.SecurityProperties;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.token.TokenProvider;
-import com.zqqiliyc.framework.web.utils.SecurityUtils;
+import com.zqqiliyc.framework.web.security.SecurityUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

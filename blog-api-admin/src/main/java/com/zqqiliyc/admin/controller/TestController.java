@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.controller;
 
 import com.zqqiliyc.framework.web.json.JsonHelper;
-import com.zqqiliyc.framework.web.utils.SnowFlakeUtils;
+import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.framework.web.http.ApiResult;
 import lombok.Getter;
 import lombok.Setter;

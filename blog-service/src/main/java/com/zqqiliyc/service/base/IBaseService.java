@@ -4,7 +4,7 @@ import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.QueryDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.BaseEntity;
-import com.zqqiliyc.framework.web.PageResult;
+import com.zqqiliyc.framework.web.bean.PageResult;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 
