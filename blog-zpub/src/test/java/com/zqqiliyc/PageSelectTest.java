@@ -3,17 +3,14 @@ package com.zqqiliyc;
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.admin.dto.UserCreateDto;
 import com.zqqiliyc.admin.dto.UserQueryDto;
-import com.zqqiliyc.framework.web.bean.PageResult;
-import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.service.ISysUserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author qili
@@ -25,11 +22,9 @@ public class PageSelectTest {
     @Autowired
     private ISysUserService userService;
     static final int count = 100;
-    private final List<SysUser> toDeleted = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
-        toDeleted.clear();
         for (int i = 0; i < count; i++) {
             UserCreateDto sysUser = new UserCreateDto();
             sysUser.setUsername(RandomUtil.randomString(6));
@@ -38,19 +33,17 @@ public class PageSelectTest {
             sysUser.setEmail(RandomUtil.randomString(6) + "@qq.com");
             sysUser.setPhone(RandomUtil.randomNumbers(11));
             sysUser.setAvatar("https://avatars.githubusercontent.com/u/102040668?v=4");
-            toDeleted.add(userService.create(sysUser));
         }
     }
 
     @AfterEach
     public void setDown() {
-        List<Long> ids = toDeleted.stream().map(SysUser::getId).toList();
-        userService.deleteHardByFieldList(BaseEntity::getId, ids);
-        toDeleted.clear();
+
     }
 
     @Order(0)
     @Test
+    @Transactional
     public void testNoPage() {
         UserQueryDto queryDto = new UserQueryDto();
         queryDto.setOrderBy("username desc");
@@ -62,6 +55,7 @@ public class PageSelectTest {
 
     @Order(1)
     @Test
+    @Transactional
     public void testPage() {
         int pageNum = 1;
         int pageSize = 10;
