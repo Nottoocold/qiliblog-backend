@@ -33,6 +33,7 @@
         <hutool.version>5.8.26</hutool.version>
         <pagehelper.version>6.1.0</pagehelper.version>
         <lombok.version>1.18.36</lombok.version>
+        <sqlite.version>3.49.1.0</sqlite.version>
     </properties>
 
     <repositories>
@@ -98,6 +99,12 @@
                 <groupId>com.zqqiliyc</groupId>
                 <artifactId>blog-zpub</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>${sqlite.version}</version>
             </dependency>
 
             <!-- mybatis -->

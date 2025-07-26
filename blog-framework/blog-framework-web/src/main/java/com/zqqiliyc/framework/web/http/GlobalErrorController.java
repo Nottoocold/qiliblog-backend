@@ -35,7 +35,8 @@ public class GlobalErrorController implements ErrorController {
         String requestUri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
         HttpStatus httpStatus = HttpStatus.resolve(status);
 
-        if (!SpringEnvUtils.isProd()) {
+        boolean prodEnv = SpringEnvUtils.isProd();
+        if (!prodEnv) {
             log.error("When request uri: {}, status: {}, exception: {}", requestUri, status, ExceptionUtil.stacktraceToString(ex));
         } else {
             log.error("When request uri: {}, status: {}, message: {}", requestUri, status, ExceptionUtil.getMessage(ex));
@@ -60,9 +61,9 @@ public class GlobalErrorController implements ErrorController {
         }
 
         if (null != httpStatus) {
-            return ApiResult.error(status, ex != null ? ex.getMessage() : httpStatus.getReasonPhrase());
+            return ApiResult.error(status, (ex != null && prodEnv) ? ex.getMessage() : httpStatus.getReasonPhrase());
         }
-        return ApiResult.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error");
+        return ApiResult.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
     private String getErrorMessage(Throwable ex, String defaultMsg) {

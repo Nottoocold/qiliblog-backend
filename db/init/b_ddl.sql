@@ -156,3 +156,13 @@ CREATE TABLE `sys_token`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='系统令牌表';
 
+DROP TABLE IF EXISTS `sys_region`;
+CREATE TABLE `sys_region`
+(
+    `id` BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    `code` VARCHAR(32) NOT NULL COMMENT '编码',
+    `name` VARCHAR(64) NOT NULL COMMENT '名称',
+    `pcode` VARCHAR(32) NULL COMMENT '父级编码',
+    `level` INT NOT NULL COMMENT '区域类型;1-省级,2-市级,3-区县级,4-乡镇级,5-村级'
+) COMMENT ='系统区域表' AUTO_INCREMENT = 1;
+ALTER TABLE `sys_region` ADD UNIQUE (`code`);

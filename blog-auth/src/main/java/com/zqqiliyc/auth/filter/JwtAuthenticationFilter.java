@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (isPermitUrl(request)) {
             // token无效，但是url在白名单中，放行
             if (log.isDebugEnabled()) {
-                log.info("token invalid but is permit url: {}", request.getRequestURI());
+                log.info("is permit url: {}", request.getRequestURI());
             }
             filterChain.doFilter(request, response);
             return;
