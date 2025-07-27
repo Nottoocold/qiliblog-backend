@@ -90,3 +90,4 @@ qiliblog:
       - /api/admin/register/**
       - /api/public/**
       - /api/test/**
+    case-sensitive: true # 鉴权时角色码和权限码是否区分大小写

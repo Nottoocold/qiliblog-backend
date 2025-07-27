@@ -44,4 +44,12 @@ public class SecurityProperties {
      * 跨域请求的有效期
      */
     private Integer maxAge = 3600;
+    /**
+     * 是否区分大小写-鉴权时角色码和权限码是否区分大小写,默认不区分
+     */
+    private Boolean caseSensitive = Boolean.FALSE;
+    /**
+     * 是否开启鉴权，默认开启
+     */
+    private Boolean authorize = Boolean.TRUE;
 }
