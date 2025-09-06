@@ -3,11 +3,13 @@ package com.zqqiliyc.auth.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
-import com.zqqiliyc.auth.strategy.AuthStrategy;
 import com.zqqiliyc.auth.service.IAuthService;
+import com.zqqiliyc.auth.strategy.AuthStrategy;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
+import com.zqqiliyc.framework.web.security.SecurityUtils;
+import com.zqqiliyc.framework.web.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthService implements IAuthService {
     private final List<AuthStrategy> authStrategies;
+    private final TokenProvider tokenProvider;
 
     public AuthResult login(LoginDto loginDto) {
         AuthStrategy strategy = CollectionUtil.findOne(authStrategies, authStrategy -> authStrategy.support(loginDto.getLoginType()));
@@ -34,5 +37,11 @@ public class AuthService implements IAuthService {
         }
         AuthRequestToken requestToken = strategy.createToken(loginDto);
         return strategy.authenticate(requestToken);
+    }
+
+    @Override
+    public void logout(String accessToken) {
+        SecurityUtils.clearAuthentication();
+        tokenProvider.revokeToken(accessToken);
     }
 }

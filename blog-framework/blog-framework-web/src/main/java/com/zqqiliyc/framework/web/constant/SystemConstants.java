@@ -6,6 +6,14 @@ package com.zqqiliyc.framework.web.constant;
  */
 public interface SystemConstants {
     /**
+     * 请求头中的授权字段
+     */
+    String HEADER_AUTHORIZATION = "Authorization";
+    /**
+     * 查询参数中的授权字段
+     */
+    String QUERY_AUTHORIZATION = "access_token";
+    /**
      * jwt claims中的role字段key
      */
     String CLAIM_ROLE = "roles";

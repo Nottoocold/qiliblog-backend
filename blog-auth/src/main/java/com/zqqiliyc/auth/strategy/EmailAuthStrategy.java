@@ -8,13 +8,13 @@ import com.zqqiliyc.auth.enums.LoginType;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.auth.token.EmailAuthRequestToken;
+import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.security.PasswordEncoder;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenProvider;
-import com.zqqiliyc.domain.entity.SysUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +58,6 @@ public class EmailAuthStrategy implements AuthStrategy {
         String roles = String.join(",", authManager.getRoles(user.get().getId()));
         TokenBean token = tokenProvider.generateToken(user.get().getId(), Map.of(SystemConstants.CLAIM_ROLE, roles));
         long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
-        return new AuthResult(token.getAccessToken(), seconds);
+        return new AuthResult(token.getAccessToken(), token.getRefreshToken(), seconds);
     }
 }

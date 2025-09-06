@@ -15,6 +15,7 @@ import java.util.StringJoiner;
 public class LoginDto {
     /**
      * 登录类型
+     *
      * @see com.zqqiliyc.auth.enums.LoginType
      */
     private int loginType;

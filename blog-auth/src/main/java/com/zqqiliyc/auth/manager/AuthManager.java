@@ -31,6 +31,7 @@ public class AuthManager implements UserDetailsService {
     private final ISysUserService userService;
     private final ISysRoleService roleService;
     private final ISysPermissionService permissionService;
+
     public Optional<SysUser> findByUsername(String username) {
         return userService.findByUsername(username);
     }

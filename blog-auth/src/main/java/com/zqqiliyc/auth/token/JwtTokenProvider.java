@@ -5,15 +5,15 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
+import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
+import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
-import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.service.ISysTokenService;
 import io.mybatis.mapper.example.Example;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -26,57 +26,64 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty(prefix = "qiliblog.token", name = "style", havingValue = "JWT")
 public class JwtTokenProvider extends AbstractTokenProvider {
-    private String secret;
-    private long expiration;
-    @Autowired
+    @Resource
     private TokenProperties tokenProperties;
-    @Autowired
-    @Lazy
-    private ISysTokenService tokenService;
 
     @Override
     protected void init() {
-        secret = tokenProperties.getSecret();
-        expiration = Math.max(tokenProperties.getExpire(), 0);
-        Assert.notBlank(secret, "JWT secret must be provided");
-        Assert.isTrue(expiration > 0, "JWT expire must be greater than zero");
+        Assert.notBlank(tokenProperties.getSecret(), "JWT secret must be provided");
+        Assert.isTrue(tokenProperties.getExpire() > 0, "JWT expire must be greater than zero");
     }
 
     @Override
     protected TokenBean doGenerateToken(Long userId, Map<String, Object> claims) {
-        JWT jwt = JWT.create();
-        jwt.setSubject(String.valueOf(userId));
-        jwt.addPayloads(claims);
+        String subject = String.valueOf(userId);
         long now = System.currentTimeMillis();
         Date issuedAt = new Date(now);
-        Date expiresAt = new Date(now + expiration * 1000);
-        jwt.setIssuedAt(issuedAt).setExpiresAt(expiresAt);
-        jwt.setSigner(JWTSignerUtil.hs256(Base64.decode(secret)));
-        String accessToken = jwt.sign();
+
+        // 生成访问令牌
+        Date expiresAt_ak = new Date(now + tokenProperties.getExpire() * 1000);
+        String accessToken = createToken(subject, claims, issuedAt, expiresAt_ak);
+
+        // 生成刷新令牌
+        Date expiresAt_rk = new Date(now + tokenProperties.getRefreshExpire() * 1000);
+        String refreshToken = createToken(subject, claims, issuedAt, expiresAt_rk);
 
         TokenBean tokenBean = new TokenBean();
         tokenBean.setAccessToken(accessToken);
+        tokenBean.setRefreshToken(refreshToken);
         tokenBean.setTokenStyle("JWT");
         tokenBean.setUserId(userId);
         tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
-        tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt));
+        tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt_ak));
+        tokenBean.setRefreshExpiredAt(DateUtil.toLocalDateTime(expiresAt_rk));
         return tokenBean;
     }
 
     @Override
     public boolean validateToken(String accessToken) {
-        boolean validate = JWT.of(accessToken).setKey(Base64.decode(secret)).validate(0);
+        boolean validate = JWT.of(accessToken).setKey(Base64.decode(tokenProperties.getSecret())).validate(0);
         if (!validate) {
             return false;
         }
         Example<SysToken> example = new Example<>();
         example.createCriteria().andEqualTo(SysToken::getAccessToken, accessToken);
-        SysToken token = tokenService.findOne(example);
+        SysToken token = SpringUtils.getBean(ISysTokenService.class).findOne(example);
         return null != token && token.getRevoked() == 0;
     }
 
     @Override
     public Map<String, Object> getClaims(String accessToken) {
-        return JWT.of(accessToken).setKey(Base64.decode(secret)).getPayloads();
+        return JWT.of(accessToken).setKey(Base64.decode(tokenProperties.getSecret())).getPayloads();
+    }
+
+    private String createToken(String sub, Map<String, Object> claims, Date issuedAt, Date expiresAt) {
+        byte[] secret = Base64.decode(tokenProperties.getSecret());
+        JWT jwt = JWT.create();
+        jwt.setSubject(sub);
+        jwt.addPayloads(claims);
+        jwt.setIssuedAt(issuedAt).setExpiresAt(expiresAt);
+        jwt.setSigner(JWTSignerUtil.hs256(secret));
+        return jwt.sign();
     }
 }

@@ -10,16 +10,25 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResult {
-    /** 访问令牌 */
+    /**
+     * 访问令牌
+     */
     private String accessToken;
-    /** 有效时间,单位秒 */
+    /**
+     * 刷新令牌
+     */
+    private String refreshToken;
+    /**
+     * 有效时间(访问令牌),单位秒
+     */
     private long expiresIn;
 
     public AuthResult() {
     }
 
-    public AuthResult(String accessToken, long expiresIn) {
+    public AuthResult(String accessToken, String refreshToken, long expiresIn) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
     }
 }

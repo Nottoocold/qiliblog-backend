@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.framework.web.config.prop.SecurityProperties;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
-import com.zqqiliyc.framework.web.token.TokenProvider;
 import com.zqqiliyc.framework.web.security.SecurityUtils;
+import com.zqqiliyc.framework.web.token.TokenProvider;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -87,12 +87,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getToken(HttpServletRequest request) {
         // 1. header
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(SystemConstants.HEADER_AUTHORIZATION);
         if (token != null) {
             return cleanToken(token);
         }
         // 2. query
-        token = request.getParameter("Authorization");
+        token = request.getParameter(SystemConstants.QUERY_AUTHORIZATION);
         if (token != null) {
             return cleanToken(token);
         }

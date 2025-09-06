@@ -9,5 +9,18 @@ import com.zqqiliyc.auth.dto.LoginDto;
  */
 public interface IAuthService {
 
+    /**
+     * 登录
+     *
+     * @param loginDto 登录信息
+     * @return 登录结果
+     */
     AuthResult login(LoginDto loginDto);
+
+    /**
+     * 登出
+     *
+     * @param accessToken 访问令牌
+     */
+    void logout(String accessToken);
 }
