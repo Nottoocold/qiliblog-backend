@@ -16,11 +16,16 @@ public class SysUserRole extends BaseEntity {
     /**
      * 用户id
      */
+    @Entity.Column(value = "user_id")
     private Long userId;
     /**
      * 角色id
      */
+    @Entity.Column(value = "role_id")
     private Long roleId;
+
+    public SysUserRole() {
+    }
 
     public SysUserRole(Long userId, Long roleId) {
         this.userId = userId;

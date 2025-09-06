@@ -14,6 +14,10 @@ import lombok.Setter;
 @Setter
 public class SysRoleCreateDto implements CreateDto<SysRole> {
     /**
+     * 主键
+     */
+    private Long id;
+    /**
      * 角色编码
      */
     @NotBlank(message = "角色编码必须提供")
@@ -39,6 +43,7 @@ public class SysRoleCreateDto implements CreateDto<SysRole> {
     @Override
     public SysRole toEntity() {
         SysRole sysRole = new SysRole();
+        sysRole.setId(getId());
         sysRole.setCode(getCode());
         sysRole.setName(getName());
         sysRole.setSort(getSort() == null ? 0 : getSort());

@@ -5,7 +5,24 @@ package com.zqqiliyc.framework.web.constant;
  * @since 2025-07-19
  */
 public interface SystemConstants {
+    /**
+     * jwt claims中的role字段key
+     */
     String CLAIM_ROLE = "roles";
+    /**
+     * jwt claims中的主体字段key，本系统存的值为用户ID
+     */
     String CLAIM_SUBJECT = "sub";
+    /**
+     * 系统级别管理员用户名
+     */
+    String USER_ADMIN = "admin";
+    /**
+     * 系统级别管理员角色
+     */
     String ROLE_ADMIN = "admin";
+    /**
+     * 系统级别管理员权限
+     */
+    String PERMISSION_ADMIN = "admin";
 }

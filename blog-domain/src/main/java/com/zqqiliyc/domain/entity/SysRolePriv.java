@@ -13,12 +13,21 @@ import org.springframework.util.Assert;
 @Setter
 @Entity.Table("sys_role_permission")
 public class SysRolePriv extends BaseEntity {
+    /**
+     * 角色ID
+     */
+    @Entity.Column(value = "role_id")
     private Long roleId;
-
+    /**
+     * 权限ID
+     */
+    @Entity.Column(value = "permission_id")
     private Long privId;
 
+    public SysRolePriv() {
+    }
+
     public SysRolePriv(Long roleId, Long privId) {
-        super();
         setRoleId(roleId);
         setPrivId(privId);
     }

@@ -29,6 +29,10 @@ import lombok.Setter;
 @Setter
 public class SysUserCreateDto implements CreateDto<SysUser> {
     /**
+     * 主键
+     */
+    private Long id;
+    /**
      * 用户名 登录名
      */
     private String username;
@@ -64,10 +68,11 @@ public class SysUserCreateDto implements CreateDto<SysUser> {
     @Override
     public SysUser toEntity() {
         SysUser user = new SysUser();
+        user.setId(getId());
         user.setUsername(getUsername());
         user.setPassword(getPassword());
         user.setNickname(getNickname());
-        user.setState(getState());
+        user.setState(getState() == null ? 0 : getState());
         user.setEmail(getEmail());
         user.setPhone(getPhone());
         user.setAvatar(getAvatar());

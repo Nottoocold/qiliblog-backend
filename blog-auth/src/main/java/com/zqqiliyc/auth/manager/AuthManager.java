@@ -2,9 +2,9 @@ package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.zqqiliyc.domain.entity.*;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import com.zqqiliyc.framework.web.redis.RedisHandler;
-import com.zqqiliyc.domain.entity.*;
 import com.zqqiliyc.service.*;
 import io.mybatis.mapper.example.Example;
 import lombok.RequiredArgsConstructor;
@@ -37,30 +37,15 @@ public class AuthManager implements UserDetailsService {
     private static final String KEY_USER_INFO = "authUserInfo";
 
     public Optional<SysUser> findByUsername(String username) {
-        if (null == username) {
-            return Optional.empty();
-        }
-        Example<SysUser> example = new Example<>();
-        example.createCriteria().andEqualTo(SysUser::getUsername, username);
-        return Optional.ofNullable(userService.findOne(example));
+        return userService.findByUsername(username);
     }
 
     public Optional<SysUser> findByEmail(String email) {
-        if (null == email) {
-            return Optional.empty();
-        }
-        Example<SysUser> example = new Example<>();
-        example.createCriteria().andEqualTo(SysUser::getEmail, email);
-        return Optional.ofNullable(userService.findOne(example));
+        return userService.findByEmail(email);
     }
 
     public Optional<SysUser> findByPhone(String phone) {
-        if (null == phone) {
-            return Optional.empty();
-        }
-        Example<SysUser> example = new Example<>();
-        example.createCriteria().andEqualTo(SysUser::getPhone, phone);
-        return Optional.ofNullable(userService.findOne(example));
+        return userService.findByPhone(phone);
     }
 
     public Set<String> getRoles(long userId) {
