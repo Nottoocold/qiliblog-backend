@@ -26,6 +26,8 @@ public class TokenBean {
 
     private LocalDateTime refreshExpiredAt;
 
+    private String additionalInfo;
+
     private int revoked;
 
     private LocalDateTime revokedAt;

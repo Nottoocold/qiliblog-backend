@@ -1,14 +1,17 @@
 package com.zqqiliyc.service.listener;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.zqqiliyc.domain.dto.token.SysTokenCreateDto;
+import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenEvent;
 import com.zqqiliyc.framework.web.token.TokenEventType;
-import com.zqqiliyc.domain.dto.token.SysTokenCreateDto;
 import com.zqqiliyc.service.ISysTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * @author qili
@@ -40,6 +43,9 @@ public class TokenEventListener {
         }
         SysTokenCreateDto dto = new SysTokenCreateDto();
         BeanUtil.copyProperties(tokenBean, dto);
+        ServletRequestAttributes currented = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        String remoteAddr = currented.getRequest().getRemoteAddr();
+        dto.setIpAddress(remoteAddr);
         tokenService.create(dto);
         if (log.isDebugEnabled()) {
             log.debug("store token to db success.");
@@ -47,6 +53,17 @@ public class TokenEventListener {
     }
 
     private void refreshToken(TokenBean tokenBean) {
+        if (log.isDebugEnabled()) {
+            log.debug("refresh token to db start.");
+        }
+        SysToken sysToken = tokenService.findByAccessToken(tokenBean.getAccessToken());
+        sysToken.setAccessToken(tokenBean.getAccessToken());
+        sysToken.setIssuedAt(tokenBean.getIssuedAt());
+        sysToken.setExpiredAt(tokenBean.getExpiredAt());
+        tokenService.update(sysToken);
+        if (log.isDebugEnabled()) {
+            log.debug("refresh token to db success.");
+        }
     }
 
     private void revokeToken(TokenBean tokenBean) {

@@ -32,7 +32,7 @@ public class SysToken extends BaseEntity {
     @Entity.Column(value = "expired_at", remark = "令牌过期时间")
     private LocalDateTime expiredAt;
 
-    @Entity.Column(value = "refresh_expired_at", remark = "刷新令牌过期时间")
+    @Entity.Column(value = "refresh_expired_at", updatable = false, remark = "刷新令牌过期时间")
     private LocalDateTime refreshExpiredAt;
 
     @Entity.Column(value = "revoked", remark = "令牌是否被撤销")

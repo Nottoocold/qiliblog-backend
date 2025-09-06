@@ -23,4 +23,12 @@ public interface IAuthService {
      * @param accessToken 访问令牌
      */
     void logout(String accessToken);
+
+    /**
+     * 刷新令牌
+     *
+     * @param refreshToken 刷新令牌
+     * @return 刷新结果
+     */
+    AuthResult refreshToken(String refreshToken);
 }

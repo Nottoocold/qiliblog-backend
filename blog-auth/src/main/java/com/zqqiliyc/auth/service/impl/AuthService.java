@@ -1,6 +1,8 @@
 package com.zqqiliyc.auth.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.service.IAuthService;
@@ -9,12 +11,14 @@ import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.security.SecurityUtils;
+import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author qili
@@ -43,5 +47,19 @@ public class AuthService implements IAuthService {
     public void logout(String accessToken) {
         SecurityUtils.clearAuthentication();
         tokenProvider.revokeToken(accessToken);
+    }
+
+    @Override
+    public AuthResult refreshToken(String refreshToken) {
+        AuthResult authResult = new AuthResult();
+        TokenBean token = tokenProvider.refreshToken(refreshToken);
+        if (Objects.isNull(token) || StrUtil.isBlank(token.getAccessToken())) {
+            throw new ClientException(GlobalErrorDict.INVALID_TOKEN);
+        }
+        authResult.setAccessToken(token.getAccessToken());
+        authResult.setRefreshToken(refreshToken);
+        long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
+        authResult.setExpiresIn(seconds);
+        return authResult;
     }
 }

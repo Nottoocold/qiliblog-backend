@@ -42,16 +42,16 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Initializ
     /**
      * validate token
      *
-     * @param accessToken accessToken
+     * @param token token
      * @return true if valid, false otherwise
      */
-    boolean validateToken(String accessToken);
+    boolean validateToken(String token);
 
     /**
      * Get claims from token
      *
-     * @param accessToken accessToken
+     * @param token token
      * @return claims
      */
-    Map<String, Object> getClaims(String accessToken);
+    Map<String, Object> getClaims(String token);
 }
