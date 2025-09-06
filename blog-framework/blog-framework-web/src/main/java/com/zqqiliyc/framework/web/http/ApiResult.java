@@ -1,6 +1,5 @@
 package com.zqqiliyc.framework.web.http;
 
-import cn.hutool.core.util.IdUtil;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,10 +24,6 @@ public class ApiResult<T> {
      */
     private Long timestamp;
     /**
-     * API请求id
-     */
-    private String requestId;
-    /**
      * 响应结果
      */
     @Nullable
@@ -43,7 +38,6 @@ public class ApiResult<T> {
         this.errorDesc = errorDesc;
         this.data = data;
         this.timestamp = System.currentTimeMillis();
-        this.requestId = IdUtil.simpleUUID();
     }
 
     public static <T> ApiResult<T> success() {

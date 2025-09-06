@@ -7,4 +7,5 @@ package com.zqqiliyc.framework.web.constant;
 public interface SystemConstants {
     String CLAIM_ROLE = "roles";
     String CLAIM_SUBJECT = "sub";
+    String ROLE_ADMIN = "admin";
 }

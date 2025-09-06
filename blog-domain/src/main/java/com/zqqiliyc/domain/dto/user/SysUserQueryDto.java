@@ -1,4 +1,4 @@
-package com.zqqiliyc.admin.dto;
+package com.zqqiliyc.domain.dto.user;
 
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.domain.dto.AbstractQueryDto;
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserQueryDto extends AbstractQueryDto<SysUser> {
+public class SysUserQueryDto extends AbstractQueryDto<SysUser> {
     private String key;
 
     @Override

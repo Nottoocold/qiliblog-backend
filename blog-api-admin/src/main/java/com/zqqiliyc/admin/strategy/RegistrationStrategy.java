@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.strategy;
 
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
 
 /**
@@ -28,10 +28,10 @@ public interface RegistrationStrategy {
     /**
      * 执行注册流程。
      *
-     * @param userRegisterDto 注册请求数据传输对象，封装了用户提交的注册信息
+     * @param sysUserRegisterDto 注册请求数据传输对象，封装了用户提交的注册信息
      * @return 返回注册结果封装对象 {@link RegisterResult}
      * @throws IllegalArgumentException 如果传入参数非法或业务规则不满足
      */
-    void register(UserRegisterDto userRegisterDto);
+    void register(SysUserRegisterDto sysUserRegisterDto);
 
 }    

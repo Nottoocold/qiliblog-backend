@@ -1,4 +1,4 @@
-package com.zqqiliyc.admin.dto;
+package com.zqqiliyc.domain.dto.user;
 
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.entity.SysUser;
@@ -27,7 +27,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserCreateDto implements CreateDto<SysUser> {
+public class SysUserCreateDto implements CreateDto<SysUser> {
     /**
      * 用户名 登录名
      */

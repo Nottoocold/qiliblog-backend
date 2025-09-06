@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.controller;
 
 import com.zqqiliyc.admin.dto.EmailDto;
-import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.service.IRegisterService;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
@@ -48,12 +48,12 @@ public class RegisterController {
      * <p>
      * 处理用户注册请求
      *
-     * @param userRegisterDto 用户注册信息的数据传输对象，包含了用户注册所需的信息
+     * @param sysUserRegisterDto 用户注册信息的数据传输对象，包含了用户注册所需的信息
      * @return 返回一个ApiResult对象，包含了注册操作的结果信息
      */
     @PostMapping
-    public ApiResult<?> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
-        registerService.register(userRegisterDto);
+    public ApiResult<?> register(@Valid @RequestBody SysUserRegisterDto sysUserRegisterDto) {
+        registerService.register(sysUserRegisterDto);
         return ApiResult.success();
     }
 

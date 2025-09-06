@@ -1,8 +1,8 @@
 package com.zqqiliyc.service;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.admin.dto.UserCreateDto;
-import com.zqqiliyc.admin.dto.UserQueryDto;
+import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
+import com.zqqiliyc.domain.dto.user.SysUserQueryDto;
 import com.zqqiliyc.domain.entity.SysUser;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.*;
@@ -26,7 +26,7 @@ class SysUserServiceTest {
     @BeforeEach
     public void insert() {
         for (int i = 0; i < count; i++) {
-            UserCreateDto sysUser = new UserCreateDto();
+            SysUserCreateDto sysUser = new SysUserCreateDto();
             sysUser.setUsername(RandomUtil.randomString(6));
             sysUser.setNickname(RandomUtil.randomString(6));
             sysUser.setPassword(RandomUtil.randomString(18));
@@ -44,7 +44,7 @@ class SysUserServiceTest {
     @Test
     @Transactional
     public void testFindList() {
-        UserQueryDto queryDto = new UserQueryDto();
+        SysUserQueryDto queryDto = new SysUserQueryDto();
         queryDto.setKey(RandomUtil.randomString(3));
         Example<SysUser> example = queryDto.toExample();
         List<SysUser> sysUsers = iSysUserService.findList(example);

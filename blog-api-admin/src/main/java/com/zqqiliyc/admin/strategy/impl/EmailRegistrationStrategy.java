@@ -4,8 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.admin.dto.UserCreateDto;
-import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
+import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
@@ -60,28 +60,28 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      *   <li>创建新用户并保存到数据库</li>
      * </ol>
      *
-     * @param userRegisterDto 注册请求数据传输对象
+     * @param sysUserRegisterDto 注册请求数据传输对象
      * @return 返回注册结果封装对象 {@link RegisterResult}
      * @throws ClientException 如果注册失败，如参数不合法或验证失败
      */
     @Override
-    public void register(UserRegisterDto userRegisterDto) {
+    public void register(SysUserRegisterDto sysUserRegisterDto) {
         log.debug("{}开始执行邮箱注册流程", LOG_PREFIX);
 
-        validateRegisterDto(userRegisterDto);
+        validateRegisterDto(sysUserRegisterDto);
         // 邮箱注册场景下，用户只需要要提供邮箱、密码、验证码，其他字段由系统自动生成
-        userRegisterDto.setPhone(VirtualPhoneGenerator.generate());
+        sysUserRegisterDto.setPhone(VirtualPhoneGenerator.generate());
         // 使用雪花算法生成的ID取最后8位作为随机用户名后缀
-        userRegisterDto.setUsername(StrUtil.format("user_{}", SnowFlakeUtils.genId() % 100000000));
+        sysUserRegisterDto.setUsername(StrUtil.format("user_{}", SnowFlakeUtils.genId() % 100000000));
 
-        checkUniqueness(userRegisterDto);
+        checkUniqueness(sysUserRegisterDto);
 
-        verifyCode(userRegisterDto);
+        verifyCode(sysUserRegisterDto);
 
-        UserCreateDto userCreateDto = createUser(userRegisterDto);
-        iSysUserService.create(userCreateDto);
+        SysUserCreateDto sysUserCreateDto = createUser(sysUserRegisterDto);
+        iSysUserService.create(sysUserCreateDto);
 
-        log.info("{}注册成功，用户：{}", LOG_PREFIX, userRegisterDto.getUsername());
+        log.info("{}注册成功，用户：{}", LOG_PREFIX, sysUserRegisterDto.getUsername());
     }
 
     /**
@@ -89,11 +89,11 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * <p>
      * 包括：邮箱格式、密码长度、非空判断等
      *
-     * @param userRegisterDto 注册请求数据
+     * @param sysUserRegisterDto 注册请求数据
      * @throws ClientException 参数非法时抛出
      */
-    private void validateRegisterDto(UserRegisterDto userRegisterDto) {
-        String email = userRegisterDto.getEmail();
+    private void validateRegisterDto(SysUserRegisterDto sysUserRegisterDto) {
+        String email = sysUserRegisterDto.getEmail();
 
         // 邮箱非空 + 格式正确
         if (StrUtil.isBlank(email)) {
@@ -111,13 +111,13 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
     /**
      * 检查邮箱、用户名、手机号是否已被注册
      *
-     * @param userRegisterDto 注册请求数据
+     * @param sysUserRegisterDto 注册请求数据
      * @throws ClientException 如果存在重复字段
      */
-    private void checkUniqueness(UserRegisterDto userRegisterDto) {
-        String email = userRegisterDto.getEmail();
-        String username = userRegisterDto.getUsername();
-        String phone = userRegisterDto.getPhone();
+    private void checkUniqueness(SysUserRegisterDto sysUserRegisterDto) {
+        String email = sysUserRegisterDto.getEmail();
+        String username = sysUserRegisterDto.getUsername();
+        String phone = sysUserRegisterDto.getPhone();
 
         if (iSysUserService.isEmailRegistered(email)) {
             log.warn("{}邮箱已存在: {}", LOG_PREFIX, email);
@@ -140,11 +140,11 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
     /**
      * 验证码校验
      *
-     * @param userRegisterDto 注册请求数据
+     * @param sysUserRegisterDto 注册请求数据
      * @throws ClientException 验证码无效时抛出
      */
-    private void verifyCode(UserRegisterDto userRegisterDto) {
-        boolean isValid = verificationCodeService.verifyCode(userRegisterDto.getEmail(), userRegisterDto.getCode());
+    private void verifyCode(SysUserRegisterDto sysUserRegisterDto) {
+        boolean isValid = verificationCodeService.verifyCode(sysUserRegisterDto.getEmail(), sysUserRegisterDto.getCode());
         if (!isValid) {
             log.warn("{}验证码校验失败", LOG_PREFIX);
             throw new ClientException(GlobalErrorDict.INVALID_CODE);
@@ -156,20 +156,20 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
     /**
      * 创建用户创建对象
      *
-     * @param userRegisterDto 注册请求数据
+     * @param sysUserRegisterDto 注册请求数据
      * @return 用户创建 DTO 对象
      */
-    private UserCreateDto createUser(UserRegisterDto userRegisterDto) {
+    private SysUserCreateDto createUser(SysUserRegisterDto sysUserRegisterDto) {
         log.debug("{}开始构建用户创建对象", LOG_PREFIX);
 
-        UserCreateDto userCreateDto = new UserCreateDto();
-        BeanUtil.copyProperties(userRegisterDto, userCreateDto);
-        userCreateDto.setState(0);
-        userCreateDto.setDeptId(-1L);
-        userCreateDto.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        SysUserCreateDto sysUserCreateDto = new SysUserCreateDto();
+        BeanUtil.copyProperties(sysUserRegisterDto, sysUserCreateDto);
+        sysUserCreateDto.setState(0);
+        sysUserCreateDto.setDeptId(-1L);
+        sysUserCreateDto.setPassword(passwordEncoder.encode(sysUserRegisterDto.getPassword()));
 
-        log.debug("{}用户创建对象构建完成: {}", LOG_PREFIX, userCreateDto);
-        return userCreateDto;
+        log.debug("{}用户创建对象构建完成: {}", LOG_PREFIX, sysUserCreateDto);
+        return sysUserCreateDto;
     }
 
 }

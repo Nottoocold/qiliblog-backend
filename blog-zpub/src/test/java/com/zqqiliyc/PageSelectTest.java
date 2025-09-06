@@ -1,8 +1,8 @@
 package com.zqqiliyc;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.admin.dto.UserCreateDto;
-import com.zqqiliyc.admin.dto.UserQueryDto;
+import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
+import com.zqqiliyc.domain.dto.user.SysUserQueryDto;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.service.ISysUserService;
@@ -26,7 +26,7 @@ public class PageSelectTest {
     @BeforeEach
     public void setUp() {
         for (int i = 0; i < count; i++) {
-            UserCreateDto sysUser = new UserCreateDto();
+            SysUserCreateDto sysUser = new SysUserCreateDto();
             sysUser.setUsername(RandomUtil.randomString(6));
             sysUser.setNickname(RandomUtil.randomString(6));
             sysUser.setPassword(RandomUtil.randomString(18));
@@ -45,7 +45,7 @@ public class PageSelectTest {
     @Test
     @Transactional
     public void testNoPage() {
-        UserQueryDto queryDto = new UserQueryDto();
+        SysUserQueryDto queryDto = new SysUserQueryDto();
         queryDto.setOrderBy("username desc");
 
         PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
@@ -59,7 +59,7 @@ public class PageSelectTest {
     public void testPage() {
         int pageNum = 1;
         int pageSize = 10;
-        UserQueryDto queryDto = new UserQueryDto();
+        SysUserQueryDto queryDto = new SysUserQueryDto();
         queryDto.setOrderBy("username desc");
         queryDto.setPageNum(pageNum);
         queryDto.setPageSize(pageSize);

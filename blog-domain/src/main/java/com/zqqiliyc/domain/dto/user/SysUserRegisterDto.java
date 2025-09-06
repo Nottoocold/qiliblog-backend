@@ -1,10 +1,9 @@
-package com.zqqiliyc.admin.dto;
+package com.zqqiliyc.domain.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.experimental.Accessors;
 
 /**
  * @author hallo
@@ -13,7 +12,7 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
-public class UserRegisterDto {
+public class SysUserRegisterDto {
     /**
      * 用户名
      */

@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zqqiliyc.admin.dto.UserRegisterDto;
+import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.service.IRegisterService;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
@@ -34,20 +34,20 @@ public class RegisterService implements IRegisterService {
      * <p>
      * 查找匹配的注册策略，若未找到则抛出异常
      *
-     * @param userRegisterDto 注册信息
+     * @param sysUserRegisterDto 注册信息
      * @return 注册结果
      * @throws ClientException 如果注册类型为空或不被支持
      */
     @Override
-    public void register(UserRegisterDto userRegisterDto) {
+    public void register(SysUserRegisterDto sysUserRegisterDto) {
         RegistrationStrategy strategy = CollectionUtil.findOne(
                 registrationStrategyList,
-                s -> s.support(userRegisterDto.getRegisterType()));
+                s -> s.support(sysUserRegisterDto.getRegisterType()));
 
         if (null == strategy) {
-            log.warn("{}不支持的注册类型: {}", LOG_PREFIX, userRegisterDto.getRegisterType());
+            log.warn("{}不支持的注册类型: {}", LOG_PREFIX, sysUserRegisterDto.getRegisterType());
             throw new ClientException(GlobalErrorDict.UNSUPPORTED_REGISTER_TYPE);
         }
-        strategy.register(userRegisterDto);
+        strategy.register(sysUserRegisterDto);
     }
 }
