@@ -4,6 +4,7 @@ import com.zqqiliyc.domain.entity.SysRole;
 import com.zqqiliyc.service.base.IBaseDeleteHardService;
 import com.zqqiliyc.service.base.IBaseService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,4 +20,12 @@ public interface ISysRoleService extends IBaseService<SysRole, Long>, IBaseDelet
      * @return 角色
      */
     Optional<SysRole> findByCode(String code);
+
+    /**
+     * 根据用户ID查询所拥有的角色
+     *
+     * @param userId 用户ID
+     * @return 角色
+     */
+    List<SysRole> findByUserId(Long userId);
 }

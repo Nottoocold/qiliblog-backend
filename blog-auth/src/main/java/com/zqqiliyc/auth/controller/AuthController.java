@@ -2,7 +2,7 @@ package com.zqqiliyc.auth.controller;
 
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
-import com.zqqiliyc.auth.service.ILoginService;
+import com.zqqiliyc.auth.service.IAuthService;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.controller.BaseController;
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(WebApiConstants.API_AUTH_PREFIX)
-public class LoginController extends BaseController {
-    private final ILoginService loginService;
+public class AuthController extends BaseController {
+    private final IAuthService loginService;
     private final TokenProvider tokenProvider;
 
     @PostMapping("/login")

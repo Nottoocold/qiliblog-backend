@@ -7,7 +7,7 @@ import com.zqqiliyc.auth.dto.LoginDto;
  * @author qili
  * @date 2025-07-01
  */
-public interface ILoginService {
+public interface IAuthService {
 
     AuthResult login(LoginDto loginDto);
 }

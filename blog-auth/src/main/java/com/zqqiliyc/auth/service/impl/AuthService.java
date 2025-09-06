@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.strategy.AuthStrategy;
-import com.zqqiliyc.auth.service.ILoginService;
+import com.zqqiliyc.auth.service.IAuthService;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoginService implements ILoginService {
+public class AuthService implements IAuthService {
     private final List<AuthStrategy> authStrategies;
 
     public AuthResult login(LoginDto loginDto) {

@@ -1,12 +1,12 @@
 package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.domain.entity.*;
+import com.zqqiliyc.domain.entity.SysRole;
+import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
-import com.zqqiliyc.framework.web.redis.RedisHandler;
-import com.zqqiliyc.service.*;
-import io.mybatis.mapper.example.Example;
+import com.zqqiliyc.service.ISysPermissionService;
+import com.zqqiliyc.service.ISysRoleService;
+import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,11 +31,6 @@ public class AuthManager implements UserDetailsService {
     private final ISysUserService userService;
     private final ISysRoleService roleService;
     private final ISysPermissionService permissionService;
-    private final ISysUserRoleService userRoleService;
-    private final ISysRolePrivService rolePrivService;
-    private final RedisHandler redisHandler;
-    private static final String KEY_USER_INFO = "authUserInfo";
-
     public Optional<SysUser> findByUsername(String username) {
         return userService.findByUsername(username);
     }
@@ -52,14 +47,7 @@ public class AuthManager implements UserDetailsService {
         if (userId <= 0) {
             return Collections.emptySet();
         }
-        Example<SysUserRole> urexample = new Example<>();
-        urexample.createCriteria().andEqualTo(SysUserRole::getUserId, userId);
-        List<SysUserRole> userRoles = userRoleService.findList(urexample);
-        if (CollUtil.isEmpty(userRoles)) {
-            return Collections.emptySet();
-        }
-        List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).toList();
-        List<SysRole> roleList = roleService.findByFieldList(SysRole::getId, roleIds);
+        List<SysRole> roleList = roleService.findByUserId(userId);
         if (CollUtil.isEmpty(roleList)) {
             return Collections.emptySet();
         }
@@ -70,31 +58,7 @@ public class AuthManager implements UserDetailsService {
         if (userId <= 0) {
             return Collections.emptySet();
         }
-        Example<SysUserRole> urexample = new Example<>();
-        urexample.createCriteria().andEqualTo(SysUserRole::getUserId, userId);
-        List<SysUserRole> userRoles = userRoleService.findList(urexample);
-        if (CollUtil.isEmpty(userRoles)) {
-            return Collections.emptySet();
-        }
-        List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).toList();
-        Example<SysRolePriv> rpexample = new Example<>();
-        rpexample.createCriteria().andIn(SysRolePriv::getRoleId, roleIds);
-        rpexample.setDistinct(true);
-        rpexample.selectColumns(SysRolePriv::getPrivId);
-        List<SysRolePriv> rolePrivs = rolePrivService.findList(rpexample);
-        if (CollUtil.isEmpty(rolePrivs)) {
-            return Collections.emptySet();
-        }
-        List<Long> privIds = rolePrivs.stream().map(SysRolePriv::getPrivId).toList();
-        List<SysPermission> privList = permissionService.findByFieldList(SysPermission::getId, privIds);
-        if (CollUtil.isEmpty(privList)) {
-            return Collections.emptySet();
-        }
-        return privList.stream().map(SysPermission::getCode).collect(Collectors.toUnmodifiableSet());
-    }
-
-    private String userInfoRedisKey(long userId) {
-        return StrUtil.format("auth:userinfo:{}", userId);
+        return permissionService.findByUserId(userId);
     }
 
     @Override

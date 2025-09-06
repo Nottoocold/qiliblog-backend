@@ -4,6 +4,7 @@ import com.zqqiliyc.domain.entity.SysPermission;
 import com.zqqiliyc.service.base.IBaseService;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author qili
@@ -18,4 +19,12 @@ public interface ISysPermissionService extends IBaseService<SysPermission, Long>
      * @return 权限
      */
     Optional<SysPermission> findByCode(String code);
+
+    /**
+     * 根据用户ID查询权限
+     *
+     * @param userId 用户ID
+     * @return 权限列表
+     */
+    Set<String> findByUserId(Long userId);
 }
