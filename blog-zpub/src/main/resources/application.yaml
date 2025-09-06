@@ -87,6 +87,7 @@ qiliblog:
       - /error
       - /webjars/**
       - /api/auth/login
+      - /api/auth/refresh
       - /api/admin/register/**
       - /api/public/**
       - /api/test/**

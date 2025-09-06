@@ -36,4 +36,9 @@ public class AuthController extends BaseController {
         authService.logout(accessToken);
         return ApiResult.success();
     }
+
+    @PostMapping("/refresh")
+    public ApiResult<AuthResult> refresh(@RequestParam String refreshToken) {
+        return ApiResult.success(authService.refreshToken(refreshToken));
+    }
 }
