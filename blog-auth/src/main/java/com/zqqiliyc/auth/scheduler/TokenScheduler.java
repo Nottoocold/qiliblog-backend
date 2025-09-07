@@ -40,7 +40,8 @@ public class TokenScheduler {
     private void doCleanJob() {
         Example<SysToken> example = new Example<>();
         Example.Criteria<SysToken> criteria = example.createCriteria();
-        criteria.andLessThan(SysToken::getExpiredAt, LocalDateTime.now());
+        criteria.andLessThan(SysToken::getRefreshExpiredAt, LocalDateTime.now());
+        example.or().andEqualTo(SysToken::getRevoked, 1);
         List<SysToken> tokens = tokenService.findList(example);
         if (log.isDebugEnabled()) {
             log.info("find invalid token size: {}", tokens.size());

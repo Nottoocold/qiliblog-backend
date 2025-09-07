@@ -5,14 +5,18 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
+import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.auth.service.IAuthService;
 import com.zqqiliyc.auth.strategy.AuthStrategy;
 import com.zqqiliyc.auth.token.AuthRequestToken;
+import com.zqqiliyc.domain.entity.SysToken;
+import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.security.SecurityUtils;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenProvider;
+import com.zqqiliyc.service.ISysTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,8 @@ import java.util.Objects;
 public class AuthService implements IAuthService {
     private final List<AuthStrategy> authStrategies;
     private final TokenProvider tokenProvider;
+    private final ISysTokenService sysTokenService;
+    private final AuthManager authManager;
 
     public AuthResult login(LoginDto loginDto) {
         AuthStrategy strategy = CollectionUtil.findOne(authStrategies, authStrategy -> authStrategy.support(loginDto.getLoginType()));
@@ -47,6 +53,18 @@ public class AuthService implements IAuthService {
     public void logout(String accessToken) {
         SecurityUtils.clearAuthentication();
         tokenProvider.revokeToken(accessToken);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param accessToken
+     * @return 用户信息
+     */
+    @Override
+    public AuthUserInfoBean userinfo(String accessToken) {
+        SysToken sysToken = sysTokenService.findByAccessToken(accessToken);
+        return (AuthUserInfoBean) authManager.loadUserByUsername(sysToken.getUserId().toString());
     }
 
     @Override

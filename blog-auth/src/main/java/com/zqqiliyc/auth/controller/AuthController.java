@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 /**
  * @author qili
  * @date 2025-06-29
@@ -31,14 +33,24 @@ public class AuthController extends BaseController {
 
     @PostMapping("/logout")
     public ApiResult<Void> logout(@RequestHeader(SystemConstants.HEADER_AUTHORIZATION) String accessToken) {
+        String ak = accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
         AuthUserInfoBean currentUser = getCurrentUser();
         log.info("用户 {} 退出登录", currentUser.getUsername());
-        authService.logout(accessToken);
+        authService.logout(ak);
         return ApiResult.success();
     }
 
+    @GetMapping("/userinfo")
+    public ApiResult<AuthUserInfoBean> userinfo() {
+        AuthUserInfoBean currentUser = getCurrentUser();
+        if (Objects.nonNull(currentUser)) {
+            return ApiResult.success(currentUser);
+        }
+        return ApiResult.success(authService.userinfo(getAuthentication().getCredentials().toString()));
+    }
+
     @PostMapping("/refresh")
-    public ApiResult<AuthResult> refresh(@RequestParam String refreshToken) {
+    public ApiResult<AuthResult> refresh(@RequestParam("refresh_token") String refreshToken) {
         return ApiResult.success(authService.refreshToken(refreshToken));
     }
 }

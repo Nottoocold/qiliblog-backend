@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -103,6 +104,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class)
     @Override
     public T update(T entity) {
+        entity.setUpdateTime(LocalDateTime.now());
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         return entity;
     }
@@ -110,6 +112,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class)
     @Override
     public T updateSelective(T entity) {
+        entity.setUpdateTime(LocalDateTime.now());
         Assert.isTrue(baseMapper.updateByPrimaryKeySelective(entity) == 1, "update failed");
         return entity;
     }

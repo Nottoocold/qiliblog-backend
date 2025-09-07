@@ -65,6 +65,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
             Date expiresAt = new Date(now + tokenProperties.getExpire() * 1000);
             String ak = createToken(subject, claims, issuedAt, expiresAt);
             tokenBean.setAccessToken(ak);
+            tokenBean.setRefreshToken(refreshToken);
             tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
             tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt));
             publishEvent(new TokenEvent(tokenBean, TokenEventType.REFRESH));

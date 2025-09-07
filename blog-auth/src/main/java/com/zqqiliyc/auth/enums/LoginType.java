@@ -9,7 +9,8 @@ import lombok.Getter;
 @Getter
 public enum LoginType {
     EMAIL(0, "邮箱登录"),
-    MOBILE(1, "手机登录");
+    MOBILE(1, "手机登录"),
+    USERNAME(2, "用户名登录");
 
     private final int value;
 

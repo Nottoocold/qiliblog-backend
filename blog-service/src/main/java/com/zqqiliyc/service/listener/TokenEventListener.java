@@ -56,7 +56,7 @@ public class TokenEventListener {
         if (log.isDebugEnabled()) {
             log.debug("refresh token to db start.");
         }
-        SysToken sysToken = tokenService.findByAccessToken(tokenBean.getAccessToken());
+        SysToken sysToken = tokenService.findByRefreshToken(tokenBean.getRefreshToken());
         sysToken.setAccessToken(tokenBean.getAccessToken());
         sysToken.setIssuedAt(tokenBean.getIssuedAt());
         sysToken.setExpiredAt(tokenBean.getExpiredAt());

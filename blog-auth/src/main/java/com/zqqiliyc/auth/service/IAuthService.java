@@ -2,6 +2,7 @@ package com.zqqiliyc.auth.service;
 
 import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
+import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 
 /**
  * @author qili
@@ -23,6 +24,13 @@ public interface IAuthService {
      * @param accessToken 访问令牌
      */
     void logout(String accessToken);
+
+    /**
+     * 获取用户信息
+     *
+     * @return 用户信息
+     */
+    AuthUserInfoBean userinfo(String accessToken);
 
     /**
      * 刷新令牌

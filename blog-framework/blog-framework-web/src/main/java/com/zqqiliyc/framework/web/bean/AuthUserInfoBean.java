@@ -1,6 +1,7 @@
 package com.zqqiliyc.framework.web.bean;
 
 import cn.hutool.core.util.ArrayUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,8 @@ import java.util.*;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(value = {"authorities", "password",
+        "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
 public class AuthUserInfoBean implements UserDetails {
     /**
      * 用户id
