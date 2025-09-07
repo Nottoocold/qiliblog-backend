@@ -17,7 +17,10 @@
         <dependency>
             <groupId>com.zqqiliyc</groupId>
             <artifactId>blog-api-admin</artifactId>
-            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zqqiliyc</groupId>
+            <artifactId>blog-api-public</artifactId>
         </dependency>
         <dependency>
             <groupId>com.zqqiliyc</groupId>

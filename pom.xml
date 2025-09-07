@@ -16,10 +16,11 @@
         <module>blog-domain</module>
         <module>blog-repository</module>
         <module>blog-service</module>
-        <module>blog-api-admin</module>
         <module>blog-zpub</module>
         <module>blog-auth</module>
         <module>blog-framework</module>
+        <module>blog-api-admin</module>
+        <module>blog-api-public</module>
     </modules>
 
     <properties>
@@ -86,6 +87,12 @@
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
                 <artifactId>blog-api-admin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zqqiliyc</groupId>
+                <artifactId>blog-api-public</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
