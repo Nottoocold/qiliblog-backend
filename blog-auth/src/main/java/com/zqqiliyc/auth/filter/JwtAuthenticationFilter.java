@@ -63,19 +63,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String token = getToken(request);
-        if (StrUtil.isNotBlank(token)) {
-            if (!tokenProvider.validateToken(token)) {
+        String accessToken = getToken(request);
+        if (StrUtil.isNotBlank(accessToken)) {
+            if (!tokenProvider.validateToken(accessToken)) {
                 // token无效，后续会被拦截
                 filterChain.doFilter(request, response);
                 return;
             } else {
                 // token有效，设置用户信息
-                Map<String, Object> claims = tokenProvider.getClaims(token);
+                Map<String, Object> claims = tokenProvider.getClaims(accessToken);
                 String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
                 UserDetails userDetails = authManager.loadUserByUsername(userId);
                 UsernamePasswordAuthenticationToken authenticated =
-                        UsernamePasswordAuthenticationToken.authenticated(userDetails, token, userDetails.getAuthorities());
+                        UsernamePasswordAuthenticationToken.authenticated(userDetails, accessToken, userDetails.getAuthorities());
                 authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityUtils.setAuthentication(authenticated);
             }

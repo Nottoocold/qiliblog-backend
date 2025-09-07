@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class SysRegionController {
 
     @GetMapping("/region/villages")
     public ApiResult<List<SysRegion>> findVillages() {
-        return ApiResult.success(sysRegionService.findVillages());
+        return ApiResult.success(Collections.emptyList());
     }
 
     @GetMapping("/region/{provinceCode}/cities")
