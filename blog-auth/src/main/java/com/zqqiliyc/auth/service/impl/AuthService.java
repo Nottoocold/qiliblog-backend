@@ -52,7 +52,7 @@ public class AuthService implements IAuthService {
     @Override
     public void logout(String accessToken) {
         SecurityUtils.clearAuthentication();
-        tokenProvider.revokeToken(accessToken);
+        tokenProvider.revokeToken(cleanToken(accessToken));
     }
 
     /**
@@ -63,8 +63,8 @@ public class AuthService implements IAuthService {
      */
     @Override
     public AuthUserInfoBean userinfo(String accessToken) {
-        SysToken sysToken = sysTokenService.findByAccessToken(accessToken);
-        return (AuthUserInfoBean) authManager.loadUserByUsername(sysToken.getUserId().toString());
+        SysToken sysToken = sysTokenService.findByAccessToken(cleanToken(accessToken));
+        return authManager.getUserInfo(sysToken.getUserId());
     }
 
     @Override
@@ -79,5 +79,9 @@ public class AuthService implements IAuthService {
         long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
         authResult.setExpiresIn(seconds);
         return authResult;
+    }
+
+    private String cleanToken(String accessToken) {
+        return accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
     }
 }

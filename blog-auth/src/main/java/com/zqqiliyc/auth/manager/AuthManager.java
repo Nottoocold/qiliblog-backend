@@ -62,6 +62,10 @@ public class AuthManager implements UserDetailsService {
         return permissionService.findByUserId(userId);
     }
 
+    public AuthUserInfoBean getUserInfo(Long userId) {
+        return (AuthUserInfoBean) loadUserByUsername(userId.toString());
+    }
+
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         SysUser sysUser = userService.findById(Long.parseLong(userId));
