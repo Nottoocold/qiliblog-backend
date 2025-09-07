@@ -1,4 +1,4 @@
-FROM openjdk:17-ea-slim
+FROM openjdk:17-jre-slim
 
 VOLUME /app
 
@@ -7,4 +7,8 @@ WORKDIR /app
 COPY ./@project.build.finalName@.jar /app/app.jar
 COPY ./libs /app/libs
 
-CMD ["java", "-server", "-Dloader.path=libs", "-jar", "app.jar", "--spring.profiles.active=prod"]
+ENV JAVA_OPTS="-server \
+               -Dloader.path=libs \
+               -Dspring.profiles.active=prod"
+
+ENTRYPOINT ["/bin/sh", "-c", "java $JAVA_OPTS -jar app.jar"]

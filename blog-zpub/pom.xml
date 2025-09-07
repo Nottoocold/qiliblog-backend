@@ -55,7 +55,7 @@
                 <includes>
                     <include>Dockerfile</include>
                 </includes>
-                <targetPath>${project.build.directory}</targetPath>
+                <targetPath>${project.build.directory}/dist</targetPath>
             </resource>
         </resources>
         <plugins>
@@ -66,6 +66,7 @@
                 <configuration>
                     <executable>true</executable>
                     <layout>ZIP</layout>
+                    <outputDirectory>${project.build.directory}/dist</outputDirectory>
                     <includes>
                         <include>
                             <groupId>${project.groupId}</groupId>
@@ -115,11 +116,13 @@
                         </goals>
                         <configuration>
                             <!--指定的依赖路径-->
-                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <outputDirectory>${project.build.directory}/dist/libs</outputDirectory>
                             <!--依赖的类型-->
                             <includeScope>runtime</includeScope>
                             <!--排除依赖-->
-                            <excludeGroupIds>${project.groupId}</excludeGroupIds>
+                            <excludeGroupIds>
+                                ${project.groupId},org.junit,org.mockito
+                            </excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>
