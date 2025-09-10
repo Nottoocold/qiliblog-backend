@@ -37,7 +37,9 @@ public class GlobalErrorController implements ErrorController {
 
         boolean prodEnv = SpringEnvUtils.isProd();
         if (!prodEnv) {
-            log.error("When request uri: {}, status: {}, exception: {}", requestUri, status, ExceptionUtil.stacktraceToString(ex));
+            log.error("When request uri: {}, status: {}, exception: {}", requestUri, status,
+                    ex != null ? ExceptionUtil.stacktraceToString(ex) :
+                            httpStatus != null ? httpStatus.getReasonPhrase() : "异常信息暂无");
         } else {
             log.error("When request uri: {}, status: {}, message: {}", requestUri, status, ExceptionUtil.getMessage(ex));
         }
