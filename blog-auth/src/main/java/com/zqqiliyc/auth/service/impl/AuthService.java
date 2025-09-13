@@ -72,7 +72,7 @@ public class AuthService implements IAuthService {
         AuthResult authResult = new AuthResult();
         TokenBean token = tokenProvider.refreshToken(refreshToken);
         if (Objects.isNull(token) || StrUtil.isBlank(token.getAccessToken())) {
-            throw new ClientException(GlobalErrorDict.INVALID_TOKEN);
+            throw new ClientException(GlobalErrorDict.REFRESH_ERROR);
         }
         authResult.setAccessToken(token.getAccessToken());
         authResult.setRefreshToken(refreshToken);

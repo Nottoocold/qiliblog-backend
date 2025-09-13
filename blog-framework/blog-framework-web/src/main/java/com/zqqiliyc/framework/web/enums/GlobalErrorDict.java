@@ -23,7 +23,8 @@ public enum GlobalErrorDict {
     EMAIL_EXISTS(401003, "邮箱已经存在"),
     USERNAME_EXISTS(401004, "用户名已经存在"),
     PHONE_EXISTS(401005, "手机号已经存在"),
-    INVALID_TOKEN(401006, "无效的token");
+    INVALID_TOKEN(401006, "无效的token"),
+    REFRESH_ERROR(401007, "刷新token失败");
     //endregion
 
     /**
