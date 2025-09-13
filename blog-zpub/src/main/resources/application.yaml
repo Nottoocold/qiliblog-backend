@@ -82,8 +82,10 @@ qiliblog:
   security:
     allowed-urls:
       - /swagger-ui.html
+      - /swagger-ui/**
       - /swagger-resources/**
-      - /v2/api-docs
+      - /v3/api-docs
+      - /v3/api-docs/**
       - /error
       - /webjars/**
       - /api/auth/login
