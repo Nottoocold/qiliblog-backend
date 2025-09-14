@@ -44,6 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private OrRequestMatcher permitMatcher;
 
+    public JwtAuthenticationFilter() {
+    }
+
     @PostConstruct
     public void init() {
         List<RequestMatcher> matchers = new ArrayList<>();
@@ -56,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (isPermitUrl(request)) {
-            // token无效，但是url在白名单中，放行
+            // url在白名单中，放行
             if (log.isDebugEnabled()) {
                 log.info("is permit url: {}", request.getRequestURI());
             }
@@ -64,21 +67,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         String accessToken = getToken(request);
-        if (StrUtil.isNotBlank(accessToken)) {
-            if (!tokenProvider.validateToken(accessToken)) {
-                // token无效，后续会被拦截
-                filterChain.doFilter(request, response);
-                return;
-            } else {
-                // token有效，设置用户信息
-                Map<String, Object> claims = tokenProvider.getClaims(accessToken);
-                String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
-                UserDetails userDetails = authManager.loadUserByUsername(userId);
-                UsernamePasswordAuthenticationToken authenticated =
-                        UsernamePasswordAuthenticationToken.authenticated(userDetails, accessToken, userDetails.getAuthorities());
-                authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityUtils.setAuthentication(authenticated);
-            }
+        if (StrUtil.isNotBlank(accessToken) && tokenProvider.verifyToken(accessToken)) {
+            // token有效，设置用户信息
+            Map<String, Object> claims = tokenProvider.getClaims(accessToken);
+            String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
+            UserDetails userDetails = authManager.loadUserByUsername(userId);
+            UsernamePasswordAuthenticationToken authenticated =
+                    UsernamePasswordAuthenticationToken.authenticated(userDetails, accessToken, userDetails.getAuthorities());
+            authenticated.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityUtils.setAuthentication(authenticated);
         }
 
         filterChain.doFilter(request, response);

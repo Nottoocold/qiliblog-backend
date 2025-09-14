@@ -3,6 +3,7 @@ package com.zqqiliyc.auth.token;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,8 +13,6 @@ import com.zqqiliyc.framework.web.json.JsonHelper;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
-import com.zqqiliyc.framework.web.token.TokenEvent;
-import com.zqqiliyc.framework.web.token.TokenEventType;
 import com.zqqiliyc.service.ISysTokenService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,11 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty(prefix = "qiliblog.token", name = "style", havingValue = "JWT")
 public class JwtTokenProvider extends AbstractTokenProvider {
+    private static final String JWT_TOKEN_STYLE = "JWT";
     @Resource
     private TokenProperties tokenProperties;
+    @Resource
+    private ISysTokenService tokenService;
 
     @Override
     protected void init() {
@@ -43,39 +45,20 @@ public class JwtTokenProvider extends AbstractTokenProvider {
     @Override
     public TokenBean refreshToken(String refreshToken) {
         ISysTokenService tokenService = SpringUtils.getBean(ISysTokenService.class);
-        // 1. 检查刷新令牌本身是否合法
-        if (!validateToken(refreshToken)) {
+        // 检查刷新令牌本身是否合法
+        SysToken oldSysToken = tokenService.findByRefreshToken(refreshToken);
+        if (!verifyToken(oldSysToken.getRefreshToken())) {
             log.warn("Refresh token is invalid, can't refresh");
             return null;
         }
-        SysToken sysToken = tokenService.findByRefreshToken(refreshToken);
 
-        // 走到这里说明刷新令牌合法
-        TokenBean tokenBean = new TokenBean();
-        // 2. 检查访问令牌是否真的需要刷新
-        String accessToken = sysToken.getAccessToken();
-        if (!validateToken(accessToken)) {
-            log.info("Access token is invalid, need to generate");
-            // 访问令牌确实需要重新生成
-            String subject = String.valueOf(sysToken.getUserId());
-            Map<String, Object> claims = JsonHelper.fromJson(sysToken.getAdditionalInfo(), new TypeReference<>() {
-            });
-            long now = System.currentTimeMillis();
-            Date issuedAt = new Date(now);
-            Date expiresAt = new Date(now + tokenProperties.getExpire() * 1000);
-            String ak = createToken(subject, claims, issuedAt, expiresAt);
-            tokenBean.setAccessToken(ak);
-            tokenBean.setRefreshToken(refreshToken);
-            tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
-            tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt));
-            publishEvent(new TokenEvent(tokenBean, TokenEventType.REFRESH));
-        } else {
-            // 访问令牌不需要重新生成
-            log.info("Access token is valid, no need to generate");
-            tokenBean.setAccessToken(accessToken);
-            tokenBean.setIssuedAt(sysToken.getIssuedAt());
-            tokenBean.setExpiredAt(sysToken.getExpiredAt());
-        }
+        // 走到这里说明刷新令牌合法:
+        // 生成新的一对token
+        Map<String, Object> claims = JsonHelper.fromJson(oldSysToken.getAdditionalInfo(), new TypeReference<>() {
+        });
+        TokenBean tokenBean = generateToken(oldSysToken.getUserId(), claims);
+        // 撤销旧的一对token
+        revokeToken(oldSysToken.getAccessToken());
         return tokenBean;
     }
 
@@ -96,7 +79,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         TokenBean tokenBean = new TokenBean();
         tokenBean.setAccessToken(accessToken);
         tokenBean.setRefreshToken(refreshToken);
-        tokenBean.setTokenStyle("JWT");
+        tokenBean.setTokenStyle(JWT_TOKEN_STYLE);
         tokenBean.setUserId(userId);
         tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
         tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt_ak));
@@ -106,12 +89,17 @@ public class JwtTokenProvider extends AbstractTokenProvider {
     }
 
     @Override
-    public boolean validateToken(String token) {
-        boolean validate = JWT.of(token).setKey(Base64.decode(tokenProperties.getSecret())).validate(0);
+    public boolean verifyToken(String token) {
+        if (StrUtil.isBlank(token)) {
+            return false;
+        }
+        boolean validate = JWT.of(token)
+                .setKey(Base64.decode(tokenProperties.getSecret()))
+                .validate(tokenProperties.getLeeway());
         if (!validate) {
             return false;
         }
-        SysToken sysToken = SpringUtils.getBean(ISysTokenService.class).findByToken(token);
+        SysToken sysToken = tokenService.findByToken(token);
         return null != sysToken && sysToken.getRevoked() == 0;
     }
 

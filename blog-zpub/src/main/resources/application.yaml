@@ -73,6 +73,7 @@ qiliblog:
     secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥
     expire: 3600 # 访问令牌过期时间 单位秒 默认1小时
     refresh-expire: 21600 # 刷新令牌过期时间 单位秒 默认6小时
+    leeway: 300 # 允许的偏差时间-5分钟
   # 验证码基本配置
   verification:
     username: qiliblog@xxx.com
@@ -89,8 +90,8 @@ qiliblog:
       - /error
       - /webjars/**
       - /api/auth/login
+      - /api/auth/logout
       - /api/auth/refresh
       - /api/admin/register/**
       - /api/public/**
-      - /api/test/**
     case-sensitive: true # 鉴权时角色码和权限码是否区分大小写

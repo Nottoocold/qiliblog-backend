@@ -4,6 +4,7 @@ import com.zqqiliyc.auth.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.service.IAuthService;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.controller.BaseController;
 import com.zqqiliyc.framework.web.http.ApiResult;
@@ -31,10 +32,8 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/logout")
-    public ApiResult<Void> logout() {
-        AuthUserInfoBean currentUser = getCurrentUser();
-        log.info("用户 {} 退出登录", currentUser.getUsername());
-        authService.logout(getAuthentication().getCredentials().toString());
+    public ApiResult<Void> logout(@RequestHeader(SystemConstants.HEADER_AUTHORIZATION) String ak) {
+        authService.logout(ak);
         return ApiResult.success();
     }
 

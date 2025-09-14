@@ -4,9 +4,10 @@ import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.repository.mapper.SysTokenMapper;
 import com.zqqiliyc.service.ISysTokenService;
 import com.zqqiliyc.service.base.AbstractBaseService;
-import io.mybatis.mapper.example.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 /**
  * @author qili
@@ -57,6 +58,7 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
         SysToken token = findByAccessToken(accessToken);
         if (token != null) {
             token.setRevoked(1);
+            token.setRevokedAt(LocalDateTime.now());
             update(token);
         }
     }

@@ -55,12 +55,6 @@ public class AuthService implements IAuthService {
         tokenProvider.revokeToken(cleanToken(accessToken));
     }
 
-    /**
-     * 获取用户信息
-     *
-     * @param accessToken
-     * @return 用户信息
-     */
     @Override
     public AuthUserInfoBean userinfo(String accessToken) {
         SysToken sysToken = sysTokenService.findByAccessToken(cleanToken(accessToken));
@@ -71,11 +65,12 @@ public class AuthService implements IAuthService {
     public AuthResult refreshToken(String refreshToken) {
         AuthResult authResult = new AuthResult();
         TokenBean token = tokenProvider.refreshToken(refreshToken);
-        if (Objects.isNull(token) || StrUtil.isBlank(token.getAccessToken())) {
+        if (Objects.isNull(token) || StrUtil.isBlank(token.getAccessToken())
+                || StrUtil.isBlank(token.getRefreshToken()) || StrUtil.equals(token.getRefreshToken(), refreshToken)) {
             throw new ClientException(GlobalErrorDict.REFRESH_ERROR);
         }
         authResult.setAccessToken(token.getAccessToken());
-        authResult.setRefreshToken(refreshToken);
+        authResult.setRefreshToken(token.getRefreshToken());
         long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
         authResult.setExpiresIn(seconds);
         return authResult;

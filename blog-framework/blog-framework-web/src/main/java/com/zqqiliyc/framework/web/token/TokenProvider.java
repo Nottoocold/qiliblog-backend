@@ -14,7 +14,7 @@ import java.util.Map;
 public interface TokenProvider extends ApplicationEventPublisherAware, InitializingBean {
 
     /**
-     * Generate token, use userId and claims to generate token
+     * 使用userId和自定义信息生成token
      *
      * @param userId 与之关联的用户ID
      * @param claims 自定义的token信息
@@ -23,8 +23,10 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Initializ
     TokenBean generateToken(Long userId, Map<String, Object> claims);
 
     /**
-     * Refresh token, use refreshToken to refresh token<br/>
-     * only valid token can be refreshed
+     * 刷新token, 刷新成功的条件：<br/>
+     * 1. refreshToken有效(刷新令牌本身有效)<br/>
+     * 刷新成功以后执行的操作：<br/>
+     * 1. 撤销旧token
      *
      * @param refreshToken refreshToken
      * @return 生成的token
@@ -32,23 +34,24 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Initializ
     TokenBean refreshToken(String refreshToken);
 
     /**
-     * Revoke token, use accessToken to revoke token<br/>
-     * only valid token can be revoked
+     * 撤销token
      *
      * @param accessToken accessToken
      */
     void revokeToken(String accessToken);
 
     /**
-     * validate token
+     * 校验 token，token有效条件：<br/>
+     * 1. 签名验证通过<br/>
+     * 2. 令牌没有被撤销
      *
      * @param token token
      * @return true if valid, false otherwise
      */
-    boolean validateToken(String token);
+    boolean verifyToken(String token);
 
     /**
-     * Get claims from token
+     * 获取token的附加信息
      *
      * @param token token
      * @return claims

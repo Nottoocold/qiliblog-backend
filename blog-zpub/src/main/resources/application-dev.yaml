@@ -17,6 +17,12 @@ spring:
       lettuce:
         pool:
           max-wait: 2000ms # 获取连接最大等待时间
+  devtools:
+    remote:
+      restart:
+        enabled: false
+    restart:
+      enabled: false
 
 logging:
   level:

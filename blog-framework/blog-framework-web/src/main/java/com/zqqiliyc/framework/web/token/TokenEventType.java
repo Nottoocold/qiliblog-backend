@@ -5,5 +5,5 @@ package com.zqqiliyc.framework.web.token;
  * @date 2025-07-13
  */
 public enum TokenEventType {
-    GENERATE, REFRESH, REVOKE
+    GENERATE, REVOKE
 }
