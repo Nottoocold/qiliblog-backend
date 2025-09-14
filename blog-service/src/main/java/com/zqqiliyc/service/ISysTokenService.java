@@ -39,4 +39,9 @@ public interface ISysTokenService extends IBaseService<SysToken, Long> {
      * @param accessToken 访问令牌
      */
     void revoke(String accessToken);
+
+    /**
+     * 清理无效的token
+     */
+    void cleanToken();
 }

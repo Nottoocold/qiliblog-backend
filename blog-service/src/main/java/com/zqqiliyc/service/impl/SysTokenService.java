@@ -4,6 +4,7 @@ import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.repository.mapper.SysTokenMapper;
 import com.zqqiliyc.service.ISysTokenService;
 import com.zqqiliyc.service.base.AbstractBaseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @author qili
  * @date 2025-06-02
  */
+@Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class SysTokenService extends AbstractBaseService<SysToken, Long, SysTokenMapper> implements ISysTokenService {
@@ -61,5 +63,17 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
             token.setRevokedAt(LocalDateTime.now());
             update(token);
         }
+    }
+
+    @Override
+    public void cleanToken() {
+        int deleted = wrapper()
+                .eq(SysToken::getRevoked, 1)
+                .or()
+                .lt(SysToken::getExpiredAt, LocalDateTime.now())
+                .or()
+                .lt(SysToken::getRefreshExpiredAt, LocalDateTime.now())
+                .delete();
+        log.info("清楚无效token数量: {}", deleted);
     }
 }
