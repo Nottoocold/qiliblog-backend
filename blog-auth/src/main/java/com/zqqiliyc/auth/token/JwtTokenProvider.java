@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.json.JsonHelper;
-import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.service.ISysTokenService;
@@ -44,10 +43,9 @@ public class JwtTokenProvider extends AbstractTokenProvider {
 
     @Override
     public TokenBean refreshToken(String refreshToken) {
-        ISysTokenService tokenService = SpringUtils.getBean(ISysTokenService.class);
         // 检查刷新令牌本身是否合法
         SysToken oldSysToken = tokenService.findByRefreshToken(refreshToken);
-        if (!verifyToken(oldSysToken.getRefreshToken())) {
+        if (oldSysToken == null || !verifyToken(oldSysToken.getRefreshToken())) {
             log.warn("Refresh token is invalid, can't refresh");
             return null;
         }
