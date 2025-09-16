@@ -1,4 +1,4 @@
-package com.zqqiliyc.auth;
+package com.zqqiliyc.auth.bean;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +21,12 @@ public class AuthResult {
     /**
      * 有效时间(访问令牌),单位秒
      */
-    private long expiresIn;
+    private int expiresIn;
 
     public AuthResult() {
     }
 
-    public AuthResult(String accessToken, String refreshToken, long expiresIn) {
+    public AuthResult(String accessToken, String refreshToken, int expiresIn) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;

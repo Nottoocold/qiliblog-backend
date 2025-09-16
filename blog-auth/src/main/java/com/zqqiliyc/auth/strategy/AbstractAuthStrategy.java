@@ -1,7 +1,7 @@
 package com.zqqiliyc.auth.strategy;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
-import com.zqqiliyc.auth.AuthResult;
+import com.zqqiliyc.auth.bean.AuthResult;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.domain.entity.SysUser;
@@ -47,7 +47,7 @@ public abstract class AbstractAuthStrategy implements AuthStrategy {
         String roles = String.join(",", authManager.getRoles(user.get().getId()));
         TokenBean token = tokenProvider.generateToken(user.get().getId(), Map.of(SystemConstants.CLAIM_ROLE, roles));
         long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
-        return new AuthResult(token.getAccessToken(), token.getRefreshToken(), seconds);
+        return new AuthResult(token.getAccessToken(), token.getRefreshToken(), Long.valueOf(seconds).intValue());
     }
 
     protected void validate(AuthRequestToken authenticationToken) {

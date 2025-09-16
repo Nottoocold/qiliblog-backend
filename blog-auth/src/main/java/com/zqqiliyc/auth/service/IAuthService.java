@@ -1,6 +1,6 @@
 package com.zqqiliyc.auth.service;
 
-import com.zqqiliyc.auth.AuthResult;
+import com.zqqiliyc.auth.bean.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 

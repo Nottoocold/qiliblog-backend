@@ -3,7 +3,7 @@ package com.zqqiliyc.auth.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.auth.AuthResult;
+import com.zqqiliyc.auth.bean.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.auth.service.IAuthService;
@@ -72,7 +72,7 @@ public class AuthService implements IAuthService {
         authResult.setAccessToken(token.getAccessToken());
         authResult.setRefreshToken(token.getRefreshToken());
         long seconds = LocalDateTimeUtil.between(token.getIssuedAt(), token.getExpiredAt()).getSeconds();
-        authResult.setExpiresIn(seconds);
+        authResult.setExpiresIn(Long.valueOf(seconds).intValue());
         return authResult;
     }
 

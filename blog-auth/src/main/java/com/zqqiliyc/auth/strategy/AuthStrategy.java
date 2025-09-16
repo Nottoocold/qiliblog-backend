@@ -1,6 +1,6 @@
 package com.zqqiliyc.auth.strategy;
 
-import com.zqqiliyc.auth.AuthResult;
+import com.zqqiliyc.auth.bean.AuthResult;
 import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 
