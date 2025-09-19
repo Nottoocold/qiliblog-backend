@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author qili
@@ -45,7 +46,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
     public TokenBean refreshToken(String refreshToken) {
         // 检查刷新令牌本身是否合法
         SysToken oldSysToken = tokenService.findByRefreshToken(refreshToken);
-        if (oldSysToken == null || !verifyToken(oldSysToken.getRefreshToken())) {
+        if (oldSysToken == null || !verifyRefreshToken(oldSysToken.getRefreshToken())) {
             log.warn("Refresh token is invalid, can't refresh");
             return null;
         }
@@ -87,7 +88,21 @@ public class JwtTokenProvider extends AbstractTokenProvider {
     }
 
     @Override
-    public boolean verifyToken(String token) {
+    public boolean verifyAccessToken(String accessToken) {
+        return verify(accessToken, () -> tokenService.findByAccessToken(accessToken));
+    }
+
+    @Override
+    public boolean verifyRefreshToken(String refreshToken) {
+        return verify(refreshToken, () -> tokenService.findByRefreshToken(refreshToken));
+    }
+
+    @Override
+    public Map<String, Object> getClaims(String token) {
+        return JWT.of(token).setKey(Base64.decode(tokenProperties.getSecret())).getPayloads();
+    }
+
+    private boolean verify(String token, Supplier<SysToken> supplier) {
         if (StrUtil.isBlank(token)) {
             return false;
         }
@@ -97,13 +112,8 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         if (!validate) {
             return false;
         }
-        SysToken sysToken = tokenService.findByToken(token);
+        SysToken sysToken = supplier.get();
         return null != sysToken && sysToken.getRevoked() == 0;
-    }
-
-    @Override
-    public Map<String, Object> getClaims(String token) {
-        return JWT.of(token).setKey(Base64.decode(tokenProperties.getSecret())).getPayloads();
     }
 
     private String createToken(String sub, Map<String, Object> claims, Date issuedAt, Date expiresAt) {

@@ -41,14 +41,24 @@ public interface TokenProvider extends ApplicationEventPublisherAware, Initializ
     void revokeToken(String accessToken);
 
     /**
-     * 校验 token，token有效条件：<br/>
+     * 校验 accessToken，accessToken有效条件：<br/>
      * 1. 签名验证通过<br/>
      * 2. 令牌没有被撤销
      *
-     * @param token token
+     * @param accessToken accessToken
      * @return true if valid, false otherwise
      */
-    boolean verifyToken(String token);
+    boolean verifyAccessToken(String accessToken);
+
+    /**
+     * 校验 refreshToken，refreshToken有效条件：<br/>
+     * 1. 签名验证通过<br/>
+     * 2. 令牌没有被撤销
+     *
+     * @param refreshToken refreshToken
+     * @return true if valid, false otherwise
+     */
+    boolean verifyRefreshToken(String refreshToken);
 
     /**
      * 获取token的附加信息

@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         String accessToken = getToken(request);
-        if (StrUtil.isNotBlank(accessToken) && tokenProvider.verifyToken(accessToken)) {
+        if (StrUtil.isNotBlank(accessToken) && tokenProvider.verifyAccessToken(accessToken)) {
             // token有效，设置用户信息
             Map<String, Object> claims = tokenProvider.getClaims(accessToken);
             String userId = Convert.toStr(claims.get(SystemConstants.CLAIM_SUBJECT));
