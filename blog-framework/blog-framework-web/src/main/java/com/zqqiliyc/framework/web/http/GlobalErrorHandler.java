@@ -44,10 +44,12 @@ public class GlobalErrorHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResult<?> handleValidationException(BindException ex) {
-        // 提取校验错误详情
+        // 提取前3个错误详情
         String errorMsg = ex.getBindingResult().getFieldErrors().stream()
+                .limit(3)
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(","));
+
         return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
     }
 
