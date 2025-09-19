@@ -1,14 +1,14 @@
 package com.zqqiliyc.domain.dto;
 
-import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.domain.entity.Entity;
+import com.zqqiliyc.framework.web.bean.SortEntry;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author qili
@@ -17,21 +17,26 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> {
+    /**
+     * 分页页码-从1开始
+     */
     private Integer pageNum;
-
+    /**
+     * 分页大小
+     */
     private Integer pageSize;
-
-    private String orderBy;
+    /**
+     * 排序字段
+     */
+    private Set<SortEntry> sortList;
 
     @Override
     public void addConditionToExample(Example<T> example) {
-        if (StrUtil.isNotBlank(orderBy)) {
-            List<String> strings = StrUtil.splitTrim(orderBy, " ");
-            Fn<T, Object> field = Fn.field(getEntityClass(), strings.get(0));
-            if (strings.size() < 2 || "asc".equalsIgnoreCase(strings.get(1))) {
-                example.orderByAsc(field);
-            } else {
-                example.orderByDesc(field);
+        if (null != sortList && !sortList.isEmpty()) {
+            Class<T> entityClass = getEntityClass();
+            for (SortEntry entry : sortList) {
+                Fn<T, Object> fn = Fn.field(entityClass, entry.getName());
+                example.orderBy(fn, entry.isAsc() ? Example.Order.ASC : Example.Order.DESC);
             }
         }
         fillExample(example);
@@ -39,7 +44,7 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
 
     @Override
     public boolean isPageRequest() {
-        return pageNum != null && pageSize != null;
+        return (null != pageNum && pageNum > 0) && (null != pageSize && pageSize > 0);
     }
 
     @SuppressWarnings("unchecked")
