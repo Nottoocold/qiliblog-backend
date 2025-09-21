@@ -5,12 +5,15 @@ import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
 import com.zqqiliyc.domain.dto.user.SysUserQueryDto;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.bean.PageResult;
+import com.zqqiliyc.framework.web.bean.SortEntry;
 import com.zqqiliyc.service.ISysUserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 /**
  * @author qili
@@ -33,6 +36,7 @@ public class PageSelectTest {
             sysUser.setEmail(RandomUtil.randomString(6) + "@qq.com");
             sysUser.setPhone(RandomUtil.randomNumbers(11));
             sysUser.setAvatar("https://avatars.githubusercontent.com/u/102040668?v=4");
+            userService.create(sysUser);
         }
     }
 
@@ -46,7 +50,7 @@ public class PageSelectTest {
     @Transactional
     public void testNoPage() {
         SysUserQueryDto queryDto = new SysUserQueryDto();
-        queryDto.setOrderBy("username desc");
+        queryDto.setSortList(Set.of(new SortEntry("username", true, 0)));
 
         PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
 
@@ -60,7 +64,7 @@ public class PageSelectTest {
         int pageNum = 1;
         int pageSize = 10;
         SysUserQueryDto queryDto = new SysUserQueryDto();
-        queryDto.setOrderBy("username desc");
+        queryDto.setSortList(Set.of(new SortEntry("username", true, 0)));
         queryDto.setPageNum(pageNum);
         queryDto.setPageSize(pageSize);
 
