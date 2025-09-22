@@ -32,7 +32,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/logout")
-    public ApiResult<Void> logout(@RequestHeader(SystemConstants.HEADER_AUTHORIZATION) String ak) {
+    public ApiResult<Void> logout(@RequestHeader(value = SystemConstants.HEADER_AUTHORIZATION, required = false) String ak) {
         authService.logout(ak);
         return ApiResult.success();
     }

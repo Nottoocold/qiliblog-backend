@@ -52,6 +52,9 @@ public class AuthService implements IAuthService {
     @Override
     public void logout(String accessToken) {
         SecurityUtils.clearAuthentication();
+        if (StrUtil.isBlank(accessToken)) {
+            return;
+        }
         tokenProvider.revokeToken(cleanToken(accessToken));
     }
 
