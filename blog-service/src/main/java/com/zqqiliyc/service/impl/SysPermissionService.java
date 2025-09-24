@@ -50,18 +50,17 @@ public class SysPermissionService extends AbstractBaseService<SysPermission, Lon
      * @return 权限列表
      */
     @Override
-    public Set<String> findByUserId(Long userId) {
+    public List<SysPermission> findByUserId(Long userId) {
         List<SysUserRole> userRoles = userRoleService.findByUserId(userId);
         if (CollUtil.isEmpty(userRoles)) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
         List<Long> roleIds = userRoles.stream().map(SysUserRole::getRoleId).toList();
         List<SysRolePriv> sysRolePrivs = rolePrivService.findByRoleIdList(roleIds);
         if (CollUtil.isEmpty(sysRolePrivs)) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
         Set<Long> privIds = sysRolePrivs.stream().map(SysRolePriv::getPrivId).collect(Collectors.toUnmodifiableSet());
-        List<SysPermission> permissionList = findByFieldList(SysPermission::getId, privIds);
-        return permissionList.stream().map(SysPermission::getCode).collect(Collectors.toUnmodifiableSet());
+        return findByFieldList(SysPermission::getId, privIds);
     }
 }

@@ -1,6 +1,7 @@
 package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
+import com.zqqiliyc.domain.entity.SysPermission;
 import com.zqqiliyc.domain.entity.SysRole;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
@@ -59,7 +60,10 @@ public class AuthManager implements UserDetailsService {
         if (userId <= 0) {
             return Collections.emptySet();
         }
-        return permissionService.findByUserId(userId);
+        return permissionService.findByUserId(userId)
+                .stream()
+                .map(SysPermission::getCode)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public AuthUserInfoBean getUserInfo(Long userId) {
