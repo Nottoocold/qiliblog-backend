@@ -103,54 +103,54 @@ public class SysRegionService implements IRegionService {
     }
 
     @Override
-    @Cacheable(key = "'cities:provinceCode:' + #provinceCode",
-            condition = "#provinceCode != null && !#provinceCode.empty", unless = "#result.empty")
-    public List<SysRegion> findCities(String provinceCode) {
-        return regionMapper.selectCitiesByProvinceCode(provinceCode);
-    }
-
-    @Override
     @Cacheable(key = "'districts:all'")
     public List<SysRegion> findDistricts() {
         return regionMapper.selectDistricts();
     }
 
     @Override
-    @Cacheable(key = "'districts:cityCode:' + #cityCode",
-            condition = "#cityCode != null && !#cityCode.empty", unless = "#result.empty")
-    public List<SysRegion> findDistricts(String cityCode) {
-        return regionMapper.selectDistrictsByCityCode(cityCode);
-    }
-
-    @Override
-    @Cacheable(key = "'streets:all'")
+    @Cacheable(key = "'streets:all'", unless = "#result.isEmpty()")
     public List<SysRegion> findStreets() {
-        return regionMapper.selectStreets();
+        return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(key = "'streets:districtCode:' + #districtCode",
-            condition = "#districtCode != null && !#districtCode.empty", unless = "#result.empty")
-    public List<SysRegion> findStreets(String districtCode) {
-        return regionMapper.selectStreetsByDistrictCode(districtCode);
-    }
-
-    @Override
-    @Cacheable(key = "'villages:all'", unless = "#result.empty")
+    @Cacheable(key = "'villages:all'", unless = "#result.isEmpty()")
     public List<SysRegion> findVillages() {
         return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(key = "'villages:streetCode:' + #streetCode",
-            condition = "#streetCode != null && !#streetCode.empty", unless = "#result.empty")
+    @Cacheable(key = "'cities:' + #provinceCode",
+            condition = "#provinceCode != null && !#provinceCode.isEmpty()", unless = "#result.isEmpty()")
+    public List<SysRegion> findCities(String provinceCode) {
+        return regionMapper.selectCitiesByProvinceCode(provinceCode);
+    }
+
+    @Override
+    @Cacheable(key = "'districts:' + #cityCode",
+            condition = "#cityCode != null && !#cityCode.isEmpty()", unless = "#result.isEmpty()")
+    public List<SysRegion> findDistricts(String cityCode) {
+        return regionMapper.selectDistrictsByCityCode(cityCode);
+    }
+
+    @Override
+    @Cacheable(key = "'streets:' + #districtCode",
+            condition = "#districtCode != null && !#districtCode.isEmpty()", unless = "#result.isEmpty()")
+    public List<SysRegion> findStreets(String districtCode) {
+        return regionMapper.selectStreetsByDistrictCode(districtCode);
+    }
+
+    @Override
+    @Cacheable(key = "'villages:' + #streetCode",
+            condition = "#streetCode != null && !#streetCode.isEmpty()", unless = "#result.isEmpty()")
     public List<SysRegion> findVillages(String streetCode) {
         return regionMapper.selectVillagesByStreetCode(streetCode);
     }
 
     @Override
     @Cacheable(key = "'single:code:' + #code",
-            condition = "#code != null && !#code.empty", unless = "#result.empty")
+            condition = "#code != null && !#code.isEmpty()", unless = "#result.isEmpty()")
     public Optional<SysRegion> findRegion(String code) {
         return Optional.ofNullable(regionMapper.selectByCode(code));
     }

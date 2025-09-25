@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,10 +59,10 @@ public class SysRegionController {
         return ApiResult.success(sysRegionService.findStreets());
     }
 
-    @Operation(summary = "获取所有村", deprecated = true)
+    @Operation(summary = "获取所有村")
     @GetMapping("/region/villages")
     public ApiResult<List<SysRegion>> findVillages() {
-        return ApiResult.success(Collections.emptyList());
+        return ApiResult.success(sysRegionService.findVillages());
     }
 
     @Operation(summary = "获取指定省下的所有市",

@@ -35,19 +35,33 @@ public interface IRegionService {
     List<SysRegion> findCities();
 
     /**
+     * 查询所有区/县级行政级别
+     *
+     * @return 区/县列表
+     */
+    List<SysRegion> findDistricts();
+
+    /**
+     * 查询所有街道
+     *
+     * @return 街道列表
+     */
+    List<SysRegion> findStreets();
+
+    /**
+     * 查询所有村
+     *
+     * @return 村列表
+     */
+    List<SysRegion> findVillages();
+
+    /**
      * 查询所有市
      *
      * @param provinceCode 省编码
      * @return 市列表
      */
     List<SysRegion> findCities(String provinceCode);
-
-    /**
-     * 查询所有区/县级行政级别
-     *
-     * @return 区/县列表
-     */
-    List<SysRegion> findDistricts();
 
     /**
      * 查询所有区/县级行政级别
@@ -60,24 +74,10 @@ public interface IRegionService {
     /**
      * 查询所有街道
      *
-     * @return 街道列表
-     */
-    List<SysRegion> findStreets();
-
-    /**
-     * 查询所有街道
-     *
      * @param districtCode 区/县编码
      * @return 街道列表
      */
     List<SysRegion> findStreets(String districtCode);
-
-    /**
-     * 查询所有村
-     *
-     * @return 村列表
-     */
-    List<SysRegion> findVillages();
 
     /**
      * 查询所有村
