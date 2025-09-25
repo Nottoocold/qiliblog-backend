@@ -36,8 +36,6 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T update(T entity);
 
-    T updateSelective(T entity);
-
     int deleteById(I id);
 
     <F> int deleteByFieldList(Fn<T, F> field, Collection<F> fieldValueList);

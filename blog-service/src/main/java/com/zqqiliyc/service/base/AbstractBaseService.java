@@ -111,14 +111,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public T updateSelective(T entity) {
-        entity.setUpdateTime(LocalDateTime.now());
-        Assert.isTrue(baseMapper.updateByPrimaryKeySelective(entity) == 1, "update failed");
-        return entity;
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
     public int deleteById(I id) {
         int count = baseMapper.deleteByPrimaryKey(id);
         Assert.isTrue(count == 1, "delete failed");
