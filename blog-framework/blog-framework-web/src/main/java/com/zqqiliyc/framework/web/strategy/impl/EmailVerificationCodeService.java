@@ -4,13 +4,11 @@ import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.redis.RedisHandler;
 import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,8 +18,6 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 /**
  * 基于邮件 + Redis 的验证码服务实现
@@ -37,7 +33,6 @@ public class EmailVerificationCodeService implements VerificationCodeService {
     private final VerificationProperties verificationProperties;
     private final ResourceLoader resourceLoader;
     private final JavaMailSender mailSender;
-    private final RedisHandler redisHandler;
 
     @Override
     public void generateAndSendCode(String email) {
@@ -60,7 +55,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
             return true;
         }
 
-        String storedCode = (String) redisHandler.get(getRedisKey(email));
+        /*String storedCode = (String) redisHandler.get(getRedisKey(email));
         if (storedCode == null) {
             log.warn("验证码不存在或已过期: {}", email);
             throw new ClientException(GlobalErrorDict.INVALID_CODE);
@@ -74,7 +69,8 @@ public class EmailVerificationCodeService implements VerificationCodeService {
             log.warn("验证码验证失败: {}", email);
         }
 
-        return isValid;
+        return isValid;*/
+        return false;
     }
 
     private String generateRandomCode() {
@@ -85,9 +81,9 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
     private void saveCodeToRedis(String email, String code) {
         String key = getRedisKey(email);
-        redisHandler.set(key, code, Duration.of(verificationProperties.getExpirationMinutes(),
+        /*redisHandler.set(key, code, Duration.of(verificationProperties.getExpirationMinutes(),
                 ChronoUnit.MINUTES).toSeconds());
-        log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);
+        log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);*/
     }
 
     /**

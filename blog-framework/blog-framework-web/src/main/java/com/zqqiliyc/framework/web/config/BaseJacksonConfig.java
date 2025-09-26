@@ -1,23 +1,14 @@
 package com.zqqiliyc.framework.web.config;
 
-import cn.hutool.core.lang.tree.Node;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.*;
 import com.fasterxml.jackson.datatype.jsr310.ser.*;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author qili
@@ -55,11 +46,10 @@ public abstract class BaseJacksonConfig {
         return simpleModule;
     }
 
-    protected Jackson2JsonRedisSerializer<Object> createJacksonSerializerForCacheUse(ObjectMapper objectMapper) {
+    /*protected Jackson2JsonRedisSerializer<Object> createJacksonSerializerForCacheUse(ObjectMapper objectMapper) {
         ObjectMapper copiedMapper = objectMapper.copy();
         // 指定要序列化的域、getter/setter 以及修饰符范围，ANY 是包括 private 和 public
         copiedMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        Collection<String> collection = new ArrayList<>();
         // 激活默认类型，类型校验宽松，
         //copiedMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
         BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
@@ -78,5 +68,5 @@ public abstract class BaseJacksonConfig {
                 .build();
         copiedMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
         return new Jackson2JsonRedisSerializer<>(copiedMapper, Object.class);
-    }
+    }*/
 }

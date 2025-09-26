@@ -1,17 +1,7 @@
 package com.zqqiliyc.framework.web.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
-
-import java.time.Duration;
 
 /**
  * @author qili
@@ -24,7 +14,7 @@ public class CacheConfig extends BaseJacksonConfig {
     /**
      * Redis缓存管理器
      */
-    @Bean
+    /*@Bean
     public CacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(1))
@@ -41,5 +31,5 @@ public class CacheConfig extends BaseJacksonConfig {
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(config)
                 .build();
-    }
+    }*/
 }

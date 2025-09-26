@@ -10,8 +10,6 @@ import com.zqqiliyc.repository.mapper.SysRegionMapper;
 import com.zqqiliyc.service.IRegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,11 +24,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
-@CacheConfig(cacheNames = SysRegionService.CACHE_NAME, cacheManager = "redisCacheManager")
 @RequiredArgsConstructor
 public class SysRegionService implements IRegionService {
     private final SysRegionMapper regionMapper;
-    public static final String CACHE_NAME = "system:regions";
 
     /**
      * 查询地区树
@@ -39,7 +35,6 @@ public class SysRegionService implements IRegionService {
      * @return 地区树
      */
     @Override
-    @Cacheable(key = "'tree:' + #level", condition = "#level >= 1 && #level <= 3", unless = "#result.empty")
     public List<Tree<String>> findRegionTree(int level) {
         StopWatch timer = new StopWatch("region tree build");
         timer.start("query all region");
@@ -91,66 +86,51 @@ public class SysRegionService implements IRegionService {
     }
 
     @Override
-    @Cacheable(key = "'provinces:all'")
     public List<SysRegion> findProvinces() {
         return regionMapper.selectProvinces();
     }
 
     @Override
-    @Cacheable(key = "'cities:all'")
     public List<SysRegion> findCities() {
         return regionMapper.selectCities();
     }
 
     @Override
-    @Cacheable(key = "'districts:all'")
     public List<SysRegion> findDistricts() {
         return regionMapper.selectDistricts();
     }
 
     @Override
-    @Cacheable(key = "'streets:all'", unless = "#result.isEmpty()")
     public List<SysRegion> findStreets() {
         return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(key = "'villages:all'", unless = "#result.isEmpty()")
     public List<SysRegion> findVillages() {
         return Collections.emptyList();
     }
 
     @Override
-    @Cacheable(key = "'cities:' + #provinceCode",
-            condition = "#provinceCode != null && !#provinceCode.isEmpty()", unless = "#result.isEmpty()")
     public List<SysRegion> findCities(String provinceCode) {
         return regionMapper.selectCitiesByProvinceCode(provinceCode);
     }
 
     @Override
-    @Cacheable(key = "'districts:' + #cityCode",
-            condition = "#cityCode != null && !#cityCode.isEmpty()", unless = "#result.isEmpty()")
     public List<SysRegion> findDistricts(String cityCode) {
         return regionMapper.selectDistrictsByCityCode(cityCode);
     }
 
     @Override
-    @Cacheable(key = "'streets:' + #districtCode",
-            condition = "#districtCode != null && !#districtCode.isEmpty()", unless = "#result.isEmpty()")
     public List<SysRegion> findStreets(String districtCode) {
         return regionMapper.selectStreetsByDistrictCode(districtCode);
     }
 
     @Override
-    @Cacheable(key = "'villages:' + #streetCode",
-            condition = "#streetCode != null && !#streetCode.isEmpty()", unless = "#result.isEmpty()")
     public List<SysRegion> findVillages(String streetCode) {
         return regionMapper.selectVillagesByStreetCode(streetCode);
     }
 
     @Override
-    @Cacheable(key = "'single:code:' + #code",
-            condition = "#code != null && !#code.isEmpty()", unless = "#result.isEmpty()")
     public Optional<SysRegion> findRegion(String code) {
         return Optional.ofNullable(regionMapper.selectByCode(code));
     }
