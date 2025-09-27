@@ -12,16 +12,28 @@ public record VerificationCacheService(Cache cache) {
         cache.put(key, code);
     }
 
-    public String getVerificationCode(String key) {
+    private String getVerificationCode(String key) {
         return cache.get(key, String.class);
     }
 
-    public void removeVerificationCode(String key) {
+    private void removeVerificationCode(String key) {
         cache.evict(key);
     }
 
+    /**
+     * 验证验证码, 验证成功则删除缓存
+     *
+     * @param key  缓存的key
+     * @param code 验证码
+     * @return 验证码验证成功返回true，否则返回false
+     */
     public boolean verifyCode(String key, String code) {
         String storedCode = getVerificationCode(key);
-        return storedCode != null && storedCode.equals(code);
+        if (storedCode != null && storedCode.equals(code)) {
+            // 验证码验证成功，删除缓存
+            removeVerificationCode(key);
+            return true;
+        }
+        return false;
     }
 }

@@ -6,6 +6,7 @@ import com.github.benmanes.caffeine.cache.Expiry;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.strategy.VerificationCacheService;
+import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @author qili
  * @date 2025-07-17
  */
+@Slf4j
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties({TokenProperties.class, VerificationProperties.class})
@@ -27,23 +29,30 @@ public class AppConfig {
     @Bean
     public VerificationCacheService verificationCacheService(VerificationProperties verificationProperties) {
         Cache<Object, Object> cache = Caffeine.newBuilder()
+                .maximumSize(1024).recordStats()
                 .expireAfter(new Expiry<>() {
                     @Override
                     public long expireAfterCreate(Object key, Object value, long currentTime) {
-                        // 缓存创建后固定缓存有效期
+                        // 验证码创建后固定缓存有效期
                         return TimeUnit.SECONDS.toNanos(verificationProperties.getExpirationSeconds());
                     }
 
                     @Override
                     public long expireAfterUpdate(Object key, Object value, long currentTime, @NonNegative long currentDuration) {
-                        // 缓存更新后有效期不变
-                        return currentDuration;
+                        // 验证码更新后重置有效期
+                        // 即每次重新发生验证码时都应该重置有效期，无论新验证码与就验证码是否相同
+                        return TimeUnit.SECONDS.toNanos(verificationProperties.getExpirationSeconds());
                     }
 
                     @Override
                     public long expireAfterRead(Object key, Object value, long currentTime, @NonNegative long currentDuration) {
-                        // 缓存读取后有效期不变
+                        // 验证码读取后有效期不变
                         return currentDuration;
+                    }
+                })
+                .removalListener((key, value, cause) -> {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Verification code removed, key: {}, cause: {}", key, cause);
                     }
                 })
                 .build();
