@@ -1,22 +1,24 @@
 package com.zqqiliyc.framework.web.strategy.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
+import com.zqqiliyc.framework.web.strategy.VerificationCacheService;
 import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -34,14 +36,14 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class EmailVerificationCodeService implements VerificationCodeService {
     private final VerificationProperties verificationProperties;
-    private final ResourceLoader resourceLoader;
+    private final VerificationCacheService verificationCacheService;
     private final JavaMailSender mailSender;
 
     @Override
     public void generateAndSendCode(String email) {
         try {
             String code = generateRandomCode();
-            saveCodeToRedis(email, code);
+            saveCodeToCache(email, code);
             sendVerificationEmail(email, code);
 
             log.info("验证码已发送至邮箱：{}", email);
@@ -53,40 +55,25 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
     @Override
     public boolean verifyCode(String email, String code) {
-        // TODO 测试用免验证码校验，上线前删除此行
-        if ("0000".equals(code)) {
-            return true;
-        }
-
-        /*String storedCode = (String) redisHandler.get(getRedisKey(email));
-        if (storedCode == null) {
-            log.warn("验证码不存在或已过期: {}", email);
-            throw new ClientException(GlobalErrorDict.INVALID_CODE);
-        }
-
-        boolean isValid = storedCode.equals(code);
-        if (isValid) {
-            redisHandler.del(getRedisKey(email));
-            log.info("验证码验证通过: {}", email);
-        } else {
-            log.warn("验证码验证失败: {}", email);
-        }
-
-        return isValid;*/
-        return false;
+        return verificationCacheService.verifyCode(getCacheKey(email), code);
     }
 
     private String generateRandomCode() {
-        String code = RandomUtil.randomNumbers(verificationProperties.getCodeLength());
-        log.debug("生成的验证码为：{}", code);
+        String code = verificationProperties.isEnabled() ?
+                RandomUtil.randomNumbers(verificationProperties.getCodeLength()) :
+                StrUtil.repeat('0', verificationProperties.getCodeLength());
+        if (log.isDebugEnabled()) {
+            log.debug("生成的验证码为：{}", code);
+        }
         return code;
     }
 
-    private void saveCodeToRedis(String email, String code) {
-        String key = getRedisKey(email);
-        /*redisHandler.set(key, code, Duration.of(verificationProperties.getExpirationMinutes(),
-                ChronoUnit.MINUTES).toSeconds());
-        log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);*/
+    private void saveCodeToCache(String email, String code) {
+        String key = getCacheKey(email);
+        verificationCacheService.storeVerificationCode(key, code);
+        if (log.isDebugEnabled()) {
+            log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);
+        }
     }
 
     /**
@@ -108,7 +95,8 @@ public class EmailVerificationCodeService implements VerificationCodeService {
         helper.setTo(email);
         helper.setSubject("一次性验证码");
 
-        String content = loadVerificationTemplate(code, verificationProperties.getExpirationSeconds());
+        String content = loadVerificationTemplate(code,
+                (int) Duration.of(verificationProperties.getExpirationSeconds(), ChronoUnit.SECONDS).toMinutes());
         helper.setText(content, true);
 
         mailSender.send(message);
@@ -126,24 +114,23 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * @throws IOException 如果无法读取模板文件，则抛出IOException
      */
     private String loadVerificationTemplate(String code, int expiration) throws IOException {
-        Resource resource = resourceLoader.getResource(verificationProperties.getTemplatePath());
-        String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+        File file = ResourceUtils.getFile(verificationProperties.getTemplatePath());
+        String template = StreamUtils.copyToString(FileUtil.getInputStream(file), StandardCharsets.UTF_8);
         template = StrUtil.replace(template, "{{code}}", code);
-        template = StrUtil.replace(template, "{{expiration}}",
-                String.valueOf(Duration.of(expiration, ChronoUnit.SECONDS).toMinutes()));
+        template = StrUtil.replace(template, "{{expiration}}", String.valueOf(expiration));
         return template;
     }
 
     /**
-     * 根据邮箱生成Redis的键
+     * 根据邮箱生成Cache的键
      * <p>
-     * 为了在Redis中存储和获取与邮箱相关的验证信息，需要将邮箱转换为特定格式的键
+     * 为了在Cache中存储和获取与邮箱相关的验证信息，需要将邮箱转换为特定格式的键
      * 该方法通过在邮箱前添加固定的前缀来生成键，以实现键值的唯一性和可识别性
      *
-     * @param email 需要生成Redis键的邮箱地址
-     * @return 返回生成的Redis键字符串
+     * @param email 需要生成Cache键的邮箱地址
+     * @return 返回生成的Cache键字符串
      */
-    private String getRedisKey(String email) {
+    private String getCacheKey(String email) {
         return "auth:verification:email:" + email;
     }
 

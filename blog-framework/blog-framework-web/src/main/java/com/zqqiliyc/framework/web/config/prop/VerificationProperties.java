@@ -12,6 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "qiliblog.verification")
 public class VerificationProperties {
+    private boolean enabled;
     private String username;
     private int codeLength;
     private int expirationSeconds;

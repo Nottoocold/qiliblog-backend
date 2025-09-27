@@ -76,6 +76,7 @@ qiliblog:
     leeway: 300 # 允许的偏差时间-5分钟
   # 验证码基本配置
   verification:
+    enabled: false
     username: qiliblog@xxx.com
     code-length: 4
     expiration-seconds: 300
