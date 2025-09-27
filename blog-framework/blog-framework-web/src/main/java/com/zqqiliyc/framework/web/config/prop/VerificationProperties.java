@@ -14,6 +14,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class VerificationProperties {
     private String username;
     private int codeLength;
-    private int expirationMinutes;
+    private int expirationSeconds;
     private String templatePath;
 }

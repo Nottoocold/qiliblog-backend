@@ -78,7 +78,7 @@ qiliblog:
   verification:
     username: qiliblog@xxx.com
     code-length: 4
-    expiration-minutes: 5
+    expiration-seconds: 300
     template-path: classpath:email/verify.html
   security:
     allowed-urls:

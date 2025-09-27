@@ -1,6 +1,7 @@
 package com.zqqiliyc.framework.web.strategy.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
@@ -18,6 +19,8 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 基于邮件 + Redis 的验证码服务实现
@@ -27,7 +30,7 @@ import java.nio.charset.StandardCharsets;
  * @description 验证码服务实现
  */
 @Slf4j
-@Service
+@Service("emailVerificationCodeService")
 @RequiredArgsConstructor
 public class EmailVerificationCodeService implements VerificationCodeService {
     private final VerificationProperties verificationProperties;
@@ -105,7 +108,7 @@ public class EmailVerificationCodeService implements VerificationCodeService {
         helper.setTo(email);
         helper.setSubject("一次性验证码");
 
-        String content = loadVerificationTemplate(code, verificationProperties.getExpirationMinutes());
+        String content = loadVerificationTemplate(code, verificationProperties.getExpirationSeconds());
         helper.setText(content, true);
 
         mailSender.send(message);
@@ -118,16 +121,17 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * 主要用途是生成验证邮件或短信的内容
      *
      * @param code       验证码，用于用户身份验证的一次性代码
-     * @param expiration 过期时间，验证码的有效时间（单位：分钟）
+     * @param expiration 过期时间，验证码的有效时间（单位：秒）
      * @return 替换后的模板字符串，包含验证码和过期时间
      * @throws IOException 如果无法读取模板文件，则抛出IOException
      */
     private String loadVerificationTemplate(String code, int expiration) throws IOException {
         Resource resource = resourceLoader.getResource(verificationProperties.getTemplatePath());
         String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-        return template
-                .replace("{{code}}", code)
-                .replace("{{expiration}}", String.valueOf(expiration));
+        template = StrUtil.replace(template, "{{code}}", code);
+        template = StrUtil.replace(template, "{{expiration}}",
+                String.valueOf(Duration.of(expiration, ChronoUnit.SECONDS).toMinutes()));
+        return template;
     }
 
     /**
