@@ -160,12 +160,6 @@
                 <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
-            <!-- snow flake id generator -->
-            <dependency>
-                <groupId>com.github.yitter</groupId>
-                <artifactId>yitter-idgenerator</artifactId>
-                <version>${id.generator.version}</version>
-            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-bom</artifactId>
