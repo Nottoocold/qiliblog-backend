@@ -28,20 +28,27 @@ public class AppConfig {
 
     @Bean
     public VerificationCacheService verificationCacheService(VerificationProperties verificationProperties) {
+        final var properties = verificationProperties;
         Cache<Object, Object> cache = Caffeine.newBuilder()
                 .maximumSize(1024).recordStats()
                 .expireAfter(new Expiry<>() {
                     @Override
                     public long expireAfterCreate(Object key, Object value, long currentTime) {
                         // 验证码创建后固定缓存有效期
-                        return TimeUnit.SECONDS.toNanos(verificationProperties.getExpirationSeconds());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Verification code created, key: {}, value: {}", key, value);
+                        }
+                        return TimeUnit.SECONDS.toNanos(properties.getExpirationSeconds());
                     }
 
                     @Override
                     public long expireAfterUpdate(Object key, Object value, long currentTime, @NonNegative long currentDuration) {
                         // 验证码更新后重置有效期
-                        // 即每次重新发生验证码时都应该重置有效期，无论新验证码与就验证码是否相同
-                        return TimeUnit.SECONDS.toNanos(verificationProperties.getExpirationSeconds());
+                        // 即每次重新发生验证码时都应该重置有效期，无论新验证码与旧验证码是否相同
+                        if (log.isDebugEnabled()) {
+                            log.debug("Verification code updated, will rest expiredTime, key: {}, value: {}", key, value);
+                        }
+                        return TimeUnit.SECONDS.toNanos(properties.getExpirationSeconds());
                     }
 
                     @Override
@@ -52,7 +59,7 @@ public class AppConfig {
                 })
                 .removalListener((key, value, cause) -> {
                     if (log.isDebugEnabled()) {
-                        log.debug("Verification code removed, key: {}, cause: {}", key, cause);
+                        log.debug("Verification code removed, key: {}, value: {} cause: {}", key, value, cause);
                     }
                 })
                 .build();
