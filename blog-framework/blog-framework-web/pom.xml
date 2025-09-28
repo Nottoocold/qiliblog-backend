@@ -82,6 +82,10 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
         <!-- hutool jwt -->
         <dependency>
             <groupId>cn.hutool</groupId>
