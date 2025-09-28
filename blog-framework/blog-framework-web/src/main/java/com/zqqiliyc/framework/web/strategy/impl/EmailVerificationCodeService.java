@@ -41,13 +41,15 @@ public class EmailVerificationCodeService implements VerificationCodeService {
 
     @Override
     public void generateAndSendCode(String email) {
+        String code = generateRandomCode();
+        saveCodeToCache(email, code);
         try {
-            String code = generateRandomCode();
-            saveCodeToCache(email, code);
             sendVerificationEmail(email, code);
 
-            log.info("验证码已发送至邮箱：{}", email);
-        } catch (MessagingException | IOException e) {
+            if (verificationProperties.isEnabled() && log.isDebugEnabled()) {
+                log.info("验证码已发送至邮箱：{}", email);
+            }
+        } catch (Exception e) {
             log.error("验证码发送失败: {}", e.getMessage(), e);
             throw new ClientException(GlobalErrorDict.PARAM_ERROR);
         }
@@ -59,20 +61,16 @@ public class EmailVerificationCodeService implements VerificationCodeService {
     }
 
     private String generateRandomCode() {
-        String code = verificationProperties.isEnabled() ?
+        return verificationProperties.isEnabled() ?
                 RandomUtil.randomNumbers(verificationProperties.getCodeLength()) :
                 StrUtil.repeat('0', verificationProperties.getCodeLength());
-        if (log.isDebugEnabled()) {
-            log.debug("生成的验证码为：{}", code);
-        }
-        return code;
     }
 
     private void saveCodeToCache(String email, String code) {
         String key = getCacheKey(email);
         verificationCacheService.storeVerificationCode(key, code);
         if (log.isDebugEnabled()) {
-            log.debug("验证码已缓存至 Redis，key={}, code={}", key, code);
+            log.info("验证码已缓存，key={}, code={}", key, code);
         }
     }
 
@@ -88,6 +86,9 @@ public class EmailVerificationCodeService implements VerificationCodeService {
      * @throws IOException        如果读取邮件模板时发生错误
      */
     private void sendVerificationEmail(String email, String code) throws MessagingException, IOException {
+        if (!verificationProperties.isEnabled()) {
+            return;
+        }
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
