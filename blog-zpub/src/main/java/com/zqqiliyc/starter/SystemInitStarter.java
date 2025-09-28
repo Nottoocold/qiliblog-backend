@@ -10,7 +10,7 @@ import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.security.PasswordEncoder;
 import com.zqqiliyc.service.*;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.Ordered;
@@ -31,24 +31,18 @@ import java.util.Optional;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
+@RequiredArgsConstructor
 public class SystemInitStarter implements ApplicationRunner {
-    @Resource
-    private ISysPermissionService permissionService;
-    @Resource
-    private ISysRoleService sysRoleService;
-    @Resource
-    private ISysUserService sysUserService;
-    @Resource
-    private ISysRolePrivService rolePrivService;
-    @Resource
-    private ISysUserRoleService userRoleService;
-    @Resource
-    private PasswordEncoder passwordEncoder;
-    @Resource
-    private PlatformTransactionManager transactionManager;
+    private final ISysPermissionService permissionService;
+    private final ISysRoleService sysRoleService;
+    private final ISysUserService sysUserService;
+    private final ISysRolePrivService rolePrivService;
+    private final ISysUserRoleService userRoleService;
+    private final PasswordEncoder passwordEncoder;
+    private final PlatformTransactionManager transactionManager;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         TransactionStatus transaction = transactionManager.getTransaction(TransactionDefinition.withDefaults());
         try {
             initAdminPermission();
