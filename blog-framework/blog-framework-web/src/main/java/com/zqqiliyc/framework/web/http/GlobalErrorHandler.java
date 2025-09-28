@@ -53,6 +53,13 @@ public class GlobalErrorHandler {
         return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResult<?> handleException(Exception ex) {
+        log.error("[GlobalErrorHandler] handleException", ex);
+        return ApiResult.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), isDev() ? ex.getMessage() : "服务器异常");
+    }
+
     private boolean isDev() {
         return SpringEnvUtils.isDev();
     }

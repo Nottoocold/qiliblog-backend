@@ -4,9 +4,12 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.zqqiliyc.domain.entity.SysToken;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.json.JsonHelper;
@@ -18,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -99,30 +104,105 @@ public class JwtTokenProvider extends AbstractTokenProvider {
 
     @Override
     public Map<String, Object> getClaims(String token) {
-        return JWT.of(token).setKey(Base64.decode(tokenProperties.getSecret())).getPayloads();
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet().getClaims();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean verify(String token, Supplier<SysToken> supplier) {
         if (StrUtil.isBlank(token)) {
             return false;
         }
-        boolean validate = JWT.of(token)
-                .setKey(Base64.decode(tokenProperties.getSecret()))
-                .validate(tokenProperties.getLeeway());
-        if (!validate) {
+
+        byte[] secret = Base64.decode(tokenProperties.getSecret());
+        // 解析和验证 JWT
+        try {
+            SignedJWT parsedJWT = SignedJWT.parse(token);
+            // 1.验证签名
+            JWSVerifier verifier = new MACVerifier(secret);
+            boolean verified = parsedJWT.verify(verifier);
+            if (!verified) {
+                return false;
+            }
+            // 2.容忍度验证
+            boolean validWithLeeway = isValidWithLeeway(parsedJWT, tokenProperties.getLeeway());
+            if (!validWithLeeway) {
+                return false;
+            }
+            // 3.检查是否被撤销
+            SysToken sysToken = supplier.get();
+            return null != sysToken && sysToken.getRevoked() == 0;
+        } catch (ParseException | JOSEException e) {
+            if (log.isDebugEnabled()) {
+                log.warn("Token is invalid", e);
+            } else {
+                log.warn("Token is invalid:{}", e.getMessage());
+            }
             return false;
         }
-        SysToken sysToken = supplier.get();
-        return null != sysToken && sysToken.getRevoked() == 0;
     }
 
+    /**
+     * 创建 JWT
+     *
+     * @param sub       主题
+     * @param claims    声明
+     * @param issuedAt  签发时间
+     * @param expiresAt 过期时间
+     * @return JWT
+     */
     private String createToken(String sub, Map<String, Object> claims, Date issuedAt, Date expiresAt) {
+        // 创建header
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.HS256)
+                .type(JOSEObjectType.JWT)
+                .build();
+        // 创建payload
+        JWTClaimsSet.Builder clainsBuilder = new JWTClaimsSet.Builder()
+                .subject(sub) // 主题
+                .issueTime(issuedAt) // 签发时间
+                .expirationTime(expiresAt);// 过期时间
+        for (Map.Entry<String, Object> entry : claims.entrySet()) {
+            clainsBuilder.claim(entry.getKey(), entry.getValue());
+        }
+        JWTClaimsSet claimsSet = clainsBuilder.build();
         byte[] secret = Base64.decode(tokenProperties.getSecret());
-        JWT jwt = JWT.create();
-        jwt.setSubject(sub);
-        jwt.addPayloads(claims);
-        jwt.setIssuedAt(issuedAt).setExpiresAt(expiresAt);
-        jwt.setSigner(JWTSignerUtil.hs256(secret));
-        return jwt.sign();
+        // 创建 JWS 对象
+        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+        try {
+            // 创建签名器
+            JWSSigner signer = new MACSigner(secret);
+            // 签名
+            signedJWT.sign(signer);
+            return signedJWT.serialize();
+        } catch (JOSEException e) {
+            // runtime, can't reach here
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 检查 JWT 是否在容忍时间内有效
+     *
+     * @param jwt           要验证的 JWT
+     * @param leewaySeconds 容忍时间（秒）
+     * @return 如果 JWT 在容忍时间内有效则返回 true，否则返回 false
+     * @throws ParseException 如果 JWT 解析失败
+     */
+    private boolean isValidWithLeeway(SignedJWT jwt, int leewaySeconds) throws ParseException {
+        JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+        Date expirationTime = claimsSet.getExpirationTime();
+
+        if (expirationTime == null) {
+            return true; // 没有过期时间，认为有效
+        }
+
+        // 当前时间减去容忍时间
+        Date nowMinusLeeway = Date.from(Instant.now().minusSeconds(leewaySeconds));
+
+        // 如果过期时间在 (当前时间-容忍时间) 之后，则认为仍在有效期内
+        return !expirationTime.before(nowMinusLeeway);
     }
 }
