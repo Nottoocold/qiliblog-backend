@@ -4,19 +4,19 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
-import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
+import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
+import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
+import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
-import com.zqqiliyc.framework.web.security.PasswordEncoder;
 import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
-import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**

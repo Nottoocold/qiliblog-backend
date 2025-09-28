@@ -8,10 +8,10 @@ import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.security.PasswordEncoder;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 import java.util.Optional;

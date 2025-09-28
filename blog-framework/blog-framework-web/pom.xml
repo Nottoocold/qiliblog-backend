@@ -87,10 +87,10 @@
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-crypto</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>cn.hutool</groupId>-->
+        <!--            <artifactId>hutool-crypto</artifactId>-->
+        <!--        </dependency>-->
         <!-- hutool jwt -->
         <!--        <dependency>-->
         <!--            <groupId>cn.hutool</groupId>-->

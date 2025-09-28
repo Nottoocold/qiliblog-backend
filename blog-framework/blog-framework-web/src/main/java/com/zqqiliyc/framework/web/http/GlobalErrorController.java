@@ -1,7 +1,6 @@
 package com.zqqiliyc.framework.web.http;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.jwt.JWTException;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
 import jakarta.servlet.RequestDispatcher;
@@ -48,10 +47,6 @@ public class GlobalErrorController implements ErrorController {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             AuthenticationException exception = (AuthenticationException) ExceptionUtil.getCausedBy(ex, AuthenticationException.class);
             return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), getErrorMessage(exception, "认证失败"));
-        } else if (ExceptionUtil.isCausedBy(ex, JWTException.class)) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            JWTException exception = (JWTException) ExceptionUtil.getCausedBy(ex, JWTException.class);
-            return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), getErrorMessage(exception, "Token无效"));
         } else if (ExceptionUtil.isCausedBy(ex, AccessDeniedException.class)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             AccessDeniedException exception = (AccessDeniedException) ExceptionUtil.getCausedBy(ex, AccessDeniedException.class);
