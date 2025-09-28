@@ -8,16 +8,6 @@ spring:
     username:  # 邮箱
     password:  # 授权码
 
-  data:
-    redis:
-      host: ${REDIS_HOST:127.0.0.1}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASS:}
-      timeout: 5000ms
-      lettuce:
-        pool:
-          max-wait: 2000ms # 获取连接最大等待时间
-
 server:
   port: ${SERVER_PORT:8080}
 
