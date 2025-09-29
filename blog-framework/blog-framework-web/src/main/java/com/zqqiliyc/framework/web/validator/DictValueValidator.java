@@ -25,9 +25,16 @@ public class DictValueValidator implements ConstraintValidator<DictValue, Object
             return true;
         }
         Integer val = Convert.toInt(value);
+        if (null == val) {
+            // 打印警告日志：@DictValue 注解应该用在Integer或int属性或参数上
+            if (log.isDebugEnabled()) {
+                log.warn("@DictValue annotation should be used on Integer or int property or parameter");
+            }
+            return true;
+        }
         DictItem<?>[] items = enumClass.getEnumConstants();
         for (DictItem<?> item : items) {
-            Enum<?> o = item.fromInt(val);
+            DictItem<?> o = item.fromInt(val);
             if (o != null) {
                 // 说明找到了对应的枚举对象
                 return true;
