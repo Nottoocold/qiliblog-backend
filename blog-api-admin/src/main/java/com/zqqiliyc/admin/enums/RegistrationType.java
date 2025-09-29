@@ -1,5 +1,6 @@
 package com.zqqiliyc.admin.enums;
 
+import com.zqqiliyc.framework.web.constant.DictItem;
 import lombok.Getter;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Getter;
  * @author hallo
  */
 @Getter
-public enum RegistrationType {
+public enum RegistrationType implements DictItem<RegistrationType> {
     EMAIL(0, "邮箱注册");
 //    PHONE(1, "手机号注册"),
 //    WECHAT(2,"微信注册"),
@@ -30,4 +31,15 @@ public enum RegistrationType {
         return null;
     }
 
-}    
+    @Override
+    public String text() {
+        return description;
+    }
+
+    @Override
+    public int intVal() {
+        return value;
+    }
+
+
+}

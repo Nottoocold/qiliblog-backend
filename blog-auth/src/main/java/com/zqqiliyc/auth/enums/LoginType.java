@@ -1,5 +1,6 @@
 package com.zqqiliyc.auth.enums;
 
+import com.zqqiliyc.framework.web.constant.DictItem;
 import lombok.Getter;
 
 /**
@@ -7,7 +8,7 @@ import lombok.Getter;
  * @date 2025-06-30
  */
 @Getter
-public enum LoginType {
+public enum LoginType implements DictItem<LoginType> {
     EMAIL(0, "邮箱登录"),
     MOBILE(1, "手机登录"),
     USERNAME(2, "用户名登录");
@@ -28,5 +29,15 @@ public enum LoginType {
             }
         }
         return null;
+    }
+
+    @Override
+    public String text() {
+        return name;
+    }
+
+    @Override
+    public int intVal() {
+        return value;
     }
 }

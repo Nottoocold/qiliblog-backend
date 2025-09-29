@@ -1,5 +1,6 @@
 package com.zqqiliyc.framework.web.enums;
 
+import com.zqqiliyc.framework.web.constant.DictItem;
 import lombok.Getter;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Getter;
  * @date 2025-07-01
  */
 @Getter
-public enum GlobalErrorDict {
+public enum GlobalErrorDict implements DictItem<GlobalErrorDict> {
     //region 400-bad request,400xxx系列错误码，专门用来标识客户端错误
     PARAM_ERROR(400001, "参数错误"),
     UNSUPPORTED_LOGIN_TYPE(400002, "不支持的登录方式"),
@@ -40,4 +41,16 @@ public enum GlobalErrorDict {
         this.code = code;
         this.message = message;
     }
+
+    @Override
+    public String text() {
+        return message;
+    }
+
+    @Override
+    public int intVal() {
+        return code;
+    }
+
+
 }

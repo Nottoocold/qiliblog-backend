@@ -1,5 +1,7 @@
 package com.zqqiliyc.auth.dto;
 
+import com.zqqiliyc.auth.enums.LoginType;
+import com.zqqiliyc.framework.web.validator.DictValue;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ public class LoginDto {
      *
      * @see com.zqqiliyc.auth.enums.LoginType
      */
+    @DictValue(enumClass = LoginType.class, message = "不支持的登录类型")
     private int loginType;
     /**
      * 登录身份-如邮箱或手机号
