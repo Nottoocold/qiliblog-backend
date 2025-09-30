@@ -1,11 +1,13 @@
 package com.zqqiliyc.framework.web.bean;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.github.pagehelper.PageInfo;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author qili
@@ -61,5 +63,12 @@ public class PageResult<T> {
 
     public static <T> PageResult<T> emptyPageResult() {
         return new PageResult<>();
+    }
+
+    public <U> PageResult<U> map(Function<List<T>, List<U>> mapper) {
+        PageResult<U> result = new PageResult<>();
+        BeanUtil.copyProperties(this, result, "list");
+        result.setList(mapper.apply(this.list));
+        return result;
     }
 }

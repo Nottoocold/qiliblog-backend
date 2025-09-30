@@ -1,5 +1,6 @@
 package com.zqqiliyc.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.Tag;
@@ -71,7 +72,12 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         for (Map.Entry<Fn<Tag, Object>, Object> entry : conditions.entrySet()) {
             exampleWrapper.eq(entry.getKey(), entry.getValue());
         }
-        if (exampleWrapper.notIn(Tag::getId, notInIds).first().isPresent()) {
+        if (CollUtil.isEmpty(notInIds)
+                && exampleWrapper.first().isPresent()) {
+            throw supplier.get();
+        }
+        if (CollUtil.isNotEmpty(notInIds)
+                && exampleWrapper.notIn(Tag::getId, notInIds).first().isPresent()) {
             throw supplier.get();
         }
     }

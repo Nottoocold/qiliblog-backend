@@ -8,6 +8,8 @@ import com.zqqiliyc.domain.dto.QueryDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.framework.web.bean.PageResult;
+import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.exception.ClientException;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;
@@ -62,8 +64,9 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
                 PageInfo<T> pageInfo = page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
                 return PageResult.of(pageInfo);
             }
+        } else {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "分页请求参数错误");
         }
-        return PageResult.emptyPageResult();
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
