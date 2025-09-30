@@ -95,6 +95,7 @@ CREATE TABLE `tags`
     `id`          BIGINT PRIMARY KEY COMMENT '标签唯一标识符 (主键)',
     `name`        VARCHAR(64) NOT NULL COMMENT '标签名称 (必须唯一，如 "Java", "Spring Boot")',
     `slug`        VARCHAR(64) NOT NULL COMMENT '标签 URL 友好标识符 (必须唯一，如 "java", "spring-boot")',
+    `post_count` INT NOT NULL DEFAULT 0 COMMENT '文章数, 用于统计标签下文章数',
     `description` VARCHAR(255)         DEFAULT NULL COMMENT '标签描述',
     `create_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
