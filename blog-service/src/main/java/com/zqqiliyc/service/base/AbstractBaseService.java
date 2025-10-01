@@ -60,7 +60,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class, readOnly = true)
     public PageResult<T> findPageInfo(QueryDto<T> queryDto) {
         if (queryDto.isPageRequest()) {
-            try (Page<T> page = PageHelper.startPage(queryDto.getPageNum(), queryDto.getPageSize())) {
+            try (Page<T> page = PageHelper.startPage(queryDto.getCurrent(), queryDto.getPageSize())) {
                 PageInfo<T> pageInfo = page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
                 return PageResult.of(pageInfo);
             }

@@ -23,7 +23,7 @@ public class PageResult<T> {
     /**
      * 当前页码
      */
-    private int pageNum;
+    private int current;
     /**
      * 每页记录数
      */
@@ -52,7 +52,7 @@ public class PageResult<T> {
     public static <T> PageResult<T> of(PageInfo<T> pageInfo) {
         PageResult<T> result = new PageResult<>();
         result.setTotal(Long.valueOf(pageInfo.getTotal()).intValue());
-        result.setPageNum(pageInfo.getPageNum());
+        result.setCurrent(pageInfo.getPageNum());
         result.setPageSize(pageInfo.getPageSize());
         result.setPages(pageInfo.getPages());
         result.setHasPre(pageInfo.isHasPreviousPage());

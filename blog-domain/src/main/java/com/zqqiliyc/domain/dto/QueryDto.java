@@ -17,7 +17,7 @@ public interface QueryDto<T extends Entity> {
 
     boolean isPageRequest();
 
-    Integer getPageNum();
+    Integer getCurrent();
 
     Integer getPageSize();
 

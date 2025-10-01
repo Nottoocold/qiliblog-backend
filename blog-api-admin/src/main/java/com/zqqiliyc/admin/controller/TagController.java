@@ -30,7 +30,7 @@ class TagController {
     private final TagVoTransfer tagVoTransfer;
 
     @Operation(summary = "分页查询标签")
-    @GetMapping
+    @GetMapping("/page")
     public ApiResult<PageResult<TagVo>> pageQuery(TagQueryDto queryDto) {
         PageResult<Tag> pageInfo = tagService.findPageInfo(queryDto);
         PageResult<TagVo> result = pageInfo.map(tagVoTransfer::toViewVoList);

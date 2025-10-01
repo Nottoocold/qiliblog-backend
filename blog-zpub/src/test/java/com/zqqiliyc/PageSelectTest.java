@@ -61,12 +61,12 @@ public class PageSelectTest {
         int pageSize = 10;
         SysUserQueryDto queryDto = new SysUserQueryDto();
         queryDto.setSortBy("username asc,state,id desc");
-        queryDto.setPageNum(pageNum);
+        queryDto.setCurrent(pageNum);
         queryDto.setPageSize(pageSize);
 
         PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
 
-        Assertions.assertEquals(pageNum, pageInfo.getPageNum());
+        Assertions.assertEquals(pageNum, pageInfo.getCurrent());
         Assertions.assertEquals(pageSize, pageInfo.getPageSize());
         Assertions.assertFalse(pageInfo.isHasPre());
         Assertions.assertTrue(pageInfo.isHasNext());

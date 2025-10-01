@@ -20,7 +20,7 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
     /**
      * 分页页码-从1开始
      */
-    private Integer pageNum;
+    private Integer current;
     /**
      * 分页大小
      */
@@ -48,7 +48,7 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
 
     @Override
     public boolean isPageRequest() {
-        return (null != pageNum && pageNum > 0) && (null != pageSize && pageSize > 0);
+        return (null != current && current > 0) && (null != pageSize && pageSize > 0);
     }
 
     @SuppressWarnings("unchecked")
