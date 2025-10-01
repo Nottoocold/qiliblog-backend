@@ -67,12 +67,14 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
 
     @Override
     public void cleanToken() {
+        LocalDateTime now = LocalDateTime.now();
         int deleted = wrapper()
                 .eq(SysToken::getRevoked, 1)
                 .or()
-                .lt(SysToken::getExpiredAt, LocalDateTime.now())
+                .lt(SysToken::getExpiredAt, now)
+                .lt(SysToken::getRefreshExpiredAt, now)
                 .or()
-                .lt(SysToken::getRefreshExpiredAt, LocalDateTime.now())
+                .lt(SysToken::getRefreshExpiredAt, now)
                 .delete();
         log.info("清楚无效token数量: {}", deleted);
     }
