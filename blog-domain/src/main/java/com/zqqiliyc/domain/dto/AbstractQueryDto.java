@@ -1,14 +1,14 @@
 package com.zqqiliyc.domain.dto;
 
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.domain.entity.Entity;
-import com.zqqiliyc.framework.web.bean.SortEntry;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author qili
@@ -26,17 +26,21 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
      */
     private Integer pageSize;
     /**
-     * 排序字段
+     * 排序字段:形如 name desc,age,time asc
      */
-    private Set<SortEntry> sortList;
+    private String sortBy;
 
     @Override
     public void addConditionToExample(Example<T> example) {
-        if (null != sortList && !sortList.isEmpty()) {
+        if (StrUtil.isNotBlank(sortBy)) {
             Class<T> entityClass = getEntityClass();
-            for (SortEntry entry : sortList) {
-                Fn<T, Object> fn = Fn.field(entityClass, entry.getName());
-                example.orderBy(fn, entry.isAsc() ? Example.Order.ASC : Example.Order.DESC);
+            List<String> sortEntry = StrUtil.splitTrim(sortBy, ",");
+            for (String entry : sortEntry) {
+                String[] split = entry.split("\\s+");
+                String name = split[0];
+                String order = split.length > 1 ? split[1].toLowerCase() : "asc";
+                example.orderBy(Fn.field(entityClass, name),
+                        "asc".equals(order) ? Example.Order.ASC : Example.Order.DESC);
             }
         }
         fillExample(example);

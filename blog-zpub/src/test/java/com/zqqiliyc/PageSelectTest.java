@@ -5,15 +5,13 @@ import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
 import com.zqqiliyc.domain.dto.user.SysUserQueryDto;
 import com.zqqiliyc.domain.entity.SysUser;
 import com.zqqiliyc.framework.web.bean.PageResult;
-import com.zqqiliyc.framework.web.bean.SortEntry;
+import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.service.ISysUserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 /**
  * @author qili
@@ -50,11 +48,9 @@ public class PageSelectTest {
     @Transactional
     public void testNoPage() {
         SysUserQueryDto queryDto = new SysUserQueryDto();
-        queryDto.setSortList(Set.of(new SortEntry("username", true, 0)));
+        queryDto.setSortBy("username asc,state,id desc");
 
-        PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
-
-        Assertions.assertTrue(pageInfo.getList().isEmpty());
+        Assertions.assertThrowsExactly(ClientException.class, () -> userService.findPageInfo(queryDto));
     }
 
     @Order(1)
@@ -64,7 +60,7 @@ public class PageSelectTest {
         int pageNum = 1;
         int pageSize = 10;
         SysUserQueryDto queryDto = new SysUserQueryDto();
-        queryDto.setSortList(Set.of(new SortEntry("username", true, 0)));
+        queryDto.setSortBy("username asc,state,id desc");
         queryDto.setPageNum(pageNum);
         queryDto.setPageSize(pageSize);
 
