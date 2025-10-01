@@ -20,5 +20,6 @@ public class TagQueryDto extends AbstractQueryDto<Tag> {
     protected void fillExample(Example<Tag> example) {
         example.createCriteria()
                 .andLike(StrUtil.isNotBlank(word), Tag::getName, "%" + word + "%");
+        example.or().andLike(StrUtil.isNotBlank(word), Tag::getSlug, "%" + word + "%");
     }
 }
