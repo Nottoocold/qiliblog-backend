@@ -1,6 +1,7 @@
 package com.zqqiliyc.service.base;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.TypeUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -10,7 +11,9 @@ import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.BaseEntity;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
+import com.zqqiliyc.framework.web.spring.SpringUtils;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;
@@ -126,6 +129,8 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class)
     @Override
     public int deleteById(I id) {
+        T entity = findById(id);
+        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
         int count = baseMapper.deleteByPrimaryKey(id);
         Assert.isTrue(count == 1, "delete failed");
         return count;
@@ -182,6 +187,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         validateWithDB(conditions, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, message), List.of(excludeIds));
     }
 
+    @SuppressWarnings("unchecked")
     private void validateWithDB(Map<Fn<T, Object>, Object> conditions,
                                 Supplier<? extends RuntimeException> supplier,
                                 List<I> excludeIds) {
@@ -195,8 +201,9 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
                 && exampleWrapper.first().isPresent()) {
             throw supplier.get();
         }
+        Class<T> entityClass = (Class<T>) TypeUtil.getClass(TypeUtil.getTypeArgument(getClass(), 0));
         if (CollUtil.isNotEmpty(excludeIds)
-                && exampleWrapper.notIn(T::getId, excludeIds).first().isPresent()) {
+                && exampleWrapper.notIn(Fn.field(entityClass, "id"), excludeIds).first().isPresent()) {
             throw supplier.get();
         }
     }

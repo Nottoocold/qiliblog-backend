@@ -3,8 +3,6 @@ package com.zqqiliyc.service.impl;
 import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.Tag;
-import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
-import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.repository.mapper.TagMapper;
 import com.zqqiliyc.service.ITagService;
 import com.zqqiliyc.service.base.AbstractBaseService;
@@ -46,12 +44,5 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         validateBeforeUpdateWithDB(Map.of(Tag::getName, entity.getName()), "标签名称已存在", excludeIds);
         validateBeforeUpdateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在", excludeIds);
         return super.update(entity);
-    }
-
-    @Override
-    public int deleteById(Long id) {
-        Tag entity = findById(id);
-        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
-        return super.deleteById(id);
     }
 }
