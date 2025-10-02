@@ -57,4 +57,11 @@ class TagController {
         TagVo tagVo = tagVoTransfer.toViewVo(tagService.update(dto));
         return ApiResult.success(tagVo);
     }
+
+    @Operation(summary = "删除标签")
+    @DeleteMapping("/{id}")
+    public ApiResult<Void> delete(@PathVariable Long id) {
+        tagService.deleteById(id);
+        return ApiResult.success();
+    }
 }

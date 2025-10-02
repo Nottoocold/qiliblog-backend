@@ -5,7 +5,9 @@ import com.zqqiliyc.domain.dto.CreateDto;
 import com.zqqiliyc.domain.dto.UpdateDto;
 import com.zqqiliyc.domain.entity.Tag;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
+import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.repository.mapper.TagMapper;
 import com.zqqiliyc.service.ITagService;
 import com.zqqiliyc.service.base.AbstractBaseService;
@@ -63,6 +65,13 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
                 () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "标签 URL 友好标识符已存在"),
                 List.of(entity.getId()));
         return super.update(entity);
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        Tag entity = findById(id);
+        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
+        return super.deleteById(id);
     }
 
     private void validateForCreateOrUpdate(Map<Fn<Tag, Object>, Object> conditions,
