@@ -23,7 +23,7 @@ public interface ViewVoTransfer<S, T> {
         if (source == null) {
             return null;
         }
-        List<S> sourceList = new ArrayList<>();
+        List<S> sourceList = new ArrayList<>(1);
         sourceList.add(source);
         List<T> result = this.toViewVoList(sourceList);
         return CollUtil.isEmpty(result) ? null : result.get(0);
@@ -41,7 +41,7 @@ public interface ViewVoTransfer<S, T> {
         }
         List<T> result = new ArrayList<>(sourceList.size());
         for (S s : sourceList) {
-            T t = this.newInstance();
+            T t = newInstance();
             BeanUtil.copyProperties(s, t);
             customize(t);
             result.add(t);
@@ -69,9 +69,9 @@ public interface ViewVoTransfer<S, T> {
     /**
      * 自定义定制目标对象列表,注意：这是在循环执行完之后允许的，voList集合已经有值
      *
-     * @param voList     目标对象列表
+     * @param targetList     目标对象列表
      * @param sourceList 源对象列表
      */
-    default void customize(List<T> voList, List<S> sourceList) {
+    default void customize(List<T> targetList, List<S> sourceList) {
     }
 }

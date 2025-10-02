@@ -2,6 +2,7 @@ package com.zqqiliyc.framework.web.http;
 
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -51,6 +52,12 @@ public class GlobalErrorHandler {
                 .collect(Collectors.joining(","));
 
         return ApiResult.error(HttpStatus.BAD_REQUEST.value(), errorMsg);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ApiResult<?> handleValidationException(ValidationException exception) {
+        return ApiResult.error(HttpStatus.BAD_REQUEST.value(), isDev() ? exception.getMessage() : "参数错误");
     }
 
     @ExceptionHandler(Exception.class)

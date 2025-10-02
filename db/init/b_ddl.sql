@@ -79,6 +79,7 @@ CREATE TABLE `category`
     `id`          BIGINT PRIMARY KEY COMMENT '主键',
     `name`        VARCHAR(64) NOT NULL COMMENT '分类名称 (必须唯一，如 "技术", "生活")',
     `slug`        VARCHAR(64) NOT NULL COMMENT '分类 URL 友好标识符 (必须唯一，如 "tech", "life")',
+    `post_count` INT NOT NULL DEFAULT 0 COMMENT '文章数, 用于统计分类下文章数',
     `description` VARCHAR(255) DEFAULT NULL COMMENT '分类描述',
     `create_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
