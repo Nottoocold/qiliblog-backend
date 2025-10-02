@@ -1,13 +1,13 @@
 package com.zqqiliyc.domain.dto;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
 import com.zqqiliyc.domain.entity.Entity;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.fn.Fn;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
@@ -53,7 +53,7 @@ public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> 
 
     @SuppressWarnings("unchecked")
     protected Class<T> getEntityClass() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return (Class<T>) TypeUtil.getClass(TypeUtil.getTypeArgument(getClass(), 0));
     }
 
     protected abstract void fillExample(Example<T> example);
