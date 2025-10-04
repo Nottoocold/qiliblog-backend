@@ -1,8 +1,8 @@
 package com.zqqiliyc.admin.strategy;
 
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.enums.RegistrationType;
+import com.zqqiliyc.biz.core.dto.user.SysUserRegisterDto;
 
 /**
  * 注册策略接口。

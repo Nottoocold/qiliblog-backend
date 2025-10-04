@@ -1,15 +1,15 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.domain.dto.cate.CategoryCreateDto;
-import com.zqqiliyc.domain.dto.cate.CategoryQueryDto;
-import com.zqqiliyc.domain.dto.cate.CategoryUpdateDto;
-import com.zqqiliyc.domain.entity.Category;
-import com.zqqiliyc.domain.vo.CategoryVo;
-import com.zqqiliyc.domain.vo.transfer.CategoryVoTransfer;
+import com.zqqiliyc.biz.core.dto.cate.CategoryCreateDto;
+import com.zqqiliyc.biz.core.dto.cate.CategoryQueryDto;
+import com.zqqiliyc.biz.core.dto.cate.CategoryUpdateDto;
+import com.zqqiliyc.biz.core.entity.Category;
+import com.zqqiliyc.biz.core.service.ICategoryService;
+import com.zqqiliyc.biz.core.vo.CategoryVo;
+import com.zqqiliyc.biz.core.vo.transfer.CategoryVoTransfer;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
-import com.zqqiliyc.service.ICategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

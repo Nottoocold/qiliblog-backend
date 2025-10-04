@@ -1,13 +1,13 @@
 package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
-import com.zqqiliyc.domain.entity.SysPermission;
-import com.zqqiliyc.domain.entity.SysRole;
-import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.biz.core.entity.SysPermission;
+import com.zqqiliyc.biz.core.entity.SysRole;
+import com.zqqiliyc.biz.core.entity.SysUser;
+import com.zqqiliyc.biz.core.service.ISysPermissionService;
+import com.zqqiliyc.biz.core.service.ISysRoleService;
+import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
-import com.zqqiliyc.service.ISysPermissionService;
-import com.zqqiliyc.service.ISysRoleService;
-import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

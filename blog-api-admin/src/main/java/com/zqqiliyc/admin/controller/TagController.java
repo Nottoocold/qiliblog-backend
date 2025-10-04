@@ -1,15 +1,15 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.domain.dto.tag.TagCreateDto;
-import com.zqqiliyc.domain.dto.tag.TagQueryDto;
-import com.zqqiliyc.domain.dto.tag.TagUpdateDto;
-import com.zqqiliyc.domain.entity.Tag;
-import com.zqqiliyc.domain.vo.TagVo;
-import com.zqqiliyc.domain.vo.transfer.TagVoTransfer;
+import com.zqqiliyc.biz.core.dto.tag.TagCreateDto;
+import com.zqqiliyc.biz.core.dto.tag.TagQueryDto;
+import com.zqqiliyc.biz.core.dto.tag.TagUpdateDto;
+import com.zqqiliyc.biz.core.entity.Tag;
+import com.zqqiliyc.biz.core.service.ITagService;
+import com.zqqiliyc.biz.core.vo.TagVo;
+import com.zqqiliyc.biz.core.vo.transfer.TagVoTransfer;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
-import com.zqqiliyc.service.ITagService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

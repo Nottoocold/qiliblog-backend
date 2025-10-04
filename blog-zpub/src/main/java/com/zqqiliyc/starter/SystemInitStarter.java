@@ -1,14 +1,14 @@
 package com.zqqiliyc.starter;
 
-import com.zqqiliyc.domain.dto.priv.SysPermissionCreateDto;
-import com.zqqiliyc.domain.dto.priv.SysRolePrivCreateDto;
-import com.zqqiliyc.domain.dto.priv.SysUserRoleCreateDto;
-import com.zqqiliyc.domain.dto.role.SysRoleCreateDto;
-import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
-import com.zqqiliyc.domain.entity.*;
+import com.zqqiliyc.biz.core.dto.priv.SysPermissionCreateDto;
+import com.zqqiliyc.biz.core.dto.priv.SysRolePrivCreateDto;
+import com.zqqiliyc.biz.core.dto.priv.SysUserRoleCreateDto;
+import com.zqqiliyc.biz.core.dto.role.SysRoleCreateDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
+import com.zqqiliyc.biz.core.entity.*;
+import com.zqqiliyc.biz.core.service.*;
 import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
-import com.zqqiliyc.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

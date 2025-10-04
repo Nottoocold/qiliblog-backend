@@ -1,9 +1,9 @@
 package com.zqqiliyc.admin.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.service.IRegisterService;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
+import com.zqqiliyc.biz.core.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import lombok.RequiredArgsConstructor;

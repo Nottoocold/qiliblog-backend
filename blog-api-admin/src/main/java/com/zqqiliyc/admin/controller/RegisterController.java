@@ -1,11 +1,11 @@
 package com.zqqiliyc.admin.controller;
 
 import com.zqqiliyc.admin.dto.EmailDto;
-import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.admin.service.IRegisterService;
+import com.zqqiliyc.biz.core.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
-import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import com.zqqiliyc.framework.web.http.ApiResult;
+import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

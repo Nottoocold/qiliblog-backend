@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.zqqiliyc</groupId>
-            <artifactId>blog-service</artifactId>
+            <artifactId>blog-biz-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

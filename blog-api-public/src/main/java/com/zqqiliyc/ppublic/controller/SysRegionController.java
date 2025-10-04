@@ -1,10 +1,10 @@
 package com.zqqiliyc.ppublic.controller;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.zqqiliyc.domain.entity.SysRegion;
+import com.zqqiliyc.biz.core.entity.SysRegion;
+import com.zqqiliyc.biz.core.service.IRegionService;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
-import com.zqqiliyc.service.IRegionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

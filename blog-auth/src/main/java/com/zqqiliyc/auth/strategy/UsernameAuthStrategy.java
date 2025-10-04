@@ -4,7 +4,7 @@ import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.enums.LoginType;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.auth.token.UsernameAuthRequestToken;
-import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.biz.core.entity.SysUser;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.service;
 
 import com.zqqiliyc.admin.RegisterResult;
-import com.zqqiliyc.domain.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.framework.web.exception.ClientException;
 
 /**

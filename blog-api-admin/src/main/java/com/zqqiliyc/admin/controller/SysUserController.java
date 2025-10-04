@@ -1,13 +1,13 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.domain.dto.user.SysUserCreateDto;
-import com.zqqiliyc.domain.dto.user.SysUserQueryDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserQueryDto;
+import com.zqqiliyc.biz.core.entity.SysUser;
+import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.controller.BaseController;
 import com.zqqiliyc.framework.web.http.ApiResult;
-import com.zqqiliyc.domain.entity.SysUser;
-import com.zqqiliyc.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

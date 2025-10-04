@@ -13,14 +13,12 @@
     <description>Blog backend parent module</description>
 
     <modules>
-        <module>blog-domain</module>
-        <module>blog-repository</module>
-        <module>blog-service</module>
         <module>blog-zpub</module>
         <module>blog-auth</module>
         <module>blog-framework</module>
         <module>blog-api-admin</module>
         <module>blog-api-public</module>
+        <module>blog-biz-core</module>
     </modules>
 
     <properties>
@@ -80,21 +78,27 @@
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-domain</artifactId>
+                <artifactId>blog-biz-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-repository</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.zqqiliyc</groupId>-->
+            <!--                <artifactId>blog-domain</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
-            <dependency>
-                <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.zqqiliyc</groupId>-->
+            <!--                <artifactId>blog-repository</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
+
+            <!--            <dependency>-->
+            <!--                <groupId>com.zqqiliyc</groupId>-->
+            <!--                <artifactId>blog-service</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>

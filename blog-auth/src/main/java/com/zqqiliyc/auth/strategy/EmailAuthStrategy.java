@@ -5,7 +5,7 @@ import com.zqqiliyc.auth.dto.LoginDto;
 import com.zqqiliyc.auth.enums.LoginType;
 import com.zqqiliyc.auth.token.AuthRequestToken;
 import com.zqqiliyc.auth.token.EmailAuthRequestToken;
-import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.biz.core.entity.SysUser;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import org.springframework.stereotype.Component;

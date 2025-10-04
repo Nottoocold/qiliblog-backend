@@ -4,7 +4,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import com.zqqiliyc.auth.bean.AuthResult;
 import com.zqqiliyc.auth.manager.AuthManager;
 import com.zqqiliyc.auth.token.AuthRequestToken;
-import com.zqqiliyc.domain.entity.SysUser;
+import com.zqqiliyc.biz.core.entity.SysUser;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;

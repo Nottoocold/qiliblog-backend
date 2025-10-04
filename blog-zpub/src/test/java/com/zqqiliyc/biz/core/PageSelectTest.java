@@ -1,0 +1,74 @@
+package com.zqqiliyc.biz.core;
+
+import cn.hutool.core.util.RandomUtil;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserQueryDto;
+import com.zqqiliyc.biz.core.entity.SysUser;
+import com.zqqiliyc.biz.core.service.ISysUserService;
+import com.zqqiliyc.framework.web.bean.PageResult;
+import com.zqqiliyc.framework.web.exception.ClientException;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.Order;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * @author qili
+ * @date 2025-06-07
+ */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SpringBootTest
+public class PageSelectTest {
+    @Autowired
+    private ISysUserService userService;
+    static final int count = 100;
+
+    @BeforeEach
+    public void setUp() {
+        for (int i = 0; i < count; i++) {
+            SysUserCreateDto sysUser = new SysUserCreateDto();
+            sysUser.setUsername(RandomUtil.randomString(6));
+            sysUser.setNickname(RandomUtil.randomString(6));
+            sysUser.setPassword(RandomUtil.randomString(18));
+            sysUser.setEmail(RandomUtil.randomString(6) + "@qq.com");
+            sysUser.setPhone(RandomUtil.randomNumbers(11));
+            sysUser.setAvatar("https://avatars.githubusercontent.com/u/102040668?v=4");
+            userService.create(sysUser);
+        }
+    }
+
+    @AfterEach
+    public void setDown() {
+
+    }
+
+    @Order(0)
+    @Test
+    @Transactional
+    public void testNoPage() {
+        SysUserQueryDto queryDto = new SysUserQueryDto();
+        queryDto.setSortBy("username asc,state,id desc");
+
+        Assertions.assertThrowsExactly(ClientException.class, () -> userService.findPageInfo(queryDto));
+    }
+
+    @Order(1)
+    @Test
+    @Transactional
+    public void testPage() {
+        int pageNum = 1;
+        int pageSize = 10;
+        SysUserQueryDto queryDto = new SysUserQueryDto();
+        queryDto.setSortBy("username asc,state,id desc");
+        queryDto.setCurrent(pageNum);
+        queryDto.setPageSize(pageSize);
+
+        PageResult<SysUser> pageInfo = userService.findPageInfo(queryDto);
+
+        Assertions.assertEquals(pageNum, pageInfo.getCurrent());
+        Assertions.assertEquals(pageSize, pageInfo.getPageSize());
+        Assertions.assertFalse(pageInfo.isHasPre());
+        Assertions.assertTrue(pageInfo.isHasNext());
+    }
+}

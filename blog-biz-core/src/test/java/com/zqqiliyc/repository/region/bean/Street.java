@@ -1,0 +1,18 @@
+package com.zqqiliyc.repository.region.bean;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author qili
+ * @date 2025-07-26
+ */
+@Getter
+@Setter
+public class Street {
+    private String code;
+    private String name;
+    private String areaCode;
+    private String cityCode;
+    private String provinceCode;
+}

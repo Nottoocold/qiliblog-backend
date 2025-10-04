@@ -14,8 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.zqqiliyc</groupId>
-            <artifactId>blog-service</artifactId>
-            <version>${project.version}</version>
+            <artifactId>blog-biz-core</artifactId>
         </dependency>
         <!-- Web -->
         <dependency>
