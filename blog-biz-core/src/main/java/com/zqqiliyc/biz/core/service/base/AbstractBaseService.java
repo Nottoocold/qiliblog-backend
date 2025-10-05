@@ -1,6 +1,7 @@
 package com.zqqiliyc.biz.core.service.base;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.TypeUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -18,7 +19,6 @@ import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;
 import io.mybatis.mapper.fn.Fn;
-import io.mybatis.provider.util.Assert;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -114,14 +113,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         validateConstraintAndThrow(dto);
         T entity = findById(dto.getId());
         dto.fillEntity(entity);
-        Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
-        return entity;
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public T update(T entity) {
-        entity.setUpdateTime(LocalDateTime.now());
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         return entity;
     }
