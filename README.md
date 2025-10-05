@@ -7,14 +7,12 @@
 
 # 模块介绍
 
-- blog-common 基础公共模块
-- blog-domain 提供领域对象
-- blog-repository 数据仓库
-- blog-service 业务层
+- blog-framework 基础框架
+- blog-biz-core 核心业务
 - blog-auth 认证模块
-- blog-api-admin 后台管理接口模块
+- blog-api-admin 后台管理接口
+- blog-api-public 公开接口
 - blog-zpub 发布模块，也是启动模块
-- blog-xxx TODO...
 
 # 部署
 
