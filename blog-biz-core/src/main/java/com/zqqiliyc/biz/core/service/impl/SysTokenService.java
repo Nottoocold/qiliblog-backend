@@ -1,5 +1,6 @@
 package com.zqqiliyc.biz.core.service.impl;
 
+import com.zqqiliyc.biz.core.config.cache.SysTokenCacheInstanceConfig;
 import com.zqqiliyc.biz.core.dto.CreateDto;
 import com.zqqiliyc.biz.core.entity.SysToken;
 import com.zqqiliyc.biz.core.repository.mapper.SysTokenMapper;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-@CacheConfig(cacheNames = "system:token")
+@CacheConfig(cacheNames = SysTokenCacheInstanceConfig.CACHE_NAME)
 @Transactional(rollbackFor = Exception.class)
 public class SysTokenService extends AbstractBaseService<SysToken, Long, SysTokenMapper> implements ISysTokenService {
 

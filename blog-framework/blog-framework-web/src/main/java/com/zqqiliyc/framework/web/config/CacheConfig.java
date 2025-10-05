@@ -1,15 +1,15 @@
 package com.zqqiliyc.framework.web.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.RemovalCause;
-import com.github.benmanes.caffeine.cache.RemovalListener;
-import jakarta.annotation.Nullable;
+import com.zqqiliyc.framework.web.config.cache.CaffeineCacheInstanceConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
+import java.util.List;
 
 /**
  * @author qili
@@ -20,18 +20,23 @@ import java.time.Duration;
 @EnableCaching
 public class CacheConfig extends BaseJacksonConfig {
 
-    @Bean
-    public Caffeine<Object, Object> caffeine() {
-        return Caffeine.newBuilder()
+    @Bean("caffeineCacheManager")
+    public CaffeineCacheManager caffeineCacheManager(List<CaffeineCacheInstanceConfig> cacheInstanceConfigs) {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        // 默认缓存构建配置
+        Caffeine<Object, Object> defaultCacheBuilder = Caffeine.newBuilder()
                 .maximumSize(512)
-                .expireAfterAccess(Duration.ofMinutes(10))
-                .recordStats()
-                .removalListener(new RemovalListener<Object, Object>() {
-                    @Override
-                    public void onRemoval(@Nullable Object key, @Nullable Object value, RemovalCause cause) {
-                        log.info("缓存被移除：key={}, value={}, cause={}", key, value, cause);
-                    }
-                });
+                .expireAfterAccess(Duration.ofMinutes(30))
+                .recordStats();
+        cacheManager.setCaffeine(defaultCacheBuilder);
+        if (cacheInstanceConfigs != null) {
+            for (CaffeineCacheInstanceConfig cacheInstanceConfig : cacheInstanceConfigs) {
+                // 注册自定义的缓存实例，用于不同场景下使用不同的缓存配置
+                cacheManager.registerCustomCache(cacheInstanceConfig.getCacheName(),
+                        cacheInstanceConfig.getCaffeineCache());
+            }
+        }
+        return cacheManager;
     }
 
     /**
