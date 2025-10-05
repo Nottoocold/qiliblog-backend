@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author qili
  * @date 2025-07-15
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class JsonConfig extends BaseJacksonConfig {
 
     @Bean

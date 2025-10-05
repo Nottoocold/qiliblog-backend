@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2025-09-13
  */
 @Profile("dev")
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class OpenAPIConfig {
 
     @Value("${server.port}")

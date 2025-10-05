@@ -11,12 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author zqqiliyc
  * @since 2025-07-02
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

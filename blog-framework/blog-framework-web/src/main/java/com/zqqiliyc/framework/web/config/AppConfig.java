@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class AppConfig {
 
     @Bean
-    public VerificationCacheService verificationCacheService(VerificationProperties verificationProperties) {
+    public static VerificationCacheService verificationCacheService(VerificationProperties verificationProperties) {
         final var properties = verificationProperties;
         Cache<Object, Object> cache = Caffeine.newBuilder()
                 .maximumSize(1024).recordStats()
