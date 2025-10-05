@@ -90,7 +90,7 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
     })
     public SysToken saveToCache(SysToken token) {
         if (log.isDebugEnabled()) {
-            log.debug("保存ID={}的SysToken缓存", token.getId());
+            log.info("保存令牌缓存,id={}", token.getId());
         }
         return token;
     }
@@ -101,7 +101,7 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
     })
     public void clearCache(SysToken token) {
         if (log.isDebugEnabled()) {
-            log.debug("清除ID={}的SysToken缓存", token.getId());
+            log.info("清除令牌缓存,id={}", token.getId());
         }
     }
 }

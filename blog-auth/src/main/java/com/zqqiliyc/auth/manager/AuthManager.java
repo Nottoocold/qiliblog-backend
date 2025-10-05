@@ -1,6 +1,7 @@
 package com.zqqiliyc.auth.manager;
 
 import cn.hutool.core.collection.CollUtil;
+import com.zqqiliyc.biz.core.config.cache.AuthDataCacheInstanceConfig;
 import com.zqqiliyc.biz.core.entity.SysPermission;
 import com.zqqiliyc.biz.core.entity.SysRole;
 import com.zqqiliyc.biz.core.entity.SysUser;
@@ -8,8 +9,13 @@ import com.zqqiliyc.biz.core.service.ISysPermissionService;
 import com.zqqiliyc.biz.core.service.ISysRoleService;
 import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.spring.SpringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +32,7 @@ import java.util.stream.Collectors;
  * @date 2025-07-16
  */
 @Slf4j
+@CacheConfig(cacheNames = AuthDataCacheInstanceConfig.CACHE_NAME)
 @Component
 @RequiredArgsConstructor
 public class AuthManager implements UserDetailsService {
@@ -45,6 +52,7 @@ public class AuthManager implements UserDetailsService {
         return Optional.ofNullable(userService.findByPhone(phone));
     }
 
+    @Cacheable(key = "'loginSession:roles:' + #userId")
     public Set<String> getRoles(long userId) {
         if (userId <= 0) {
             return Collections.emptySet();
@@ -56,6 +64,7 @@ public class AuthManager implements UserDetailsService {
         return roleList.stream().map(SysRole::getCode).collect(Collectors.toUnmodifiableSet());
     }
 
+    @Cacheable(key = "'loginSession:pers:' + #userId")
     public Set<String> getPermissions(long userId) {
         if (userId <= 0) {
             return Collections.emptySet();
@@ -67,9 +76,10 @@ public class AuthManager implements UserDetailsService {
     }
 
     public AuthUserInfoBean getUserInfo(Long userId) {
-        return (AuthUserInfoBean) loadUserByUsername(userId.toString());
+        return (AuthUserInfoBean) (SpringUtils.getBean(this.getClass()).loadUserByUsername(userId.toString()));
     }
 
+    @Cacheable(key = "'loginSession:userinfo:' + #userId")
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         SysUser sysUser = userService.findById(Long.parseLong(userId));
@@ -84,5 +94,16 @@ public class AuthManager implements UserDetailsService {
         authUserInfoBean.setRoles(getRoles(sysUser.getId()).toArray(new String[0]));
         authUserInfoBean.setPermissions(getPermissions(sysUser.getId()).toArray(new String[0]));
         return authUserInfoBean;
+    }
+
+    @Caching(evict = {
+            @CacheEvict(key = "'loginSession:roles:' + #userId"),
+            @CacheEvict(key = "'loginSession:pers:' + #userId"),
+            @CacheEvict(key = "'loginSession:userinfo:' + #userId")
+    })
+    public void clearCache(long userId) {
+        if (log.isDebugEnabled()) {
+            log.info("清除用户权限数据缓存，userId={}", userId);
+        }
     }
 }

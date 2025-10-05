@@ -55,6 +55,7 @@ public class AuthService implements IAuthService {
         if (StrUtil.isBlank(accessToken)) {
             return;
         }
+        authManager.clearCache(sysTokenService.findByAccessToken(cleanToken(accessToken)).getUserId());
         tokenProvider.revokeToken(cleanToken(accessToken));
     }
 
