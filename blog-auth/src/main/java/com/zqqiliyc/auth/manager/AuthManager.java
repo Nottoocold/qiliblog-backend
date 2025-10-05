@@ -34,15 +34,15 @@ public class AuthManager implements UserDetailsService {
     private final ISysPermissionService permissionService;
 
     public Optional<SysUser> findByUsername(String username) {
-        return userService.findByUsername(username);
+        return Optional.ofNullable(userService.findByUsername(username));
     }
 
     public Optional<SysUser> findByEmail(String email) {
-        return userService.findByEmail(email);
+        return Optional.ofNullable(userService.findByEmail(email));
     }
 
     public Optional<SysUser> findByPhone(String phone) {
-        return userService.findByPhone(phone);
+        return Optional.ofNullable(userService.findByPhone(phone));
     }
 
     public Set<String> getRoles(long userId) {

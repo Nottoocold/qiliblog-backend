@@ -21,7 +21,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.util.Assert;
 
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * 系统初始化启动器：初始化系统默认用户、角色、权限、角色权限关系、用户角色关系
@@ -57,8 +57,8 @@ public class SystemInitStarter implements ApplicationRunner {
     }
 
     private void initAdminPermission() {
-        Optional<SysPermission> permission = permissionService.findByCode(SystemConstants.PERMISSION_ADMIN);
-        if (permission.isEmpty()) {
+        SysPermission permission = permissionService.findByCode(SystemConstants.PERMISSION_ADMIN);
+        if (Objects.isNull(permission)) {
             SysPermissionCreateDto dto = new SysPermissionCreateDto();
             dto.setId(1L);
             dto.setCode(SystemConstants.PERMISSION_ADMIN);
@@ -73,8 +73,8 @@ public class SystemInitStarter implements ApplicationRunner {
     }
 
     private void initAdminRole() {
-        Optional<SysRole> role = sysRoleService.findByCode(SystemConstants.ROLE_ADMIN);
-        if (role.isEmpty()) {
+        SysRole role = sysRoleService.findByCode(SystemConstants.ROLE_ADMIN);
+        if (Objects.isNull(role)) {
             SysRoleCreateDto dto = new SysRoleCreateDto();
             dto.setId(1L);
             dto.setCode(SystemConstants.ROLE_ADMIN);
@@ -88,8 +88,8 @@ public class SystemInitStarter implements ApplicationRunner {
     }
 
     private void initAdminUser() {
-        Optional<SysUser> user = sysUserService.findByUsername(SystemConstants.USER_ADMIN);
-        if (user.isEmpty()) {
+        SysUser user = sysUserService.findByUsername(SystemConstants.USER_ADMIN);
+        if (Objects.isNull(user)) {
             SysUserCreateDto dto = new SysUserCreateDto();
             dto.setId(1L);
             dto.setUsername(SystemConstants.USER_ADMIN);
@@ -106,8 +106,8 @@ public class SystemInitStarter implements ApplicationRunner {
     }
 
     private void initAuthorization() {
-        Optional<SysRolePriv> sysRolePriv = rolePrivService.findOne(1L, 1L);
-        if (sysRolePriv.isEmpty()) {
+        SysRolePriv sysRolePriv = rolePrivService.findOne(1L, 1L);
+        if (Objects.isNull(sysRolePriv)) {
             SysRolePrivCreateDto dto = new SysRolePrivCreateDto();
             dto.setRoleId(1L);
             dto.setPrivId(1L);
@@ -116,8 +116,8 @@ public class SystemInitStarter implements ApplicationRunner {
             Assert.isTrue(entity.getRoleId() == 1L, "系统角色授权初始化失败");
             Assert.isTrue(entity.getPrivId() == 1L, "系统角色授权初始化失败");
         }
-        Optional<SysUserRole> sysUserRole = userRoleService.findOne(1L, 1L);
-        if (sysUserRole.isEmpty()) {
+        SysUserRole sysUserRole = userRoleService.findOne(1L, 1L);
+        if (Objects.isNull(sysUserRole)) {
             SysUserRoleCreateDto dto = new SysUserRoleCreateDto();
             dto.setUserId(1L);
             dto.setRoleId(1L);

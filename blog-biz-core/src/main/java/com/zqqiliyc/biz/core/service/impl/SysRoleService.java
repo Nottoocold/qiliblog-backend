@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -34,8 +33,8 @@ public class SysRoleService extends AbstractDeleteHardService<SysRole, Long, Sys
      * @return 角色
      */
     @Override
-    public Optional<SysRole> findByCode(String code) {
-        return wrapper().eq(SysRole::getCode, code).one();
+    public SysRole findByCode(String code) {
+        return wrapper().eq(SysRole::getCode, code).one().orElse(null);
     }
 
     /**

@@ -8,8 +8,6 @@ import com.zqqiliyc.biz.core.service.base.AbstractDeleteHardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 /**
  * @author qili
  * @date 2025-04-06
@@ -25,11 +23,11 @@ public class SysUserService extends AbstractDeleteHardService<SysUser, Long, Sys
      * @return 用户信息
      */
     @Override
-    public Optional<SysUser> findByUsername(String username) {
+    public SysUser findByUsername(String username) {
         if (StrUtil.isBlank(username)) {
-            return Optional.empty();
+            return null;
         }
-        return wrapper().eq(SysUser::getUsername, username).one();
+        return wrapper().eq(SysUser::getUsername, username).one().orElse(null);
     }
 
     /**
@@ -39,11 +37,11 @@ public class SysUserService extends AbstractDeleteHardService<SysUser, Long, Sys
      * @return 用户信息
      */
     @Override
-    public Optional<SysUser> findByEmail(String email) {
+    public SysUser findByEmail(String email) {
         if (StrUtil.isBlank(email)) {
-            return Optional.empty();
+            return null;
         }
-        return wrapper().eq(SysUser::getEmail, email).one();
+        return wrapper().eq(SysUser::getEmail, email).one().orElse(null);
     }
 
     /**
@@ -53,26 +51,10 @@ public class SysUserService extends AbstractDeleteHardService<SysUser, Long, Sys
      * @return 用户信息
      */
     @Override
-    public Optional<SysUser> findByPhone(String phone) {
+    public SysUser findByPhone(String phone) {
         if (StrUtil.isBlank(phone)) {
-            return Optional.empty();
+            return null;
         }
-        return wrapper().eq(SysUser::getPhone, phone).one();
+        return wrapper().eq(SysUser::getPhone, phone).one().orElse(null);
     }
-
-    @Override
-    public boolean isEmailRegistered(String email) {
-        return findByEmail(email).isPresent();
-    }
-
-    @Override
-    public boolean isUsernameTaken(String username) {
-        return findByUsername(username).isPresent();
-    }
-
-    @Override
-    public boolean isPhoneBound(String phone) {
-        return findByPhone(phone).isPresent();
-    }
-
 }

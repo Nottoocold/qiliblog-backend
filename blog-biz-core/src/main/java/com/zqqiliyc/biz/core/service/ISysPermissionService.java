@@ -4,7 +4,6 @@ import com.zqqiliyc.biz.core.entity.SysPermission;
 import com.zqqiliyc.biz.core.service.base.IBaseService;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -18,7 +17,7 @@ public interface ISysPermissionService extends IBaseService<SysPermission, Long>
      * @param code 权限编码
      * @return 权限
      */
-    Optional<SysPermission> findByCode(String code);
+    SysPermission findByCode(String code);
 
     /**
      * 根据用户ID查询权限

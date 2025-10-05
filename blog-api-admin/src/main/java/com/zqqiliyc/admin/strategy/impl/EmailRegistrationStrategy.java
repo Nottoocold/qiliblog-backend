@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * 邮箱注册策略实现
  * 实现了通过邮箱进行用户注册的具体逻辑
@@ -34,7 +36,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
 
     private static final String LOG_PREFIX = "[EmailRegistrationStrategy] ";
 
-    private final ISysUserService iSysUserService;
+    private final ISysUserService sysUserService;
     private final VerificationCodeService verificationCodeService;
     private final PasswordEncoder passwordEncoder;
 
@@ -79,7 +81,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
         verifyCode(sysUserRegisterDto);
 
         SysUserCreateDto sysUserCreateDto = createUser(sysUserRegisterDto);
-        iSysUserService.create(sysUserCreateDto);
+        sysUserService.create(sysUserCreateDto);
 
         log.info("{}注册成功，用户：{}", LOG_PREFIX, sysUserRegisterDto.getUsername());
     }
@@ -119,17 +121,17 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
         String username = sysUserRegisterDto.getUsername();
         String phone = sysUserRegisterDto.getPhone();
 
-        if (iSysUserService.isEmailRegistered(email)) {
+        if (Objects.nonNull(sysUserService.findByEmail(email))) {
             log.warn("{}邮箱已存在: {}", LOG_PREFIX, email);
             throw new ClientException(GlobalErrorDict.EMAIL_EXISTS);
         }
 
-        if (iSysUserService.isUsernameTaken(username)) {
+        if (Objects.nonNull(sysUserService.findByUsername(username))) {
             log.warn("{}用户名已存在: {}", LOG_PREFIX, username);
             throw new ClientException(GlobalErrorDict.USERNAME_EXISTS);
         }
 
-        if (iSysUserService.isPhoneBound(phone)) {
+        if (Objects.nonNull(sysUserService.findByPhone(phone))) {
             log.warn("{}手机号已存在: {}", LOG_PREFIX, phone);
             throw new ClientException(GlobalErrorDict.PHONE_EXISTS);
         }

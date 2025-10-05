@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,8 +38,8 @@ public class SysPermissionService extends AbstractBaseService<SysPermission, Lon
      * @return 权限
      */
     @Override
-    public Optional<SysPermission> findByCode(String code) {
-        return wrapper().eq(SysPermission::getCode, code).one();
+    public SysPermission findByCode(String code) {
+        return wrapper().eq(SysPermission::getCode, code).one().orElse(null);
     }
 
     /**

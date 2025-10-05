@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -28,8 +27,8 @@ public class SysUserRoleService extends AbstractBaseService<SysUserRole, Long, S
      * @return 用户角色信息
      */
     @Override
-    public Optional<SysUserRole> findOne(Long userId, Long roleId) {
-        return wrapper().eq(SysUserRole::getUserId, userId).eq(SysUserRole::getRoleId, roleId).one();
+    public SysUserRole findOne(Long userId, Long roleId) {
+        return wrapper().eq(SysUserRole::getUserId, userId).eq(SysUserRole::getRoleId, roleId).one().orElse(null);
     }
 
     /**

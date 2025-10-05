@@ -5,7 +5,6 @@ import com.zqqiliyc.biz.core.service.base.IBaseService;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -20,7 +19,7 @@ public interface ISysRolePrivService extends IBaseService<SysRolePriv, Long> {
      * @param privId 权限id
      * @return 角色权限
      */
-    Optional<SysRolePriv> findOne(Long roleId, Long privId);
+    SysRolePriv findOne(Long roleId, Long privId);
 
     /**
      * 根据角色id查询

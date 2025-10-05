@@ -27,8 +27,8 @@ public class SysRolePrivService extends AbstractBaseService<SysRolePriv, Long, S
      * @return 角色权限
      */
     @Override
-    public Optional<SysRolePriv> findOne(Long roleId, Long privId) {
-        return wrapper().eq(SysRolePriv::getRoleId, roleId).eq(SysRolePriv::getPrivId, privId).one();
+    public SysRolePriv findOne(Long roleId, Long privId) {
+        return wrapper().eq(SysRolePriv::getRoleId, roleId).eq(SysRolePriv::getPrivId, privId).one().orElse(null);
     }
 
     /**

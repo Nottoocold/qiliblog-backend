@@ -25,13 +25,9 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class SysTokenService extends AbstractBaseService<SysToken, Long, SysTokenMapper> implements ISysTokenService {
 
-    @Caching(put = {
-            @CachePut(key = "'ak:' + #dto.toEntity().accessToken"),
-            @CachePut(key = "'rk:' + #dto.toEntity().refreshToken")
-    })
     @Override
     public SysToken create(CreateDto<SysToken> dto) {
-        return super.create(dto);
+        return SpringUtils.getBean(this.getClass()).saveToCache(super.create(dto));
     }
 
     /**
@@ -86,6 +82,17 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
             deleted.forEach(tokenService::clearCache);
             log.info("清楚无效token数量: {}", deleted.size());
         }
+    }
+
+    @Caching(put = {
+            @CachePut(key = "'ak:' + #token.accessToken"),
+            @CachePut(key = "'rk:' + #token.refreshToken")
+    })
+    public SysToken saveToCache(SysToken token) {
+        if (log.isDebugEnabled()) {
+            log.debug("保存ID={}的SysToken缓存", token.getId());
+        }
+        return token;
     }
 
     @Caching(evict = {
