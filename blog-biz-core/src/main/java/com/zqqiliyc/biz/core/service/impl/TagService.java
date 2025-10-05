@@ -22,7 +22,6 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
 
     @Override
     public Tag create(CreateDto<Tag> dto) {
-        validateConstraintAndThrow(dto);
         Tag entity = dto.toEntity();
         validateBeforeCreateWithDB(Map.of(Tag::getName, entity.getName()), "标签名称已存在");
         validateBeforeCreateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在");
@@ -32,7 +31,6 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
 
     @Override
     public Tag update(UpdateDto<Tag> dto) {
-        validateConstraintAndThrow(dto);
         Tag entity = findById(dto.getId());
         dto.fillEntity(entity);
         Long[] excludeIds = {entity.getId()};

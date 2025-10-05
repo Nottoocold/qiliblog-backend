@@ -22,7 +22,6 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
 
     @Override
     public Category create(CreateDto<Category> dto) {
-        validateConstraintAndThrow(dto);
         Category entity = dto.toEntity();
         validateBeforeCreateWithDB(Map.of(Category::getName, entity.getName()), "分类名称已存在");
         validateBeforeCreateWithDB(Map.of(Category::getSlug, entity.getSlug()), "分类 URL 友好标识符已存在");
@@ -32,7 +31,6 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
 
     @Override
     public Category update(UpdateDto<Category> dto) {
-        validateConstraintAndThrow(dto);
         Category entity = findById(dto.getId());
         dto.fillEntity(entity);
         Long[] excludeIds = {entity.getId()};

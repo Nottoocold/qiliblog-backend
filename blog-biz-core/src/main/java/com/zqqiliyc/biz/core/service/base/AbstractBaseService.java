@@ -19,16 +19,16 @@ import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;
 import io.mybatis.mapper.fn.Fn;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Path;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
@@ -101,7 +101,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class)
     @Override
     public T create(CreateDto<T> dto) {
-        validateConstraintAndThrow(dto);
         T entity = dto.toEntity();
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
         return entity;
@@ -110,7 +109,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Transactional(rollbackFor = Exception.class)
     @Override
     public T update(UpdateDto<T> dto) {
-        validateConstraintAndThrow(dto);
         T entity = findById(dto.getId());
         dto.fillEntity(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
@@ -131,28 +129,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Override
     public <F> int deleteByFieldList(Fn<T, F> field, Collection<F> fieldValueList) {
         return baseMapper.deleteByFieldList(field, fieldValueList);
-    }
-
-    /**
-     * 校验约束
-     *
-     * @param data 数据
-     */
-    protected void validateConstraintAndThrow(Object data) {
-        Set<ConstraintViolation<Object>> violations = validator.validate(data);
-        if (!violations.isEmpty()) {
-            // 打印哪些熟悉存在错误
-            if (log.isDebugEnabled()) {
-                for (ConstraintViolation<Object> violation : violations) {
-                    Path propertyPath = violation.getPropertyPath();
-                    Object invalidValue = violation.getInvalidValue();
-                    String message = violation.getMessage();
-                    log.warn("occur constraintViolation exception: propertyPath={}, invalidValue={}, message={}",
-                            propertyPath, invalidValue, message);
-                }
-            }
-            throw new ConstraintViolationException(violations);
-        }
     }
 
     /**
