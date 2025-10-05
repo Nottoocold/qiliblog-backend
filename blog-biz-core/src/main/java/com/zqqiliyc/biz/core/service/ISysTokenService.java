@@ -26,14 +26,6 @@ public interface ISysTokenService extends IBaseService<SysToken, Long> {
     SysToken findByRefreshToken(String refreshToken);
 
     /**
-     * 根据token查询, 包含accessToken和refreshToken
-     *
-     * @param token 令牌
-     * @return token详情
-     */
-    SysToken findByToken(String token);
-
-    /**
      * 撤销
      *
      * @param accessToken 访问令牌

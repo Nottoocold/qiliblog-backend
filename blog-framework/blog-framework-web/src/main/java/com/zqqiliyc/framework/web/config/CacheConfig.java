@@ -1,15 +1,38 @@
 package com.zqqiliyc.framework.web.config;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
+import com.github.benmanes.caffeine.cache.RemovalListener;
+import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.time.Duration;
 
 /**
  * @author qili
  * @date 2025-09-07
  */
-@Configuration
+@Slf4j
+@Configuration(proxyBeanMethods = false)
 @EnableCaching
 public class CacheConfig extends BaseJacksonConfig {
+
+    @Bean
+    public Caffeine<Object, Object> caffeine() {
+        return Caffeine.newBuilder()
+                .maximumSize(512)
+                .expireAfterAccess(Duration.ofMinutes(10))
+                .recordStats()
+                .removalListener(new RemovalListener<Object, Object>() {
+                    @Override
+                    public void onRemoval(@Nullable Object key, @Nullable Object value, RemovalCause cause) {
+                        log.info("缓存被移除：key={}, value={}, cause={}", key, value, cause);
+                    }
+                });
+    }
 
     /**
      * Redis缓存管理器
