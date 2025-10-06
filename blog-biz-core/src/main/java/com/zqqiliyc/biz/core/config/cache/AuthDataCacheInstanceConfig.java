@@ -38,9 +38,4 @@ public class AuthDataCacheInstanceConfig implements CaffeineCacheInstanceConfig 
     public String getCacheDescription() {
         return "用户权限数据缓存";
     }
-
-    @Override
-    public org.springframework.cache.Cache getCache() {
-        throw new UnsupportedOperationException("请使用getCaffeineCache()方法获取缓存实例");
-    }
 }

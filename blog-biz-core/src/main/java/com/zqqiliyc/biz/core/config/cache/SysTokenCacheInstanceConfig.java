@@ -35,11 +35,6 @@ public class SysTokenCacheInstanceConfig implements CaffeineCacheInstanceConfig 
     }
 
     @Override
-    public org.springframework.cache.Cache getCache() {
-        throw new UnsupportedOperationException("请使用getCaffeineCache()方法获取缓存实例");
-    }
-
-    @Override
     public Cache<Object, Object> getCaffeineCache() {
         return nativeCache;
     }

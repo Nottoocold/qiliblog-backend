@@ -8,6 +8,10 @@ import com.github.benmanes.caffeine.cache.Cache;
  */
 public interface CaffeineCacheInstanceConfig extends CacheInstanceConfig {
 
+    default org.springframework.cache.Cache getCache() {
+        throw new UnsupportedOperationException("请使用getCaffeineCache()方法获取缓存实例");
+    }
+
     /**
      * 获取Caffeine缓存实例
      *
