@@ -1,12 +1,12 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.biz.core.dto.cate.CategoryCreateDto;
-import com.zqqiliyc.biz.core.dto.cate.CategoryQueryDto;
-import com.zqqiliyc.biz.core.dto.cate.CategoryUpdateDto;
+import com.zqqiliyc.biz.core.dto.cate.CategoryCreateDTO;
+import com.zqqiliyc.biz.core.dto.cate.CategoryQueryDTO;
+import com.zqqiliyc.biz.core.dto.cate.CategoryUpdateDTO;
 import com.zqqiliyc.biz.core.entity.Category;
 import com.zqqiliyc.biz.core.service.ICategoryService;
 import com.zqqiliyc.biz.core.vo.CategoryVo;
-import com.zqqiliyc.biz.core.vo.transfer.CategoryVoTransfer;
+import com.zqqiliyc.biz.core.vo.transfer.CategoryVoConvertor;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 class CategoryController {
     private final ICategoryService categoryService;
-    private final CategoryVoTransfer categoryVoTransfer;
+    private final CategoryVoConvertor categoryVoTransfer;
 
     @Operation(summary = "分页查询分类")
     @GetMapping("/page")
-    public ApiResult<PageResult<CategoryVo>> pageQuery(CategoryQueryDto queryDto) {
+    public ApiResult<PageResult<CategoryVo>> pageQuery(CategoryQueryDTO queryDto) {
         PageResult<Category> pageInfo = categoryService.findPageInfo(queryDto);
         PageResult<CategoryVo> result = pageInfo.map(categoryVoTransfer::toViewVoList);
         return ApiResult.success(result);
@@ -47,14 +47,14 @@ class CategoryController {
 
     @Operation(summary = "创建分类")
     @PostMapping
-    public ApiResult<CategoryVo> create(@RequestBody @Validated CategoryCreateDto dto) {
+    public ApiResult<CategoryVo> create(@RequestBody @Validated CategoryCreateDTO dto) {
         CategoryVo CategoryVo = categoryVoTransfer.toViewVo(categoryService.create(dto));
         return ApiResult.success(CategoryVo);
     }
 
     @Operation(summary = "更新分类")
     @PutMapping
-    public ApiResult<CategoryVo> update(@RequestBody @Validated CategoryUpdateDto dto) {
+    public ApiResult<CategoryVo> update(@RequestBody @Validated CategoryUpdateDTO dto) {
         CategoryVo CategoryVo = categoryVoTransfer.toViewVo(categoryService.update(dto));
         return ApiResult.success(CategoryVo);
     }

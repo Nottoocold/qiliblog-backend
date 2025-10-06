@@ -2,7 +2,10 @@ package com.zqqiliyc.biz.core.dto;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.TypeUtil;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.List;
  * @author qili
  * @date 2025-09-30
  */
-public interface ViewVoTransfer<S, T> {
+public interface ViewVoConvertor<S, T> {
 
     /**
      * 转换为视图对象
@@ -55,13 +58,18 @@ public interface ViewVoTransfer<S, T> {
      *
      * @return 新的目标实例
      */
-    T newInstance();
+    @SuppressWarnings("unchecked")
+    default T newInstance() {
+        Type typeArgument = TypeUtil.getTypeArgument(this.getClass(), 1);
+        Class<?> aClass = TypeUtil.getClass(typeArgument);
+        return (T) ReflectUtil.newInstance(aClass);
+    }
 
     /**
      * 自定义定制目标对象，注意：这是在循环体中运行的，请勿执行耗时操作，如需耗时操作请使用 customize(List, List)
      *
      * @param vo 目标对象
-     * @see ViewVoTransfer#customize(List, List)
+     * @see ViewVoConvertor#customize(List, List)
      */
     default void customize(T vo) {
     }

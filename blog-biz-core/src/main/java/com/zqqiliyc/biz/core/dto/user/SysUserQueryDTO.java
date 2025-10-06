@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.dto.user;
 
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.biz.core.dto.AbstractQueryDto;
+import com.zqqiliyc.biz.core.dto.AbstractQueryDTO;
 import com.zqqiliyc.biz.core.entity.SysUser;
 import io.mybatis.mapper.example.Example;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SysUserQueryDto extends AbstractQueryDto<SysUser> {
+public class SysUserQueryDTO extends AbstractQueryDTO<SysUser> {
     private String key;
 
     @Override

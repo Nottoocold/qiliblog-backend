@@ -6,9 +6,9 @@ import cn.hutool.core.util.TypeUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.zqqiliyc.biz.core.dto.CreateDto;
-import com.zqqiliyc.biz.core.dto.QueryDto;
-import com.zqqiliyc.biz.core.dto.UpdateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
+import com.zqqiliyc.biz.core.dto.QueryDTO;
+import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.BaseEntity;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
@@ -69,7 +69,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     }
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    public PageResult<T> findPageInfo(QueryDto<T> queryDto) {
+    public PageResult<T> findPageInfo(QueryDTO<T> queryDto) {
         if (queryDto.isPageRequest()) {
             try (Page<T> page = PageHelper.startPage(queryDto.getCurrent(), queryDto.getPageSize())) {
                 PageInfo<T> pageInfo = page.doSelectPageInfo(() -> baseMapper.selectByExample(queryDto.toExample()));
@@ -100,7 +100,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public T create(CreateDto<T> dto) {
+    public T create(CreateDTO<T> dto) {
         T entity = dto.toEntity();
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
         return entity;
@@ -108,7 +108,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public T update(UpdateDto<T> dto) {
+    public T update(UpdateDTO<T> dto) {
         T entity = findById(dto.getId());
         dto.fillEntity(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");

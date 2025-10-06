@@ -1,6 +1,6 @@
 package com.zqqiliyc.biz.core.vo.transfer;
 
-import com.zqqiliyc.biz.core.dto.ViewVoTransfer;
+import com.zqqiliyc.biz.core.dto.ViewVoConvertor;
 import com.zqqiliyc.biz.core.entity.Category;
 import com.zqqiliyc.biz.core.vo.CategoryVo;
 import org.springframework.stereotype.Component;
@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
  * @date 2025-10-02
  */
 @Component
-public class CategoryVoTransfer implements ViewVoTransfer<Category, CategoryVo> {
+public class CategoryVoConvertor implements ViewVoConvertor<Category, CategoryVo> {
 
-    @Override
-    public CategoryVo newInstance() {
-        return new CategoryVo();
-    }
 }

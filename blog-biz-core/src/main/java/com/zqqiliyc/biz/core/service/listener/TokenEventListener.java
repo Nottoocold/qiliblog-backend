@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.service.listener;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.zqqiliyc.biz.core.dto.token.SysTokenCreateDto;
+import com.zqqiliyc.biz.core.dto.token.SysTokenCreateDTO;
 import com.zqqiliyc.biz.core.service.ISysTokenService;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenEvent;
@@ -38,7 +38,7 @@ public class TokenEventListener {
         if (log.isDebugEnabled()) {
             log.debug("store token to db start.");
         }
-        SysTokenCreateDto dto = new SysTokenCreateDto();
+        SysTokenCreateDTO dto = new SysTokenCreateDTO();
         BeanUtil.copyProperties(tokenBean, dto);
         ServletRequestAttributes currented = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         String remoteAddr = currented.getRequest().getRemoteAddr();

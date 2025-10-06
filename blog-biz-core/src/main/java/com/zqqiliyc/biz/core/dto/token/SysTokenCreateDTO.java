@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.dto.token;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysToken;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class SysTokenCreateDto implements CreateDto<SysToken> {
+public class SysTokenCreateDTO implements CreateDTO<SysToken> {
     private String accessToken;
 
     private String refreshToken;

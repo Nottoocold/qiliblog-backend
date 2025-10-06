@@ -1,10 +1,10 @@
 package com.zqqiliyc.starter;
 
-import com.zqqiliyc.biz.core.dto.priv.SysPermissionCreateDto;
-import com.zqqiliyc.biz.core.dto.priv.SysRolePrivCreateDto;
-import com.zqqiliyc.biz.core.dto.priv.SysUserRoleCreateDto;
-import com.zqqiliyc.biz.core.dto.role.SysRoleCreateDto;
-import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
+import com.zqqiliyc.biz.core.dto.priv.SysPermissionCreateDTO;
+import com.zqqiliyc.biz.core.dto.priv.SysRolePrivCreateDTO;
+import com.zqqiliyc.biz.core.dto.priv.SysUserRoleCreateDTO;
+import com.zqqiliyc.biz.core.dto.role.SysRoleCreateDTO;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDTO;
 import com.zqqiliyc.biz.core.entity.*;
 import com.zqqiliyc.biz.core.service.*;
 import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
@@ -59,7 +59,7 @@ public class SystemInitStarter implements ApplicationRunner {
     private void initAdminPermission() {
         SysPermission permission = permissionService.findByCode(SystemConstants.PERMISSION_ADMIN);
         if (Objects.isNull(permission)) {
-            SysPermissionCreateDto dto = new SysPermissionCreateDto();
+            SysPermissionCreateDTO dto = new SysPermissionCreateDTO();
             dto.setId(1L);
             dto.setCode(SystemConstants.PERMISSION_ADMIN);
             dto.setName("系统管理");
@@ -75,7 +75,7 @@ public class SystemInitStarter implements ApplicationRunner {
     private void initAdminRole() {
         SysRole role = sysRoleService.findByCode(SystemConstants.ROLE_ADMIN);
         if (Objects.isNull(role)) {
-            SysRoleCreateDto dto = new SysRoleCreateDto();
+            SysRoleCreateDTO dto = new SysRoleCreateDTO();
             dto.setId(1L);
             dto.setCode(SystemConstants.ROLE_ADMIN);
             dto.setName("系统管理员");
@@ -90,7 +90,7 @@ public class SystemInitStarter implements ApplicationRunner {
     private void initAdminUser() {
         SysUser user = sysUserService.findByUsername(SystemConstants.USER_ADMIN);
         if (Objects.isNull(user)) {
-            SysUserCreateDto dto = new SysUserCreateDto();
+            SysUserCreateDTO dto = new SysUserCreateDTO();
             dto.setId(1L);
             dto.setUsername(SystemConstants.USER_ADMIN);
             dto.setNickname("系统管理员");
@@ -108,7 +108,7 @@ public class SystemInitStarter implements ApplicationRunner {
     private void initAuthorization() {
         SysRolePriv sysRolePriv = rolePrivService.findOne(1L, 1L);
         if (Objects.isNull(sysRolePriv)) {
-            SysRolePrivCreateDto dto = new SysRolePrivCreateDto();
+            SysRolePrivCreateDTO dto = new SysRolePrivCreateDTO();
             dto.setRoleId(1L);
             dto.setPrivId(1L);
             SysRolePriv entity = rolePrivService.create(dto);
@@ -118,7 +118,7 @@ public class SystemInitStarter implements ApplicationRunner {
         }
         SysUserRole sysUserRole = userRoleService.findOne(1L, 1L);
         if (Objects.isNull(sysUserRole)) {
-            SysUserRoleCreateDto dto = new SysUserRoleCreateDto();
+            SysUserRoleCreateDTO dto = new SysUserRoleCreateDTO();
             dto.setUserId(1L);
             dto.setRoleId(1L);
             SysUserRole entity = userRoleService.create(dto);

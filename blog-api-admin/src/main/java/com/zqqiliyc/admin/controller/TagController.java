@@ -1,12 +1,12 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.biz.core.dto.tag.TagCreateDto;
-import com.zqqiliyc.biz.core.dto.tag.TagQueryDto;
-import com.zqqiliyc.biz.core.dto.tag.TagUpdateDto;
+import com.zqqiliyc.biz.core.dto.tag.TagCreateDTO;
+import com.zqqiliyc.biz.core.dto.tag.TagQueryDTO;
+import com.zqqiliyc.biz.core.dto.tag.TagUpdateDTO;
 import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.service.ITagService;
 import com.zqqiliyc.biz.core.vo.TagVo;
-import com.zqqiliyc.biz.core.vo.transfer.TagVoTransfer;
+import com.zqqiliyc.biz.core.vo.transfer.TagVoConvertor;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
@@ -27,11 +27,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 class TagController {
     private final ITagService tagService;
-    private final TagVoTransfer tagVoTransfer;
+    private final TagVoConvertor tagVoTransfer;
 
     @Operation(summary = "分页查询标签")
     @GetMapping("/page")
-    public ApiResult<PageResult<TagVo>> pageQuery(TagQueryDto queryDto) {
+    public ApiResult<PageResult<TagVo>> pageQuery(TagQueryDTO queryDto) {
         PageResult<Tag> pageInfo = tagService.findPageInfo(queryDto);
         PageResult<TagVo> result = pageInfo.map(tagVoTransfer::toViewVoList);
         return ApiResult.success(result);
@@ -46,14 +46,14 @@ class TagController {
 
     @Operation(summary = "创建标签")
     @PostMapping
-    public ApiResult<TagVo> create(@RequestBody @Validated TagCreateDto dto) {
+    public ApiResult<TagVo> create(@RequestBody @Validated TagCreateDTO dto) {
         TagVo tagVo = tagVoTransfer.toViewVo(tagService.create(dto));
         return ApiResult.success(tagVo);
     }
 
     @Operation(summary = "更新标签")
     @PutMapping
-    public ApiResult<TagVo> update(@RequestBody @Validated TagUpdateDto dto) {
+    public ApiResult<TagVo> update(@RequestBody @Validated TagUpdateDTO dto) {
         TagVo tagVo = tagVoTransfer.toViewVo(tagService.update(dto));
         return ApiResult.success(tagVo);
     }

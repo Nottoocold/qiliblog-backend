@@ -1,8 +1,8 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.zqqiliyc.biz.core.dto.CreateDto;
-import com.zqqiliyc.biz.core.dto.UpdateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
+import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.Category;
 import com.zqqiliyc.biz.core.repository.mapper.CategoryMapper;
 import com.zqqiliyc.biz.core.service.ICategoryService;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class CategoryService extends AbstractBaseService<Category, Long, CategoryMapper> implements ICategoryService {
 
     @Override
-    public Category create(CreateDto<Category> dto) {
+    public Category create(CreateDTO<Category> dto) {
         Category entity = dto.toEntity();
         validateBeforeCreateWithDB(Map.of(Category::getName, entity.getName()), "分类名称已存在");
         validateBeforeCreateWithDB(Map.of(Category::getSlug, entity.getSlug()), "分类 URL 友好标识符已存在");
@@ -30,7 +30,7 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
     }
 
     @Override
-    public Category update(UpdateDto<Category> dto) {
+    public Category update(UpdateDTO<Category> dto) {
         Category entity = findById(dto.getId());
         dto.fillEntity(entity);
         Long[] excludeIds = {entity.getId()};

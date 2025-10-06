@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.admin.RegisterResult;
 import com.zqqiliyc.admin.enums.RegistrationType;
 import com.zqqiliyc.admin.strategy.RegistrationStrategy;
-import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDTO;
 import com.zqqiliyc.biz.core.dto.user.SysUserRegisterDto;
 import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
@@ -80,7 +80,7 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
 
         verifyCode(sysUserRegisterDto);
 
-        SysUserCreateDto sysUserCreateDto = createUser(sysUserRegisterDto);
+        SysUserCreateDTO sysUserCreateDto = createUser(sysUserRegisterDto);
         sysUserService.create(sysUserCreateDto);
 
         log.info("{}注册成功，用户：{}", LOG_PREFIX, sysUserRegisterDto.getUsername());
@@ -161,10 +161,10 @@ public class EmailRegistrationStrategy implements RegistrationStrategy {
      * @param sysUserRegisterDto 注册请求数据
      * @return 用户创建 DTO 对象
      */
-    private SysUserCreateDto createUser(SysUserRegisterDto sysUserRegisterDto) {
+    private SysUserCreateDTO createUser(SysUserRegisterDto sysUserRegisterDto) {
         log.debug("{}开始构建用户创建对象", LOG_PREFIX);
 
-        SysUserCreateDto sysUserCreateDto = new SysUserCreateDto();
+        SysUserCreateDTO sysUserCreateDto = new SysUserCreateDTO();
         BeanUtil.copyProperties(sysUserRegisterDto, sysUserCreateDto);
         sysUserCreateDto.setState(0);
         sysUserCreateDto.setDeptId(-1L);

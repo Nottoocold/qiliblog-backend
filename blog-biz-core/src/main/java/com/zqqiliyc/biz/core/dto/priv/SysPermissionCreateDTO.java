@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.dto.priv;
 
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysPermission;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SysPermissionCreateDto implements CreateDto<SysPermission> {
+public class SysPermissionCreateDTO implements CreateDTO<SysPermission> {
     /**
      * 主键
      */

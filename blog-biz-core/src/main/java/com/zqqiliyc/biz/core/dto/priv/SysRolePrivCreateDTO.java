@@ -1,6 +1,6 @@
 package com.zqqiliyc.biz.core.dto.priv;
 
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysRolePriv;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SysRolePrivCreateDto implements CreateDto<SysRolePriv> {
+public class SysRolePrivCreateDTO implements CreateDTO<SysRolePriv> {
     /**
      * 角色ID
      */

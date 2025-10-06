@@ -1,8 +1,8 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.zqqiliyc.biz.core.dto.CreateDto;
-import com.zqqiliyc.biz.core.dto.UpdateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
+import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.repository.mapper.TagMapper;
 import com.zqqiliyc.biz.core.service.ITagService;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implements ITagService {
 
     @Override
-    public Tag create(CreateDto<Tag> dto) {
+    public Tag create(CreateDTO<Tag> dto) {
         Tag entity = dto.toEntity();
         validateBeforeCreateWithDB(Map.of(Tag::getName, entity.getName()), "标签名称已存在");
         validateBeforeCreateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在");
@@ -30,7 +30,7 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
     }
 
     @Override
-    public Tag update(UpdateDto<Tag> dto) {
+    public Tag update(UpdateDTO<Tag> dto) {
         Tag entity = findById(dto.getId());
         dto.fillEntity(entity);
         Long[] excludeIds = {entity.getId()};

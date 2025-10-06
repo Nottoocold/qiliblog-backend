@@ -1,10 +1,11 @@
 package com.zqqiliyc.biz.core.dto.cate;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +15,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Schema(description = "创建分类 DTO")
-public class CategoryCreateDto implements CreateDto<Category> {
+@Schema(description = "更新分类 DTO")
+public class CategoryUpdateDTO implements UpdateDTO<Category> {
+    @NotNull(message = "分类 ID 不能为空")
+    @Schema(description = "分类 ID")
+    private Long id;
+
     @NotBlank(message = "分类名称不能为空")
     @Schema(description = "分类名称")
     private String name;
@@ -28,9 +33,14 @@ public class CategoryCreateDto implements CreateDto<Category> {
     private String description;
 
     @Override
-    public Category toEntity() {
-        Category entity = new Category();
-        BeanUtil.copyProperties(this, entity);
-        return entity;
+    public void fillEntity(Category entity) {
+        BeanUtil.copyProperties(this, entity, "id");
+    }
+
+    @Override
+    public UpdateDTO<Category> fromEntity(Category entity) {
+        CategoryUpdateDTO dto = new CategoryUpdateDTO();
+        BeanUtil.copyProperties(entity, dto);
+        return dto;
     }
 }

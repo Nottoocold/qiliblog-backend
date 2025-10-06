@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public abstract class AbstractQueryDto<T extends Entity> implements QueryDto<T> {
+public abstract class AbstractQueryDTO<T extends Entity> implements QueryDTO<T> {
     /**
      * 分页页码-从1开始
      */

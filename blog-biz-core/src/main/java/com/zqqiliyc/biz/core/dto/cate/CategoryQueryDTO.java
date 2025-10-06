@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.dto.cate;
 
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.biz.core.dto.AbstractQueryDto;
+import com.zqqiliyc.biz.core.dto.AbstractQueryDTO;
 import com.zqqiliyc.biz.core.entity.Category;
 import io.mybatis.mapper.example.Example;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CategoryQueryDto extends AbstractQueryDto<Category> {
+public class CategoryQueryDTO extends AbstractQueryDTO<Category> {
     private String word;
 
     @Override

@@ -1,8 +1,8 @@
 package com.zqqiliyc.biz.core.service.base;
 
-import com.zqqiliyc.biz.core.dto.CreateDto;
-import com.zqqiliyc.biz.core.dto.QueryDto;
-import com.zqqiliyc.biz.core.dto.UpdateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
+import com.zqqiliyc.biz.core.dto.QueryDTO;
+import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.BaseEntity;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import io.mybatis.mapper.example.Example;
@@ -22,7 +22,7 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T findOne(Example<T> example);
 
-    PageResult<T> findPageInfo(QueryDto<T> queryDto);
+    PageResult<T> findPageInfo(QueryDTO<T> queryDto);
 
     List<T> findList(Example<T> example);
 
@@ -30,9 +30,9 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     <F> List<T> findByFieldList(Fn<T, F> field, Collection<F> fieldValueList);
 
-    T create(CreateDto<T> dto);
+    T create(CreateDTO<T> dto);
 
-    T update(UpdateDto<T> dto);
+    T update(UpdateDTO<T> dto);
 
     int deleteById(I id);
 

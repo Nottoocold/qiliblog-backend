@@ -1,11 +1,10 @@
 package com.zqqiliyc.biz.core.dto.tag;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.zqqiliyc.biz.core.dto.UpdateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,12 +14,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Schema(description = "标签更新参数")
-public class TagUpdateDto implements UpdateDto<Tag> {
-    @NotNull(message = "标签ID不能为空")
-    @Schema(description = "标签ID", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long id;
-
+@Schema(description = "标签创建参数")
+public class TagCreateDTO implements CreateDTO<Tag> {
     @NotBlank(message = "标签名不能为空")
     @Schema(description = "标签名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
@@ -33,14 +28,9 @@ public class TagUpdateDto implements UpdateDto<Tag> {
     private String description;
 
     @Override
-    public void fillEntity(Tag entity) {
-        BeanUtil.copyProperties(this, entity, "id");
-    }
-
-    @Override
-    public UpdateDto<Tag> fromEntity(Tag entity) {
-        TagUpdateDto dto = new TagUpdateDto();
-        BeanUtil.copyProperties(entity, dto);
-        return dto;
+    public Tag toEntity() {
+        Tag entity = new Tag();
+        BeanUtil.copyProperties(this, entity);
+        return entity;
     }
 }

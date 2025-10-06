@@ -1,6 +1,6 @@
 package com.zqqiliyc.biz.core.dto.role;
 
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SysRoleCreateDto implements CreateDto<SysRole> {
+public class SysRoleCreateDTO implements CreateDTO<SysRole> {
     /**
      * 主键
      */

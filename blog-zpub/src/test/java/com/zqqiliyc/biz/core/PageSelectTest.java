@@ -1,8 +1,8 @@
 package com.zqqiliyc.biz.core;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
-import com.zqqiliyc.biz.core.dto.user.SysUserQueryDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDTO;
+import com.zqqiliyc.biz.core.dto.user.SysUserQueryDTO;
 import com.zqqiliyc.biz.core.entity.SysUser;
 import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.web.bean.PageResult;
@@ -27,7 +27,7 @@ public class PageSelectTest {
     @BeforeEach
     public void setUp() {
         for (int i = 0; i < count; i++) {
-            SysUserCreateDto sysUser = new SysUserCreateDto();
+            SysUserCreateDTO sysUser = new SysUserCreateDTO();
             sysUser.setUsername(RandomUtil.randomString(6));
             sysUser.setNickname(RandomUtil.randomString(6));
             sysUser.setPassword(RandomUtil.randomString(18));
@@ -47,7 +47,7 @@ public class PageSelectTest {
     @Test
     @Transactional
     public void testNoPage() {
-        SysUserQueryDto queryDto = new SysUserQueryDto();
+        SysUserQueryDTO queryDto = new SysUserQueryDTO();
         queryDto.setSortBy("username asc,state,id desc");
 
         Assertions.assertThrowsExactly(ClientException.class, () -> userService.findPageInfo(queryDto));
@@ -59,7 +59,7 @@ public class PageSelectTest {
     public void testPage() {
         int pageNum = 1;
         int pageSize = 10;
-        SysUserQueryDto queryDto = new SysUserQueryDto();
+        SysUserQueryDTO queryDto = new SysUserQueryDTO();
         queryDto.setSortBy("username asc,state,id desc");
         queryDto.setCurrent(pageNum);
         queryDto.setPageSize(pageSize);

@@ -1,6 +1,6 @@
 package com.zqqiliyc.biz.core.dto.user;
 
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysUser;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +27,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SysUserCreateDto implements CreateDto<SysUser> {
+public class SysUserCreateDTO implements CreateDTO<SysUser> {
     /**
      * 主键
      */

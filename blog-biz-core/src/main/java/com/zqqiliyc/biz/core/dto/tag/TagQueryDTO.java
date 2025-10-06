@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.dto.tag;
 
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.biz.core.dto.AbstractQueryDto;
+import com.zqqiliyc.biz.core.dto.AbstractQueryDTO;
 import com.zqqiliyc.biz.core.entity.Tag;
 import io.mybatis.mapper.example.Example;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TagQueryDto extends AbstractQueryDto<Tag> {
+public class TagQueryDTO extends AbstractQueryDTO<Tag> {
     private String word;
 
     @Override

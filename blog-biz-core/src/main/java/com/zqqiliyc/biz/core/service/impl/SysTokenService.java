@@ -1,7 +1,7 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import com.zqqiliyc.biz.core.config.cache.SysTokenCacheInstanceConfig;
-import com.zqqiliyc.biz.core.dto.CreateDto;
+import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysToken;
 import com.zqqiliyc.biz.core.repository.mapper.SysTokenMapper;
 import com.zqqiliyc.biz.core.service.ISysTokenService;
@@ -26,7 +26,7 @@ import java.util.List;
 public class SysTokenService extends AbstractBaseService<SysToken, Long, SysTokenMapper> implements ISysTokenService {
 
     @Override
-    public SysToken create(CreateDto<SysToken> dto) {
+    public SysToken create(CreateDTO<SysToken> dto) {
         return SpringUtils.getBean(this.getClass()).saveToCache(super.create(dto));
     }
 

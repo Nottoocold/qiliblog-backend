@@ -1,6 +1,6 @@
 package com.zqqiliyc.biz.core.vo.transfer;
 
-import com.zqqiliyc.biz.core.dto.ViewVoTransfer;
+import com.zqqiliyc.biz.core.dto.ViewVoConvertor;
 import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.vo.TagVo;
 import org.springframework.stereotype.Component;
@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
  * @date 2025-09-30
  */
 @Component
-public class TagVoTransfer implements ViewVoTransfer<Tag, TagVo> {
+public class TagVoConvertor implements ViewVoConvertor<Tag, TagVo> {
 
-    @Override
-    public TagVo newInstance() {
-        return new TagVo();
-    }
 }

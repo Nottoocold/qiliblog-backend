@@ -1,7 +1,7 @@
 package com.zqqiliyc.admin.controller;
 
-import com.zqqiliyc.biz.core.dto.user.SysUserCreateDto;
-import com.zqqiliyc.biz.core.dto.user.SysUserQueryDto;
+import com.zqqiliyc.biz.core.dto.user.SysUserCreateDTO;
+import com.zqqiliyc.biz.core.dto.user.SysUserQueryDTO;
 import com.zqqiliyc.biz.core.entity.SysUser;
 import com.zqqiliyc.biz.core.service.ISysUserService;
 import com.zqqiliyc.framework.web.bean.PageResult;
@@ -26,13 +26,13 @@ public class SysUserController extends BaseController {
 
     @GetMapping
     @PreAuthorize("@ac.hasPermissions('sys:user:query')")
-    public ApiResult<PageResult<SysUser>> query(SysUserQueryDto queryDto) {
+    public ApiResult<PageResult<SysUser>> query(SysUserQueryDTO queryDto) {
         return ApiResult.success(userService.findPageInfo(queryDto));
     }
 
     @PostMapping
     @PreAuthorize("@ac.hasPermissions({'sys:user:query', 'sys:user:query'}, false)")
-    public ApiResult<SysUser> create(@RequestBody SysUserCreateDto dto) {
+    public ApiResult<SysUser> create(@RequestBody SysUserCreateDTO dto) {
         log.info("create user: {}", dto);
         return ApiResult.success();
     }

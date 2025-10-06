@@ -7,7 +7,7 @@ import io.mybatis.mapper.example.Example;
  * @author qili
  * @date 2025-05-25
  */
-public interface QueryDto<T extends Entity> {
+public interface QueryDTO<T extends Entity> {
 
     default Example<T> toExample() {
         Example<T> example = new Example<>();
