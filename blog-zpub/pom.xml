@@ -48,85 +48,15 @@
 
     <build>
         <finalName>qiliblog-server-${project.version}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>..</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>Dockerfile</include>
-                </includes>
-                <targetPath>${project.build.directory}/dist</targetPath>
-            </resource>
-        </resources>
         <plugins>
-            <!-- 1. 轻量级打包,仅将项目自己的jar打包到启动jar里 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <executable>true</executable>
-                    <layout>ZIP</layout>
-                    <outputDirectory>${project.build.directory}/dist</outputDirectory>
-                    <includes>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-api-admin</artifactId>
-                        </include>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-auth</artifactId>
-                        </include>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-common</artifactId>
-                        </include>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-domain</artifactId>
-                        </include>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-repository</artifactId>
-                        </include>
-                        <include>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>blog-service</artifactId>
-                        </include>
-                    </includes>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--拷贝依赖到jar外面的lib目录-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <!--指定的依赖路径-->
-                            <outputDirectory>${project.build.directory}/dist/libs</outputDirectory>
-                            <!--依赖的类型-->
-                            <includeScope>runtime</includeScope>
-                            <!--排除依赖-->
-                            <excludeGroupIds>
-                                ${project.groupId},org.junit,org.mockito
-                            </excludeGroupIds>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
