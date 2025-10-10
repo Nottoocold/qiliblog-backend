@@ -38,16 +38,9 @@
         <jose.version>10.5</jose.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>aliyunmaven</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
         <dependencies>
-            <!-- spring-boot-->
+            <!-- Import dependency management from Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -81,24 +74,6 @@
                 <artifactId>blog-biz-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <!--            <dependency>-->
-            <!--                <groupId>com.zqqiliyc</groupId>-->
-            <!--                <artifactId>blog-domain</artifactId>-->
-            <!--                <version>${project.version}</version>-->
-            <!--            </dependency>-->
-
-            <!--            <dependency>-->
-            <!--                <groupId>com.zqqiliyc</groupId>-->
-            <!--                <artifactId>blog-repository</artifactId>-->
-            <!--                <version>${project.version}</version>-->
-            <!--            </dependency>-->
-
-            <!--            <dependency>-->
-            <!--                <groupId>com.zqqiliyc</groupId>-->
-            <!--                <artifactId>blog-service</artifactId>-->
-            <!--                <version>${project.version}</version>-->
-            <!--            </dependency>-->
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
