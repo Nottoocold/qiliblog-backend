@@ -13,8 +13,6 @@ spring:
     remote:
       restart:
         enabled: false
-    restart:
-      enabled: false
 
 logging:
   level:
