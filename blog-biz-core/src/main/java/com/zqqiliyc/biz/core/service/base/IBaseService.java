@@ -24,6 +24,10 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     PageResult<T> findPageInfo(QueryDTO<T> queryDto);
 
+    default List<T> findList(QueryDTO<T> queryDto) {
+        return findList(queryDto.toExample());
+    }
+
     List<T> findList(Example<T> example);
 
     long count(Example<T> example);

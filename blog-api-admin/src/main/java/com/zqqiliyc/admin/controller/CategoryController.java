@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author qili
  * @date 2025-09-30
@@ -35,6 +37,14 @@ class CategoryController {
     public ApiResult<PageResult<CategoryVo>> pageQuery(CategoryQueryDTO queryDto) {
         PageResult<Category> pageInfo = categoryService.findPageInfo(queryDto);
         PageResult<CategoryVo> result = pageInfo.map(categoryVoTransfer::toViewVoList);
+        return ApiResult.success(result);
+    }
+
+    @Operation(summary = "列表查询分类")
+    @GetMapping("/list")
+    public ApiResult<List<CategoryVo>> listQuery(CategoryQueryDTO queryDto) {
+        List<Category> categoryList = categoryService.findList(queryDto);
+        List<CategoryVo> result = categoryVoTransfer.toViewVoList(categoryList);
         return ApiResult.success(result);
     }
 
