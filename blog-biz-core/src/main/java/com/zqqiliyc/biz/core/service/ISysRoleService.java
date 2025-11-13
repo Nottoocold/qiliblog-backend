@@ -1,7 +1,6 @@
 package com.zqqiliyc.biz.core.service;
 
 import com.zqqiliyc.biz.core.entity.SysRole;
-import com.zqqiliyc.biz.core.service.base.IBaseDeleteHardService;
 import com.zqqiliyc.biz.core.service.base.IBaseService;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  * @author qili
  * @date 2025-04-06
  */
-public interface ISysRoleService extends IBaseService<SysRole, Long>, IBaseDeleteHardService<SysRole, Long> {
+public interface ISysRoleService extends IBaseService<SysRole, Long> {
 
     /**
      * 根据角色码查询角色

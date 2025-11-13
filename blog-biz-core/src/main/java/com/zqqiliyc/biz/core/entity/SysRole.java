@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 @Getter
 @Setter
 @Entity.Table("sys_role")
-public class SysRole extends BaseEntityWithDel {
+public class SysRole extends BaseEntity {
     /**
      * 角色编码
      */

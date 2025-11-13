@@ -2,16 +2,12 @@ package com.zqqiliyc.biz.core.repository.mapper;
 
 import com.zqqiliyc.biz.core.entity.SysRole;
 import com.zqqiliyc.biz.core.repository.Dao;
-import com.zqqiliyc.biz.core.repository.IDeleteMapper;
-import com.zqqiliyc.biz.core.repository.config.LogicalOptimizeSqlWrapper;
-import io.mybatis.mapper.logical.LogicalMapper;
-import io.mybatis.provider.SqlWrapper;
+import io.mybatis.mapper.BaseMapper;
 
 /**
  * @author qili
  * @date 2025-04-06
  */
-@SqlWrapper(LogicalOptimizeSqlWrapper.class)
-public interface SysRoleMapper extends LogicalMapper<SysRole, Long>, IDeleteMapper<SysRole>, Dao {
+public interface SysRoleMapper extends BaseMapper<SysRole, Long>, Dao {
 
 }

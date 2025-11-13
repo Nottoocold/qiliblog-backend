@@ -6,7 +6,7 @@ import com.zqqiliyc.biz.core.entity.SysUserRole;
 import com.zqqiliyc.biz.core.repository.mapper.SysRoleMapper;
 import com.zqqiliyc.biz.core.service.ISysRoleService;
 import com.zqqiliyc.biz.core.service.ISysUserRoleService;
-import com.zqqiliyc.biz.core.service.base.AbstractDeleteHardService;
+import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
-public class SysRoleService extends AbstractDeleteHardService<SysRole, Long, SysRoleMapper> implements ISysRoleService {
+public class SysRoleService extends AbstractBaseService<SysRole, Long, SysRoleMapper> implements ISysRoleService {
     private final ISysUserRoleService userRoleService;
 
     /**
