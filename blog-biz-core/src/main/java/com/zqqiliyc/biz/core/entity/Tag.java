@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Entity.Table("tags")
+@Entity.Table("blog_tags")
 public class Tag extends BaseEntity {
     @Entity.Column(value = "name", remark = "标签名")
     private String name;

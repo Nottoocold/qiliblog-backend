@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Entity.Table("category")
+@Entity.Table("blog_category")
 public class Category extends BaseEntity {
     @Entity.Column(value = "name", remark = "分类名称 (必须唯一，如 技术, 生活)")
     private String name;

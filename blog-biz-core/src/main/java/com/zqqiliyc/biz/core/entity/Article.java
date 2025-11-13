@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Entity.Table("article")
+@Entity.Table("blog_article")
 public class Article extends BaseEntity {
     @Entity.Column(value = "title", remark = "文章标题")
     private String title;

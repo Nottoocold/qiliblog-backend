@@ -72,9 +72,9 @@ CREATE TABLE sys_role_permission
     CONSTRAINT UNIQUE (role_id, permission_id)
 ) COMMENT ='角色权限关联表';
 
-DROP TABLE IF EXISTS `category`;
--- 创建分类表 (`category`)
-CREATE TABLE `category`
+DROP TABLE IF EXISTS `blog_category`;
+-- 创建分类表 (`blog_category`)
+CREATE TABLE `blog_category`
 (
     `id`          BIGINT PRIMARY KEY COMMENT '主键',
     `name`        VARCHAR(64) NOT NULL COMMENT '分类名称 (必须唯一，如 "技术", "生活")',
@@ -89,9 +89,9 @@ CREATE TABLE `category`
   DEFAULT CHARSET = utf8mb4
     COMMENT ='文章分类表';
 
-DROP TABLE IF EXISTS `tags`;
--- 创建标签表 (`tags`)
-CREATE TABLE `tags`
+DROP TABLE IF EXISTS `blog_tags`;
+-- 创建标签表 (`blog_tags`)
+CREATE TABLE `blog_tags`
 (
     `id`          BIGINT PRIMARY KEY COMMENT '标签唯一标识符 (主键)',
     `name`        VARCHAR(64) NOT NULL COMMENT '标签名称 (必须唯一，如 "Java", "Spring Boot")',
@@ -106,9 +106,9 @@ CREATE TABLE `tags`
   DEFAULT CHARSET = utf8mb4
     COMMENT ='文章标签表';
 
-DROP TABLE IF EXISTS `article`;
--- 创建文章表 (`article`)
-CREATE TABLE `article`
+DROP TABLE IF EXISTS `blog_article`;
+-- 创建文章表 (`blog_article`)
+CREATE TABLE `blog_article`
 (
     `id`             BIGINT PRIMARY KEY COMMENT '文章唯一标识符 (主键)',
     `title`          VARCHAR(255) NOT NULL COMMENT '文章标题',
