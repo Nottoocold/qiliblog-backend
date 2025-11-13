@@ -116,10 +116,13 @@ CREATE TABLE `article`
     `content`        LONGTEXT     NOT NULL COMMENT '文章详细内容 (支持 Markdown/HTML)',
     `summary`        TEXT                  DEFAULT NULL COMMENT '文章摘要 (用于列表页预览)',
     `cover_image`    VARCHAR(255)          DEFAULT NULL COMMENT '文章封面图片 URL',
-    `status`         TINYINT      NOT NULL DEFAULT 0 COMMENT '文章状态: draft(0草稿), published(1已发布), private(2私密)',
-    `category_id`    BIGINT                DEFAULT NULL COMMENT '外键，关联分类表 id (文章所属主分类)',
+    `status`         TINYINT        DEFAULT 0 COMMENT '文章状态: draft(0草稿), published(1已发布), private(2私密)',
+    `category_id`    BIGINT    NOT NULL COMMENT '外键，关联分类表 id (文章所属主分类)',
     `author_id`      BIGINT       NOT NULL COMMENT '外键，关联用户表 id (文章作者)',
-    `is_commentable` TINYINT      NOT NULL DEFAULT 1 COMMENT '是否允许评论: 1(允许), 0(不允许)',
+    `is_top`         TINYINT        DEFAULT 0 COMMENT '是否置顶: 1(是), 0(否)',
+    `is_recommend`   TINYINT        DEFAULT 0 COMMENT '是否推荐: 1(是), 0(否)',
+    `is_commentable` TINYINT        DEFAULT 1 COMMENT '是否允许评论: 1(允许), 0(不允许)',
+    `publish_at`     TIMESTAMP NULL DEFAULT NULL COMMENT '文章需要定时发布时设置',
     `published_time` TIMESTAMP    NULL     DEFAULT NULL COMMENT '文章发布时间 (当状态变为 published 时设置)',
     `modified_time`  TIMESTAMP    NULL     DEFAULT NULL COMMENT '文章内容修改时间(当状态为 published 时, 每次修改时设置)',
     `view_count`     INT                   DEFAULT 0 COMMENT '文章阅读次数',
@@ -128,10 +131,21 @@ CREATE TABLE `article`
     `read_time`      VARCHAR(64)           DEFAULT NULL COMMENT '预计阅读时间',
     `create_time`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
     `update_time`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-    UNIQUE KEY `idx_slug` (`slug`) -- Slug 必须唯一
+    UNIQUE KEY `idx_slug` (`slug`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
     COMMENT ='文章核心信息表';
+
+DROP TABLE IF EXISTS `rel_article_tag`;
+-- 创建文章标签关联表 (`rel_article_tag`)
+CREATE TABLE `rel_article_tag`
+(
+    `id`          BIGINT PRIMARY KEY COMMENT '主键ID',
+    `article_id`  BIGINT NOT NULL COMMENT '文章ID',
+    `tag_id`      BIGINT NOT NULL COMMENT '标签ID',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT ='文章标签关联表';
 
 DROP TABLE IF EXISTS `sys_token`;
 CREATE TABLE `sys_token`

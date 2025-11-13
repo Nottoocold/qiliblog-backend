@@ -33,13 +33,22 @@ public class Article extends BaseEntity {
     private int status;
 
     @Entity.Column(value = "category_id", remark = "文章分类ID")
-    private long categoryId;
+    private Long categoryId;
 
     @Entity.Column(value = "author_id", remark = "文章作者ID")
-    private long authorId;
+    private Long authorId;
+
+    @Entity.Column(value = "is_top", remark = "是否置顶: 0否, 1是")
+    private int top;
+
+    @Entity.Column(value = "is_recommend", remark = "是否推荐: 0否, 1是")
+    private int recommend;
 
     @Entity.Column(value = "is_commentable", remark = "是否允许评论: 0不允许, 1允许")
-    private int commentAble;
+    private int allowComment;
+
+    @Entity.Column(value = "publish_at", remark = "需要定时发布时设置")
+    private LocalDateTime publishAt;
 
     @Entity.Column(value = "published_time", remark = "文章发布时间 (当状态变为 published(1) 时设置)")
     private LocalDateTime publishedTime;
@@ -60,7 +69,7 @@ public class Article extends BaseEntity {
     private String readTime;
 
     public Article() {
-        this.commentAble = 1;
+        this.allowComment = 1;
     }
 
     public Article(String title) {
