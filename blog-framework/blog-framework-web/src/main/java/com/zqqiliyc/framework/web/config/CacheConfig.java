@@ -26,7 +26,7 @@ public class CacheConfig extends BaseJacksonConfig {
         // 默认缓存构建配置
         Caffeine<Object, Object> defaultCacheBuilder = Caffeine.newBuilder()
                 .maximumSize(512)
-                .expireAfterAccess(Duration.ofMinutes(30))
+                .expireAfterAccess(Duration.ofMinutes(3))
                 .recordStats();
         cacheManager.setCaffeine(defaultCacheBuilder);
         if (cacheInstanceConfigs != null) {

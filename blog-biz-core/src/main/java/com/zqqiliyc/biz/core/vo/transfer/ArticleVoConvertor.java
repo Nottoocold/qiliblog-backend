@@ -1,7 +1,10 @@
 package com.zqqiliyc.biz.core.vo.transfer;
 
 import com.zqqiliyc.biz.core.dto.ViewVoConvertor;
-import com.zqqiliyc.biz.core.entity.*;
+import com.zqqiliyc.biz.core.entity.Article;
+import com.zqqiliyc.biz.core.entity.Category;
+import com.zqqiliyc.biz.core.entity.SysUser;
+import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.service.ICategoryService;
 import com.zqqiliyc.biz.core.service.IRelArticleTagService;
 import com.zqqiliyc.biz.core.service.ISysUserService;
@@ -12,9 +15,10 @@ import com.zqqiliyc.biz.core.vo.TagVo;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -46,8 +50,10 @@ public class ArticleVoConvertor implements ViewVoConvertor<Article, ArticleVo> {
         Map<Long, CategoryVo> categoryMap = categoryVoConvertor.toViewVoList(categoryService.findByFieldList(Category::getId, sourceList.stream().map(Article::getCategoryId).toList()))
                 .stream().collect(Collectors.toMap(CategoryVo::getId, Function.identity()));
 
-        Map<Long, List<RelArticleTag>> postTagMap = relArticleTagService.findByFieldList(RelArticleTag::getArticleId, sourceList.stream().map(Article::getId).toList())
-                .stream().collect(Collectors.groupingBy(RelArticleTag::getArticleId));
+        Map<Long, Set<Long>> postTagIdMap = new HashMap<>(sourceList.size());
+        sourceList.forEach(article -> {
+            postTagIdMap.put(article.getId(), relArticleTagService.findByArticleId(article.getId()));
+        });
 
         Map<Long, SysUser> userMap = sysUserService.findByFieldList(SysUser::getId, sourceList.stream().map(Article::getAuthorId).toList())
                 .stream().collect(Collectors.toMap(SysUser::getId, Function.identity()));
@@ -58,8 +64,7 @@ public class ArticleVoConvertor implements ViewVoConvertor<Article, ArticleVo> {
 
             vo.setCategory(categoryMap.get(vo.getCategoryId()));
 
-            List<RelArticleTag> articleTagList = postTagMap.getOrDefault(vo.getId(), Collections.emptyList());
-            vo.setTagIds(articleTagList.stream().map(RelArticleTag::getTagId).toList());
+            vo.setTagIds(postTagIdMap.get(vo.getId()));
 
             List<TagVo> tagVoList = tagVoConvertor.toViewVoList(tagService.findByFieldList(Tag::getId, vo.getTagIds()));
             vo.setTagList(tagVoList);

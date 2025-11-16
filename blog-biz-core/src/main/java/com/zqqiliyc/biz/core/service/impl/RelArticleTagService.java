@@ -4,20 +4,40 @@ import com.zqqiliyc.biz.core.entity.RelArticleTag;
 import com.zqqiliyc.biz.core.repository.mapper.RelArticleTagMapper;
 import com.zqqiliyc.biz.core.service.IRelArticleTagService;
 import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
+import com.zqqiliyc.framework.web.event.TagCountChangeEvent;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author qili
  * @date 2025-06-02
  */
 @Service
+@RequiredArgsConstructor
+@CacheConfig(cacheNames = "relArticleTagCache")
 @Transactional(rollbackFor = Exception.class)
 public class RelArticleTagService extends AbstractBaseService<RelArticleTag, Long, RelArticleTagMapper> implements IRelArticleTagService {
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Override
+    @Cacheable(key = "'articleId:' + #articleId")
+    public Set<Long> findByArticleId(Long articleId) {
+        return wrapper().eq(RelArticleTag::getArticleId, articleId)
+                .list().stream().map(RelArticleTag::getTagId).collect(Collectors.toSet());
+    }
+
+    @Override
+    @CacheEvict(key = "'articleId:' + #articleId")
     public void save(Long articleId, List<Long> tagIds) {
         List<RelArticleTag> exists = baseMapper.wrapper()
                 .eq(RelArticleTag::getArticleId, articleId)
@@ -42,5 +62,10 @@ public class RelArticleTagService extends AbstractBaseService<RelArticleTag, Lon
             relArticleTag.setTagId(tagId);
             return relArticleTag;
         }).forEach(entity -> baseMapper.insert(entity));
+
+        // 发布标签文章数变化事件
+        if (!addTagIds.isEmpty() || !deleteTagIds.isEmpty()) {
+            eventPublisher.publishEvent(new TagCountChangeEvent(this, addTagIds, deleteTagIds));
+        }
     }
 }

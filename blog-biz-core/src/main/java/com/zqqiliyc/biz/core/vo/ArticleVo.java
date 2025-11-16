@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author qili
@@ -33,9 +33,9 @@ public class ArticleVo {
     @Schema(description = "文章分类")
     private CategoryVo category;
     @Schema(description = "文章标签ID列表")
-    private List<Long> tagIds;
+    private Collection<Long> tagIds;
     @Schema(description = "文章标签列表")
-    private List<TagVo> tagList;
+    private Collection<TagVo> tagList;
     @Schema(description = "文章作者ID")
     private Long authorId;
     @Schema(description = "文章作者")

@@ -37,10 +37,4 @@ public class TagUpdateDTO implements UpdateDTO<Tag> {
         BeanUtil.copyProperties(this, entity, "id");
     }
 
-    @Override
-    public UpdateDTO<Tag> fromEntity(Tag entity) {
-        TagUpdateDTO dto = new TagUpdateDTO();
-        BeanUtil.copyProperties(entity, dto);
-        return dto;
-    }
 }

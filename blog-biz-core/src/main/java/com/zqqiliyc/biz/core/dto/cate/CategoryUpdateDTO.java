@@ -36,11 +36,4 @@ public class CategoryUpdateDTO implements UpdateDTO<Category> {
     public void fillEntity(Category entity) {
         BeanUtil.copyProperties(this, entity, "id");
     }
-
-    @Override
-    public UpdateDTO<Category> fromEntity(Category entity) {
-        CategoryUpdateDTO dto = new CategoryUpdateDTO();
-        BeanUtil.copyProperties(entity, dto);
-        return dto;
-    }
 }

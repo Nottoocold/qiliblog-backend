@@ -1,5 +1,6 @@
 package com.zqqiliyc.biz.core.dto;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.zqqiliyc.biz.core.entity.BaseEntity;
 
 import java.io.Serializable;
@@ -14,5 +15,7 @@ public interface UpdateDTO<T extends BaseEntity> {
 
     void fillEntity(T entity);
 
-    UpdateDTO<T> fromEntity(T entity);
+    static <M> M fromEntity(BaseEntity entity, Class<M> target) {
+        return BeanUtil.copyProperties(entity, target);
+    }
 }
