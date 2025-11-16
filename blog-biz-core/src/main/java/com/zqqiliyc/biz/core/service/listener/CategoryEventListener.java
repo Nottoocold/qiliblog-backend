@@ -3,6 +3,7 @@ package com.zqqiliyc.biz.core.service.listener;
 import cn.hutool.core.lang.Assert;
 import com.zqqiliyc.biz.core.entity.Category;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -12,6 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
  * @date 2025-10-02
  */
 @Component
+@RequiredArgsConstructor
 class CategoryEventListener {
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)

@@ -2,7 +2,7 @@ package com.zqqiliyc.biz.core.service.listener;
 
 import cn.hutool.core.lang.Assert;
 import com.zqqiliyc.biz.core.entity.Tag;
-import com.zqqiliyc.biz.core.repository.mapper.TagMapper;
+import com.zqqiliyc.biz.core.service.ITagService;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.event.TagCountChangeEvent;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 @RequiredArgsConstructor
 class TagEventListener {
-    private final TagMapper tagMapper;
+    private final ITagService tagService;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void onDelete(EntityDeleteEvent<Tag> event) {
@@ -34,22 +34,14 @@ class TagEventListener {
         // 增加文章数
         if (event.getIncrementTagIds() != null && !event.getIncrementTagIds().isEmpty()) {
             for (Long tagId : event.getIncrementTagIds()) {
-                Tag tag = tagMapper.selectByPrimaryKey(tagId).orElse(null);
-                if (tag != null) {
-                    tag.setPostCount(tag.getPostCount() + 1);
-                    tagMapper.updateByPrimaryKey(tag);
-                }
+                tagService.updateTagPostCount(tagId, 1);
             }
         }
 
         // 减少文章数
         if (event.getDecrementTagIds() != null && !event.getDecrementTagIds().isEmpty()) {
             for (Long tagId : event.getDecrementTagIds()) {
-                Tag tag = tagMapper.selectByPrimaryKey(tagId).orElse(null);
-                if (tag != null) {
-                    tag.setPostCount(Math.max(0, tag.getPostCount() - 1));
-                    tagMapper.updateByPrimaryKey(tag);
-                }
+                tagService.updateTagPostCount(tagId, -1);
             }
         }
     }

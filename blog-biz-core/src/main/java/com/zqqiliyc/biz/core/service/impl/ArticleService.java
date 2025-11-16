@@ -13,6 +13,7 @@ import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityCreateEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,22 +26,18 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
+@RequiredArgsConstructor
 public class ArticleService extends AbstractBaseService<Article, Long, ArticleMapper> implements IArticleService {
     private final IRelArticleTagService relArticleTagService;
     private final ICategoryService categoryService;
 
-    public ArticleService(IRelArticleTagService relArticleTagService, ICategoryService categoryService) {
-        this.relArticleTagService = relArticleTagService;
-        this.categoryService = categoryService;
-    }
-
     @Override
     public Article createDraft(ArticleDraftCreateDTO draftSaveDTO) {
-        draftSaveDTO.setReadTime("少于1分钟");
         Article article = draftSaveDTO.toEntity();
+        article.setWordCount(article.getContent().length());
         // 1. 创建文章
         SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
-        Assert.isTrue(baseMapper.insert(article) == 1, "insert article failed");
+        Assert.isTrue(baseMapper.insert(article) == 1, "文章创建失败");
         // 2. 保存文章标签
         List<Long> tagIds = draftSaveDTO.getTagIds();
         relArticleTagService.save(article.getId(), tagIds);

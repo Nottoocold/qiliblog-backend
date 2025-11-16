@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author qili
@@ -38,5 +39,15 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         validateBeforeUpdateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在", excludeIds);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         return entity;
+    }
+
+    @Override
+    public void updateTagPostCount(Long tagId, int delta) {
+        Optional<Tag> tag = baseMapper.selectByPrimaryKey(tagId);
+        if (tag.isPresent()) {
+            Tag tagEntity = tag.get();
+            tagEntity.setPostCount(Math.max(0, tagEntity.getPostCount() + delta));
+            baseMapper.updateByPrimaryKey(tagEntity);
+        }
     }
 }
