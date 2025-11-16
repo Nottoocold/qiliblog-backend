@@ -1,6 +1,9 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.biz.core.dto.article.ArticleDraftCreateDTO;
 import com.zqqiliyc.biz.core.dto.article.ArticleUpdateDTO;
 import com.zqqiliyc.biz.core.entity.Article;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -32,9 +36,18 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
     private final ICategoryService categoryService;
 
     @Override
+    public Article findBySlug(String slug) {
+        return wrapper().eq(Article::getSlug, slug).one().orElse(null);
+    }
+
+    @Override
     public Article createDraft(ArticleDraftCreateDTO draftSaveDTO) {
         Article article = draftSaveDTO.toEntity();
         article.setWordCount(article.getContent().length());
+        if (StrUtil.isBlank(article.getSlug())) {
+            // 自动生成唯一的 slug 标识
+            article.setSlug(generateUniqueSlug());
+        }
         // 1. 创建文章
         SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
         Assert.isTrue(baseMapper.insert(article) == 1, "文章创建失败");
@@ -83,5 +96,52 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         }
 
         return article;
+    }
+
+    /**
+     * 生成唯一的 slug 标识
+     * <p>
+     * 格式: {时间戳}-{8位随机字符}，示例: 20251116143025-a3Bx9Kp2
+     * <p>
+     * 支持 10w+ 文章数量:
+     * <ul>
+     *   <li>时间戳精确到秒，保证时间维度唯一性</li>
+     *   <li>8位Base62随机字符，提供 62^8 = 218万亿 种组合</li>
+     *   <li>数据库唯一性检查 + 重试机制</li>
+     * </ul>
+     *
+     * @return 唯一的 slug 字符串
+     */
+    private String generateUniqueSlug() {
+        int maxRetries = 3;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        for (int i = 0; i < maxRetries; i++) {
+            // 生成时间戳部分（格式：yyyyMMddHHmmss）
+            String timestamp = LocalDateTime.now().format(formatter);
+
+            // 生成8位随机字符（Base62：0-9a-zA-Z）
+            String randomPart = RandomUtil.randomString(8);
+
+            String slug = timestamp + "-" + randomPart;
+
+            // 检查数据库中是否已存在
+            Article existingArticle = findBySlug(slug);
+            if (existingArticle == null) {
+                return slug;
+            }
+
+            // 如果重复，添加短暂延迟后重试
+            if (i < maxRetries - 1) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        // 如果所有重试都失败，使用 UUID 作为后备方案（去掉横线）
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }
