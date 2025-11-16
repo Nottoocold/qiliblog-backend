@@ -1,6 +1,7 @@
 package com.zqqiliyc.biz.core.service;
 
 import com.zqqiliyc.biz.core.dto.article.ArticleDraftCreateDTO;
+import com.zqqiliyc.biz.core.dto.article.ArticleUpdateDTO;
 import com.zqqiliyc.biz.core.entity.Article;
 import com.zqqiliyc.biz.core.service.base.IBaseService;
 
@@ -11,4 +12,6 @@ import com.zqqiliyc.biz.core.service.base.IBaseService;
 public interface IArticleService extends IBaseService<Article, Long> {
 
     Article createDraft(ArticleDraftCreateDTO draftSaveDTO);
+
+    Article updateArticle(ArticleUpdateDTO updateDTO);
 }

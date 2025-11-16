@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author qili
@@ -38,5 +39,15 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
         validateBeforeUpdateWithDB(Map.of(Category::getSlug, entity.getSlug()), "分类 URL 友好标识符已存在", excludeIds);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         return entity;
+    }
+
+    @Override
+    public void updateCategoryPostCount(Long categoryId, int delta) {
+        Optional<Category> categoryOpt = baseMapper.selectByPrimaryKey(categoryId);
+        if (categoryOpt.isPresent()) {
+            Category category = categoryOpt.get();
+            category.setPostCount(Math.max(0, category.getPostCount() + delta));
+            baseMapper.updateByPrimaryKey(category);
+        }
     }
 }

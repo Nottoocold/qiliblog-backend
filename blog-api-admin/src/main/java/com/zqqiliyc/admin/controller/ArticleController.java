@@ -2,6 +2,7 @@ package com.zqqiliyc.admin.controller;
 
 import com.zqqiliyc.biz.core.dto.article.ArticleDraftCreateDTO;
 import com.zqqiliyc.biz.core.dto.article.ArticleQueryDTO;
+import com.zqqiliyc.biz.core.dto.article.ArticleUpdateDTO;
 import com.zqqiliyc.biz.core.entity.Article;
 import com.zqqiliyc.biz.core.service.IArticleService;
 import com.zqqiliyc.biz.core.vo.ArticleVo;
@@ -43,5 +44,12 @@ public class ArticleController {
     public ApiResult<ArticleVo> saveDraft(@RequestBody @Validated ArticleDraftCreateDTO dto) {
         dto.setAuthorId(SecurityUtils.getCurrentUserId());
         return ApiResult.success(articleVoConvertor.toViewVo(articleService.createDraft(dto)));
+    }
+
+    @Operation(summary = "更新文章")
+    @PutMapping
+    public ApiResult<ArticleVo> updateArticle(@RequestBody @Validated ArticleUpdateDTO dto) {
+        Article article = articleService.updateArticle(dto);
+        return ApiResult.success(articleVoConvertor.toViewVo(article));
     }
 }
