@@ -44,13 +44,17 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
     public Article createDraft(ArticleDraftCreateDTO draftSaveDTO) {
         Article article = draftSaveDTO.toEntity();
         article.setWordCount(article.getContent().length());
+        article.setModifiedTime(LocalDateTime.now());
         if (StrUtil.isBlank(article.getSlug())) {
             // 自动生成唯一的 slug 标识
             article.setSlug(generateUniqueSlug());
+        } else if (!article.getSlug().matches("^[a-zA-Z0-9-]+$")) {
+            // slug 只允许包含字母、数字和连字符
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
         }
         // 1. 创建文章
         SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
-        Assert.isTrue(baseMapper.insert(article) == 1, "文章创建失败");
+        Assert.isTrue(baseMapper.insert(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "创建文章失败"));
         // 2. 保存文章标签
         List<Long> tagIds = draftSaveDTO.getTagIds();
         relArticleTagService.save(article.getId(), tagIds);
@@ -81,13 +85,11 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             article.setWordCount(updateDTO.getContent().length());
         }
 
-        // 5. 如果文章已发布，更新内容修改时间
-        if (article.getStatus() == 1) {
-            article.setModifiedTime(LocalDateTime.now());
-        }
+        // 5. 更新内容修改时间
+        article.setModifiedTime(LocalDateTime.now());
 
         // 6. 更新文章
-        Assert.isTrue(baseMapper.updateByPrimaryKey(article) == 1, "更新文章失败");
+        Assert.isTrue(baseMapper.updateByPrimaryKey(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "更新文章失败"));
 
         // 7. 更新文章标签关联
         List<Long> tagIds = updateDTO.getTagIds();

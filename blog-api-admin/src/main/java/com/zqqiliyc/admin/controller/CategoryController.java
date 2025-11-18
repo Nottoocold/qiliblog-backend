@@ -41,7 +41,7 @@ class CategoryController {
     }
 
     @Operation(summary = "列表查询分类")
-    @GetMapping("/list")
+    @GetMapping("list")
     public ApiResult<List<CategoryVo>> listQuery(CategoryQueryDTO queryDto) {
         List<Category> categoryList = categoryService.findList(queryDto);
         List<CategoryVo> result = categoryVoTransfer.toViewVoList(categoryList);

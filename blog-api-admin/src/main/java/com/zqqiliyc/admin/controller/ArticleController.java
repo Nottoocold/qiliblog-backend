@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author qili
  * @date 2025-11-15
@@ -40,18 +42,11 @@ public class ArticleController {
         return ApiResult.success(result);
     }
 
-    @Operation(summary = "保存草稿文章")
-    @PostMapping("/draft")
-    public ApiResult<ArticleVo> saveDraft(@RequestBody @Validated ArticleDraftCreateDTO dto) {
-        dto.setAuthorId(SecurityUtils.getCurrentUserId());
-        return ApiResult.success(articleVoConvertor.toViewVo(articleService.createDraft(dto)));
-    }
-
-    @Operation(summary = "更新文章")
-    @PutMapping
-    public ApiResult<ArticleVo> updateArticle(@RequestBody @Validated ArticleUpdateDTO dto) {
-        Article article = articleService.updateArticle(dto);
-        return ApiResult.success(articleVoConvertor.toViewVo(article));
+    @Operation(summary = "列表查询文章")
+    @GetMapping("/list")
+    public ApiResult<List<ArticleVo>> listQuery(ArticleQueryDTO queryDto) {
+        List<Article> articleList = articleService.findList(queryDto);
+        return ApiResult.success(articleVoConvertor.toViewVoList(articleList));
     }
 
     @Operation(summary = "根据ID查询文章详情")
@@ -71,6 +66,20 @@ public class ArticleController {
         if (article == null) {
             return ApiResult.error(GlobalErrorDict.PARAM_ERROR.getCode(), "文章不存在");
         }
+        return ApiResult.success(articleVoConvertor.toViewVo(article));
+    }
+
+    @Operation(summary = "保存草稿文章")
+    @PostMapping("/draft")
+    public ApiResult<ArticleVo> saveDraft(@RequestBody @Validated ArticleDraftCreateDTO dto) {
+        dto.setAuthorId(SecurityUtils.getCurrentUserId());
+        return ApiResult.success(articleVoConvertor.toViewVo(articleService.createDraft(dto)));
+    }
+
+    @Operation(summary = "更新文章")
+    @PutMapping
+    public ApiResult<ArticleVo> updateArticle(@RequestBody @Validated ArticleUpdateDTO dto) {
+        Article article = articleService.updateArticle(dto);
         return ApiResult.success(articleVoConvertor.toViewVo(article));
     }
 }
