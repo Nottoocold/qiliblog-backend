@@ -9,11 +9,6 @@ spring:
     username:  # 邮箱
     password:  # 授权码
 
-  devtools:
-    remote:
-      restart:
-        enabled: false
-
 logging:
   level:
     com.zqqiliyc: debug
