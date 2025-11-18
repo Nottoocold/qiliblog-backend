@@ -25,7 +25,11 @@ public enum GlobalErrorDict implements DictItem<GlobalErrorDict> {
     USERNAME_EXISTS(401004, "用户名已经存在"),
     PHONE_EXISTS(401005, "手机号已经存在"),
     INVALID_TOKEN(401006, "无效的token"),
-    REFRESH_ERROR(401007, "刷新token失败");
+    REFRESH_ERROR(401007, "刷新token失败"),
+    //endregion
+
+    //region 500-server error,500xxx系列错误码，专门用来标识服务器错误
+    SERVER_ERROR(500001, "服务器错误");
     //endregion
 
     /**
