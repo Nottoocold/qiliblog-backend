@@ -3,8 +3,10 @@ package com.zqqiliyc.biz.core.service.listener;
 import cn.hutool.core.lang.Assert;
 import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.service.ITagService;
+import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.event.TagCountChangeEvent;
+import com.zqqiliyc.framework.web.exception.ClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -22,7 +24,7 @@ class TagEventListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void onDelete(EntityDeleteEvent<Tag> event) {
         Tag tag = event.getEntity();
-        Assert.isTrue(tag.getPostCount() == 0, "标签下有文章，请先删除文章");
+        Assert.isTrue(tag.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "标签下有文章，无法删除"));
     }
 
     /**

@@ -2,7 +2,9 @@ package com.zqqiliyc.biz.core.service.listener;
 
 import cn.hutool.core.lang.Assert;
 import com.zqqiliyc.biz.core.entity.Category;
+import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
+import com.zqqiliyc.framework.web.exception.ClientException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -19,6 +21,6 @@ class CategoryEventListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void onDelete(EntityDeleteEvent<Category> event) {
         Category category = event.getEntity();
-        Assert.isTrue(category.getPostCount() == 0, "分类下有文章，请先删除文章");
+        Assert.isTrue(category.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "该分类下有文章，无法删除"));
     }
 }

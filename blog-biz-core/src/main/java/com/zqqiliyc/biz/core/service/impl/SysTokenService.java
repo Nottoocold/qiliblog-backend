@@ -101,7 +101,7 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
     })
     public void clearCache(SysToken token) {
         if (log.isDebugEnabled()) {
-            log.info("清除令牌缓存,id={}", token.getId());
+            log.debug("清除令牌缓存,id={}", token.getId());
         }
     }
 }
