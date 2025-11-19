@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.service.listener;
+package com.zqqiliyc.biz.core.listener;
 
 import com.zqqiliyc.biz.core.entity.Article;
 import com.zqqiliyc.biz.core.service.ICategoryService;

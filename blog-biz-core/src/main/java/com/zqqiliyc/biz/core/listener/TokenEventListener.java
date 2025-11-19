@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.service.listener;
+package com.zqqiliyc.biz.core.listener;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.zqqiliyc.biz.core.dto.token.SysTokenCreateDTO;

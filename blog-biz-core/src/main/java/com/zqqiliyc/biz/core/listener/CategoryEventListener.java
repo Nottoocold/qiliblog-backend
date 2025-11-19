@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.service.listener;
+package com.zqqiliyc.biz.core.listener;
 
 import cn.hutool.core.lang.Assert;
 import com.zqqiliyc.biz.core.entity.Category;
