@@ -10,7 +10,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -56,9 +55,6 @@ public class ArticleCreateDTO implements CreateDTO<Article> {
 
     @Schema(description = "是否推荐: 0否, 1是")
     private int recommend;
-
-    @Schema(description = "定时发布时间, 需要定时发布时设置")
-    private LocalDateTime publishAt;
 
     @Schema(description = "预计阅读时间,如：少于1分钟，3分钟，多于30分钟等")
     private String readTime;

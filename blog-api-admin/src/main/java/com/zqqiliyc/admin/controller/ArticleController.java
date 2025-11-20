@@ -82,4 +82,11 @@ public class ArticleController {
         Article article = articleService.updateArticle(dto);
         return ApiResult.success(articleVoConvertor.toViewVo(article));
     }
+
+    @Operation(summary = "删除文章")
+    @DeleteMapping("/{id}")
+    public ApiResult<Void> deleteArticle(@PathVariable Long id) {
+        articleService.deleteById(id);
+        return ApiResult.success();
+    }
 }

@@ -3,13 +3,12 @@ package com.zqqiliyc.biz.core.service.impl;
 import com.zqqiliyc.biz.core.entity.RelArticleTag;
 import com.zqqiliyc.biz.core.repository.mapper.RelArticleTagMapper;
 import com.zqqiliyc.biz.core.service.IRelArticleTagService;
+import com.zqqiliyc.biz.core.service.ITagService;
 import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
-import com.zqqiliyc.framework.web.event.TagCountChangeEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +25,25 @@ import java.util.stream.Collectors;
 @CacheConfig(cacheNames = "relArticleTagCache")
 @Transactional(rollbackFor = Exception.class)
 public class RelArticleTagService extends AbstractBaseService<RelArticleTag, Long, RelArticleTagMapper> implements IRelArticleTagService {
-
-    private final ApplicationEventPublisher eventPublisher;
+    private final ITagService tagService;
 
     @Override
     @Cacheable(key = "'articleId:' + #articleId")
     public Set<Long> findByArticleId(Long articleId) {
         return wrapper().eq(RelArticleTag::getArticleId, articleId)
                 .list().stream().map(RelArticleTag::getTagId).collect(Collectors.toSet());
+    }
+
+    @Override
+    @CacheEvict(key = "'articleId:' + #articleId")
+    public void deleteByArticleId(Long articleId) {
+        List<Long> deleteTagIds = wrapper().eq(RelArticleTag::getArticleId, articleId)
+                .list()
+                .stream().map(RelArticleTag::getTagId).toList();
+
+        wrapper().eq(RelArticleTag::getArticleId, articleId).delete();
+
+        deleteTagIds.forEach(tagId -> tagService.updateTagPostCount(tagId, -1));
     }
 
     @Override
@@ -63,9 +73,11 @@ public class RelArticleTagService extends AbstractBaseService<RelArticleTag, Lon
             return relArticleTag;
         }).forEach(entity -> baseMapper.insert(entity));
 
-        // 发布标签文章数变化事件
-        if (!addTagIds.isEmpty() || !deleteTagIds.isEmpty()) {
-            eventPublisher.publishEvent(new TagCountChangeEvent(this, addTagIds, deleteTagIds));
+        if (!deleteTagIds.isEmpty()) {
+            deleteTagIds.forEach(tagId -> tagService.updateTagPostCount(tagId, -1));
+        }
+        if (!addTagIds.isEmpty()) {
+            addTagIds.forEach(tagId -> tagService.updateTagPostCount(tagId, 1));
         }
     }
 }

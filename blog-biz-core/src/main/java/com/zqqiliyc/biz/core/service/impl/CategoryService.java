@@ -1,17 +1,20 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.Category;
 import com.zqqiliyc.biz.core.repository.mapper.CategoryMapper;
 import com.zqqiliyc.biz.core.service.ICategoryService;
 import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
+import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.exception.ClientException;
+import io.mybatis.mapper.fn.Fn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -43,11 +46,17 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
 
     @Override
     public void updateCategoryPostCount(Long categoryId, int delta) {
-        Optional<Category> categoryOpt = baseMapper.selectByPrimaryKey(categoryId);
-        if (categoryOpt.isPresent()) {
-            Category category = categoryOpt.get();
-            category.setPostCount(Math.max(0, category.getPostCount() + delta));
-            baseMapper.updateByPrimaryKey(category);
-        }
+        Fn<Category, Object> field = Fn.field(baseMapper.entityClass(), Category::getPostCount);
+        String column = field.toColumn();
+        String operator = delta >= 0 ? "+" : "-";
+        baseMapper.wrapper()
+                .eq(Category::getId, categoryId)
+                .set(StrUtil.format("{} = {} {} {}", column, column, operator, Math.abs(delta)))
+                .update();
+    }
+
+    @Override
+    protected void beforeDelete(Category category) {
+        Assert.isTrue(category.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "该分类下有文章，无法删除"));
     }
 }

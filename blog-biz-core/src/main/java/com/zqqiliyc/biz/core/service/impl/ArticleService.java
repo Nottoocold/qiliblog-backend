@@ -12,8 +12,10 @@ import com.zqqiliyc.biz.core.service.IArticleService;
 import com.zqqiliyc.biz.core.service.ICategoryService;
 import com.zqqiliyc.biz.core.service.IRelArticleTagService;
 import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
+import com.zqqiliyc.biz.core.support.dict.ArticleStatus;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityCreateEvent;
+import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +44,19 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     public Article createDraft(ArticleDraftCreateDTO draftSaveDTO) {
+        if (draftSaveDTO.isDelayPublish()) {
+            // 延迟发布
+            if (draftSaveDTO.getPublishAt() == null) {
+                throw new ClientException(GlobalErrorDict.PARAM_ERROR, "请选择发布时间");
+            }
+            if (draftSaveDTO.getPublishAt().isBefore(LocalDateTime.now())) {
+                throw new ClientException(GlobalErrorDict.PARAM_ERROR, "发布时间不能早于当前时间");
+            }
+        }
         Article article = draftSaveDTO.toEntity();
         article.setWordCount(article.getContent().length());
         article.setModifiedTime(LocalDateTime.now());
+        article.setStatus(ArticleStatus.DRAFT.intVal());
         if (StrUtil.isBlank(article.getSlug())) {
             // 自动生成唯一的 slug 标识
             article.setSlug(generateUniqueSlug());
@@ -58,6 +70,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         // 2. 保存文章标签
         List<Long> tagIds = draftSaveDTO.getTagIds();
         relArticleTagService.save(article.getId(), tagIds);
+        // 3. 更新分类文章计数
+        categoryService.updateCategoryPostCount(article.getCategoryId(), 1);
         return article;
     }
 
@@ -98,6 +112,17 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         }
 
         return article;
+    }
+
+
+    @Override
+    public void deleteById(Long id) {
+        final Article article = findById(id);
+        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, article));
+        int deleted = baseMapper.deleteByPrimaryKey(id);
+        Assert.isTrue(deleted == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "删除文章失败"));
+        categoryService.updateCategoryPostCount(article.getCategoryId(), -1);
+        relArticleTagService.deleteByArticleId(id);
     }
 
     /**

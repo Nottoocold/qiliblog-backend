@@ -38,7 +38,7 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     T update(UpdateDTO<T> dto);
 
-    int deleteById(I id);
+    void deleteById(I id);
 
     <F> int deleteByFieldList(Fn<T, F> field, Collection<F> fieldValueList);
 }

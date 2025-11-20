@@ -117,12 +117,12 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public int deleteById(I id) {
+    public void deleteById(I id) {
         T entity = findById(id);
         SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
+        beforeDelete(entity);
         int count = baseMapper.deleteByPrimaryKey(id);
         Assert.isTrue(count == 1, "delete failed");
-        return count;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -173,5 +173,8 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
                 && exampleWrapper.notIn(Fn.field(entityClass, "id"), excludeIds).first().isPresent()) {
             throw supplier.get();
         }
+    }
+
+    protected void beforeDelete(T entity) {
     }
 }

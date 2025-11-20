@@ -4,6 +4,8 @@ import com.zqqiliyc.biz.core.entity.BaseEntity;
 import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import io.mybatis.provider.EntityTable;
 import io.mybatis.provider.SqlSourceCustomize;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
  * @author qili
  * @date 2025-05-25
  */
+@Slf4j
 public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
     private static final String createdTime = "createTime";
     private static final String updatedTime = "updateTime";
@@ -51,9 +54,15 @@ public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
     }
 
     private void setCommonField(MetaObject metaObject, String field, Object value) {
-        Object val = metaObject.getValue(field);
-        if (val == null) {
-            metaObject.setValue(field, value);
+        try {
+            Object val = metaObject.getValue(field);
+            if (val == null) {
+                metaObject.setValue(field, value);
+            }
+        } catch (BindingException ignored) {
+            log.warn("字段{}不存在", field);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

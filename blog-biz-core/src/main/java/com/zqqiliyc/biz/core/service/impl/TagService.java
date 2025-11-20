@@ -1,17 +1,20 @@
 package com.zqqiliyc.biz.core.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.dto.UpdateDTO;
 import com.zqqiliyc.biz.core.entity.Tag;
 import com.zqqiliyc.biz.core.repository.mapper.TagMapper;
 import com.zqqiliyc.biz.core.service.ITagService;
 import com.zqqiliyc.biz.core.service.base.AbstractBaseService;
+import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.exception.ClientException;
+import io.mybatis.mapper.fn.Fn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author qili
@@ -43,11 +46,17 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
 
     @Override
     public void updateTagPostCount(Long tagId, int delta) {
-        Optional<Tag> tag = baseMapper.selectByPrimaryKey(tagId);
-        if (tag.isPresent()) {
-            Tag tagEntity = tag.get();
-            tagEntity.setPostCount(Math.max(0, tagEntity.getPostCount() + delta));
-            baseMapper.updateByPrimaryKey(tagEntity);
-        }
+        Fn<Tag, Object> field = Fn.field(baseMapper.entityClass(), Tag::getPostCount);
+        String column = field.toColumn();
+        String operator = delta >= 0 ? "+" : "-";
+        baseMapper.wrapper()
+                .eq(Tag::getId, tagId)
+                .set(StrUtil.format("{} = {} {} {}", column, column, operator, Math.abs(delta)))
+                .update();
+    }
+
+    @Override
+    protected void beforeDelete(Tag tag) {
+        Assert.isTrue(tag.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "标签下有文章，无法删除"));
     }
 }
