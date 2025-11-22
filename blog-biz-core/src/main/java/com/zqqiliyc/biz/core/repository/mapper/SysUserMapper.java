@@ -1,9 +1,9 @@
 package com.zqqiliyc.biz.core.repository.mapper;
 
+import com.zqqiliyc.biz.core.config.mybatis.LogicalOptimizeSqlWrapper;
 import com.zqqiliyc.biz.core.entity.SysUser;
 import com.zqqiliyc.biz.core.repository.Dao;
 import com.zqqiliyc.biz.core.repository.IDeleteMapper;
-import com.zqqiliyc.biz.core.repository.config.LogicalOptimizeSqlWrapper;
 import io.mybatis.mapper.logical.LogicalMapper;
 import io.mybatis.provider.SqlWrapper;
 

@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.repository.config;
+package com.zqqiliyc.biz.core.config.mybatis;
 
 import com.github.pagehelper.PageInterceptor;
 import com.zqqiliyc.biz.core.repository.Dao;

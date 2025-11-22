@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.repository.config;
+package com.zqqiliyc.biz.core.config.mybatis;
 
 import com.zqqiliyc.biz.core.entity.BaseEntity;
 import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;

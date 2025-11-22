@@ -1,4 +1,4 @@
-package com.zqqiliyc.biz.core.repository.config;
+package com.zqqiliyc.biz.core.config.mybatis;
 
 import io.mybatis.common.util.Assert;
 import io.mybatis.mapper.logical.LogicalColumn;

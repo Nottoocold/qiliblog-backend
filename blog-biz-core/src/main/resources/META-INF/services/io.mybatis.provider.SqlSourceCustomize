@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-com.zqqiliyc.biz.core.repository.config.CommFieldSetterSqlSourceCustomize
+com.zqqiliyc.biz.core.config.mybatis.CommFieldSetterSqlSourceCustomize
