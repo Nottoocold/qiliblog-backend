@@ -1,13 +1,17 @@
 spring:
   datasource:
-    username: qiliblog
-    password: qiliblog001
-    url: jdbc:mysql://localhost:3306/qiliblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-
+    username: qiliblog_readwrite
+    password: qiliblog@1
+    url: jdbc:postgresql://localhost:5432/qiliblog?currentSchema=qiliblog&TimeZone=Asia/Shanghai
+    hikari:
+      schema: qiliblog
 
   mail:
     username:  # 邮箱
     password:  # 授权码
+  docker:
+    compose:
+      enabled: false
 
 logging:
   level:
@@ -20,5 +24,7 @@ logging:
 #    org.springframework.aop: trace
 #    org.springframework.cglib: trace
 mybatis:
+  provider:
+    schema: qiliblog
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

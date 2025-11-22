@@ -1,8 +1,10 @@
 spring:
   datasource:
-    username: ${DB_USER:qiliblog}
-    password: ${DB_PASSWORD:qiliblog001}
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/qiliblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${DB_USER:qiliblog_readwrite}
+    password: ${DB_PASSWORD:qiliblog@1}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:qiliblog}?currentSchema=${DB_SCHEMA:qiliblog}&TimeZone=Asia/Shanghai
+    hikari:
+      schema: ${DB_SCHEMA:qiliblog}
 
   mail:
     username:  # 邮箱
@@ -19,5 +21,7 @@ logging:
       clean-history-on-start: true
 
 mybatis:
+  provider:
+    schema: ${DB_SCHEMA:qiliblog}
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

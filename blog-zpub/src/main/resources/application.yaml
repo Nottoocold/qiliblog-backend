@@ -5,10 +5,9 @@ spring:
     active: dev
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     hikari:
       auto-commit: false
-      connection-init-sql: SET NAMES utf8mb4;
   mvc:
     servlet:
       load-on-startup: 1
