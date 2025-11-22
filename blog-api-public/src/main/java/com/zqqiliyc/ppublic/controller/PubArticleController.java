@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(WebApiConstants.API_PUBLIC_PREFIX + "/article")
-public class ArticleController {
+public class PubArticleController {
     private final IArticleService articleService;
     private final ArticleVoConvertor articleVoConvertor;
 
