@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -14,7 +13,6 @@ import com.zqqiliyc.biz.core.entity.SysToken;
 import com.zqqiliyc.biz.core.service.ISysTokenService;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.enums.TokenStyle;
-import com.zqqiliyc.framework.web.json.JsonHelper;
 import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import jakarta.annotation.Resource;
@@ -58,8 +56,9 @@ public class JwtTokenProvider extends AbstractTokenProvider {
 
         // 走到这里说明刷新令牌合法:
         // 生成新的一对token
-        Map<String, Object> claims = JsonHelper.fromJson(oldSysToken.getAdditionalInfo(), new TypeReference<>() {
-        });
+        //Map<String, Object> claims = JsonHelper.fromJson(oldSysToken.getAdditionalInfo(), new TypeReference<>() {
+        //});
+        Map<String, Object> claims = oldSysToken.getAdditionalInfo();
         TokenBean tokenBean = generateToken(oldSysToken.getUserId(), claims);
         // 撤销旧的一对token
         revokeToken(oldSysToken.getAccessToken());
@@ -88,7 +87,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
         tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt_ak));
         tokenBean.setRefreshExpiredAt(DateUtil.toLocalDateTime(expiresAt_rk));
-        tokenBean.setAdditionalInfo(JsonHelper.toJson(claims));
+        tokenBean.setAdditionalInfo(claims);
         return tokenBean;
     }
 

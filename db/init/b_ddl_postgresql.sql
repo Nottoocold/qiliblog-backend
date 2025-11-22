@@ -248,10 +248,6 @@ COMMENT ON COLUMN rel_article_tag.tag_id IS '标签ID';
 COMMENT ON COLUMN rel_article_tag.create_time IS '创建时间';
 COMMENT ON COLUMN rel_article_tag.update_time IS '更新时间';
 
--- 创建枚举类型用于令牌风格
-DROP TYPE IF EXISTS token_style_enum CASCADE;
-CREATE TYPE token_style_enum AS ENUM ('JWT', 'UUID');
-
 -- 删除并创建系统令牌表
 DROP TABLE IF EXISTS sys_token CASCADE;
 CREATE TABLE sys_token
@@ -259,7 +255,7 @@ CREATE TABLE sys_token
     id                 BIGINT           NOT NULL PRIMARY KEY,
     access_token       VARCHAR(512)     NOT NULL,
     refresh_token      VARCHAR(512),
-    token_style        token_style_enum NOT NULL,
+    token_style VARCHAR(32) NOT NULL,
     user_id            BIGINT           NOT NULL,
     issued_at          TIMESTAMP        NOT NULL,
     expired_at         TIMESTAMP        NOT NULL,
@@ -290,8 +286,6 @@ COMMENT ON COLUMN sys_token.update_time IS '记录最后更新时间';
 
 CREATE UNIQUE INDEX uk_access_token ON sys_token (access_token);
 CREATE UNIQUE INDEX uk_refresh_token ON sys_token (refresh_token);
-CREATE INDEX idx_user_status ON sys_token (user_id, revoked, expired_at);
-CREATE INDEX idx_refresh_expiry ON sys_token (refresh_expired_at, revoked);
 
 -- 删除并创建系统区域表
 DROP TABLE IF EXISTS sys_region CASCADE;

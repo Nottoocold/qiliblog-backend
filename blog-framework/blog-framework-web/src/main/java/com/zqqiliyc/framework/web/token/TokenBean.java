@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author qili
@@ -44,7 +45,7 @@ public class TokenBean {
     /**
      * 附加信息
      */
-    private String additionalInfo;
+    private Map<String, Object> additionalInfo;
     /**
      * 令牌是否被撤销-0-否，1-是
      */

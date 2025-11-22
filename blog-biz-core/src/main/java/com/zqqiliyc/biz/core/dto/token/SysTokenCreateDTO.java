@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author qili
@@ -36,7 +37,7 @@ public class SysTokenCreateDTO implements CreateDTO<SysToken> {
 
     private String ipAddress;
 
-    private String additionalInfo;
+    private Map<String, Object> additionalInfo;
 
     @Override
     public SysToken toEntity() {

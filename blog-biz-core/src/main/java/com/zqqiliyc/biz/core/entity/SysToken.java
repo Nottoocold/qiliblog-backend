@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author qili
@@ -46,5 +47,5 @@ public class SysToken extends BaseEntity {
     private String ipAddress;
 
     @Entity.Column(value = "additional_info", remark = "令牌附加信息,json格式")
-    private String additionalInfo;
+    private Map<String, Object> additionalInfo;
 }

@@ -5,6 +5,7 @@ import com.zqqiliyc.biz.core.repository.Dao;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
 import org.mybatis.spring.annotation.MapperScan;
+import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.mybatis.spring.boot.autoconfigure.SqlSessionFactoryBeanCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,15 @@ public class MyBatisConfig {
         return factoryBean -> {
             PageInterceptor pageInterceptor = new PageInterceptor();
             factoryBean.addPlugins(pageInterceptor);
+        };
+    }
+
+
+    @Bean
+    ConfigurationCustomizer configurationCustomizer() {
+        return configuration -> {
+            configuration.getTypeHandlerRegistry()
+                    .register(PostgreSQLJsonTypeHandler.class);
         };
     }
 }
