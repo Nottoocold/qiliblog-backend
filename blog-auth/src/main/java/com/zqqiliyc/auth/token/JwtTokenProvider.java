@@ -13,6 +13,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.zqqiliyc.biz.core.entity.SysToken;
 import com.zqqiliyc.biz.core.service.ISysTokenService;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
+import com.zqqiliyc.framework.web.enums.TokenStyle;
 import com.zqqiliyc.framework.web.json.JsonHelper;
 import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
@@ -35,7 +36,6 @@ import java.util.function.Supplier;
 @Component
 @ConditionalOnProperty(prefix = "qiliblog.token", name = "style", havingValue = "JWT")
 public class JwtTokenProvider extends AbstractTokenProvider {
-    private static final String JWT_TOKEN_STYLE = "JWT";
     @Resource
     private TokenProperties tokenProperties;
     @Resource
@@ -83,7 +83,7 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         TokenBean tokenBean = new TokenBean();
         tokenBean.setAccessToken(accessToken);
         tokenBean.setRefreshToken(refreshToken);
-        tokenBean.setTokenStyle(JWT_TOKEN_STYLE);
+        tokenBean.setTokenStyle(TokenStyle.JWT);
         tokenBean.setUserId(userId);
         tokenBean.setIssuedAt(DateUtil.toLocalDateTime(issuedAt));
         tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt_ak));

@@ -1,5 +1,6 @@
 package com.zqqiliyc.biz.core.entity;
 
+import com.zqqiliyc.framework.web.enums.TokenStyle;
 import io.mybatis.provider.Entity;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class SysToken extends BaseEntity {
     private String refreshToken;
 
     @Entity.Column(value = "token_style", updatable = false, remark = "令牌风格,当前支持JWT，UUID")
-    private String tokenStyle;
+    private TokenStyle tokenStyle;
 
     @Entity.Column(value = "user_id", updatable = false, remark = "令牌关联的用户ID")
     private Long userId;

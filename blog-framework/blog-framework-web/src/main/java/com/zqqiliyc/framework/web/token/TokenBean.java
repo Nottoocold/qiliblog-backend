@@ -1,5 +1,6 @@
 package com.zqqiliyc.framework.web.token;
 
+import com.zqqiliyc.framework.web.enums.TokenStyle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,7 @@ public class TokenBean {
     /**
      * 令牌样式-JWT
      */
-    private String tokenStyle;
+    private TokenStyle tokenStyle;
     /**
      * 用户ID
      */

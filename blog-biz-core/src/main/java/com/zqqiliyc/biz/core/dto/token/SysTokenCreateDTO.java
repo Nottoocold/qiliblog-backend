@@ -3,6 +3,7 @@ package com.zqqiliyc.biz.core.dto.token;
 import cn.hutool.core.bean.BeanUtil;
 import com.zqqiliyc.biz.core.dto.CreateDTO;
 import com.zqqiliyc.biz.core.entity.SysToken;
+import com.zqqiliyc.framework.web.enums.TokenStyle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,7 @@ public class SysTokenCreateDTO implements CreateDTO<SysToken> {
 
     private String refreshToken;
 
-    private String tokenStyle;
+    private TokenStyle tokenStyle;
 
     private Long userId;
 
