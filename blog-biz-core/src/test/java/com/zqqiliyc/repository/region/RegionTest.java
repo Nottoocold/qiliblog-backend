@@ -35,10 +35,10 @@ public class RegionTest {
 
         DataSourceFactory dataSourceFactory = new PooledDataSourceFactory();
         Properties properties = new Properties();
-        properties.setProperty("driver", "com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url", "jdbc:mysql://localhost:3306/qiliblog?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true");
-        properties.setProperty("username", "qiliblog");
-        properties.setProperty("password", "qiliblog001");
+        properties.setProperty("driver", "org.postgresql.Driver");
+        properties.setProperty("url", "jdbc:postgresql://localhost:5432/qiliblog?currentSchema=qiliblog&TimeZone=Asia/Shanghai");
+        properties.setProperty("username", "qiliblog_readwrite");
+        properties.setProperty("password", "qiliblog@1");
         dataSourceFactory.setProperties(properties);
 
         Environment environment = new Environment("development", new JdbcTransactionFactory(), dataSourceFactory.getDataSource());
@@ -77,9 +77,9 @@ public class RegionTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession();
              Connection connection = sqlSession.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.execute("delete from sys_region where id > 0");
-            statement.execute("alter table sys_region auto_increment = 1");
-            statement.execute("analyze table sys_region");
+            statement.execute("DELETE FROM sys_region WHERE id > 0");
+            statement.execute("SELECT setval('sys_region_id_seq', (SELECT COALESCE(MAX(id), 0) + 1 FROM sys_region), false)");
+            statement.execute("analyze sys_region");
         }
     }
 
