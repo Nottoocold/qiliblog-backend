@@ -13,12 +13,11 @@
     <description>Blog backend parent module</description>
 
     <modules>
-        <module>blog-zpub</module>
-        <module>blog-auth</module>
+        <module>blog-module-publish</module>
+        <module>blog-module-auth</module>
         <module>blog-framework</module>
-        <module>blog-api-admin</module>
-        <module>blog-api-public</module>
-        <module>blog-biz-core</module>
+        <module>blog-module-biz</module>
+        <module>blog-module-api</module>
     </modules>
 
     <properties>
@@ -36,6 +35,7 @@
         <sqlite.version>3.49.1.0</sqlite.version>
         <!-- jose(Javascript Object Signing and Encryption) -->
         <jose.version>10.5</jose.version>
+        <tinypinyin.version>2.0.3.RELEASE</tinypinyin.version>
     </properties>
 
     <dependencyManagement>
@@ -71,31 +71,25 @@
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-biz-core</artifactId>
+                <artifactId>blog-module-biz</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-api-admin</artifactId>
+                <artifactId>blog-module-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-api-public</artifactId>
+                <artifactId>blog-module-auth</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-auth</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-zpub</artifactId>
+                <artifactId>blog-module-publish</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -156,6 +150,12 @@
                 <version>${hutool.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.biezhi</groupId>
+                <artifactId>TinyPinyin</artifactId>
+                <version>${tinypinyin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

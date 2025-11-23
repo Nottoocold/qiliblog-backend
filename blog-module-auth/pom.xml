@@ -5,32 +5,26 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.zqqiliyc</groupId>
-        <artifactId>blog-framework</artifactId>
+        <artifactId>qiliblog-backend</artifactId>
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>blog-framework-common</artifactId>
+    <artifactId>blog-module-auth</artifactId>
+    <description>auth认证模块</description>
 
     <dependencies>
-        <!-- Lombok -->
+        <dependency>
+            <groupId>com.zqqiliyc</groupId>
+            <artifactId>blog-module-biz</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
-        <!-- hutool tools -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.biezhi</groupId>
-            <artifactId>TinyPinyin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

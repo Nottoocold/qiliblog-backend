@@ -1,0 +1,97 @@
+spring:
+  application:
+    name: qiliblog-backend
+  profiles:
+    active: dev
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
+  mvc:
+    servlet:
+      load-on-startup: 1
+  aop:
+    auto: true # 自动代理 相当于添加了注解@EnableAspectJAutoProxy
+    proxy-target-class: true # 使用cglib代理
+  transaction:
+    rollback-on-commit-failure: true # 在事务commit失败时回滚
+  mail:
+    protocol: smtps
+    host: smtp.163.com
+    port: 465
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  jackson:
+    time-zone: Asia/Shanghai # 时区
+    date-format: yyyy-MM-dd HH:mm:ss # 日期格式
+    default-property-inclusion: non_null # 属性为null时不输出
+    serialization:
+      write-dates-as-timestamps: false # 不使用时间戳
+      fail-on-empty-beans: false # 序列化没有属性的对象时不报错
+    deserialization:
+      fail-on-unknown-properties: false # 反序列化时允许未知属性
+
+
+mybatis:
+  configuration:
+    default-statement-timeout: 10 # 默认超时时间
+    map-underscore-to-camel-case: true # 开启驼峰命名,即从经典数据库列名 A_COLUMN 映射到经典 Java 属性名 aColumn
+    arg-name-based-constructor-auto-mapping: true # 开启构造函数自动映射
+#  mapper-locations: classpath:mapper/*.xml
+
+
+logging:
+  logback:
+    rollingpolicy:
+      max-file-size: 1MB
+  file:
+    name: ./log/qiliblog-backend.log
+server:
+  port: 8080
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+    application-display-name: qiliblog-backend
+    context-path: /
+  error:
+    include-path: never
+    include-stacktrace: never
+    include-message: never
+
+qiliblog:
+  token:
+    style: JWT # token风格
+    secret: QH69T328CqtUnRM+qRaCa6f+x+j04I07GHEmlh2XkJw= # 签名密钥
+    expire: 3600 # 访问令牌过期时间 单位秒 默认1小时
+    refresh-expire: 21600 # 刷新令牌过期时间 单位秒 默认6小时
+    leeway: 300 # 允许的偏差时间-5分钟
+  # 验证码基本配置
+  verification:
+    enabled: false
+    username: qiliblog@xxx.com
+    code-length: 4
+    expiration-seconds: 300
+    template-path: classpath:email/verify.html
+  security:
+    allowed-urls:
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /swagger-resources/**
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /error
+      - /webjars/**
+      - /api/auth/login
+      - /api/auth/logout
+      - /api/auth/refresh
+      - /api/admin/register/**
+      - /api/public/**
+    case-sensitive: true # 鉴权时角色码和权限码是否区分大小写

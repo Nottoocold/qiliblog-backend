@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    username: qiliblog_tester
+    password: qiliblog@1
+    url: jdbc:postgresql://localhost:5432/qiliblog?currentSchema=qiliblog_test&TimeZone=Asia/Shanghai
+    hikari:
+      schema: qiliblog_test
+
+  mail:
+    username:  # 邮箱
+    password:  # 授权码
+  docker:
+    compose:
+      enabled: false
+
+logging:
+  level:
+    com.zqqiliyc: debug
+    io.mybatis: debug
+    web: debug
+    sql: debug
+    org.springframework.transaction: debug
+    org.springframework.security: info
+#    org.springframework.aop: trace
+#    org.springframework.cglib: trace
+mybatis:
+  provider:
+    schema: qiliblog_test
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
