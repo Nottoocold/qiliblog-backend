@@ -60,7 +60,10 @@ public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
                 metaObject.setValue(field, value);
             }
         } catch (BindingException ignored) {
-            log.warn("字段{}不存在", field);
+            if (log.isDebugEnabled()) {
+                String msg = metaObject.getOriginalObject().getClass().getName() + ":" + field + " is not exist";
+                log.warn(msg);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

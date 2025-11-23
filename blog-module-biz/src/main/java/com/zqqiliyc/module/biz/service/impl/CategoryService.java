@@ -14,6 +14,7 @@ import io.mybatis.mapper.fn.Fn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -52,6 +53,7 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
         baseMapper.wrapper()
                 .eq(Category::getId, categoryId)
                 .set(StrUtil.format("{} = {} {} {}", column, column, operator, Math.abs(delta)))
+                .set(Category::getUpdateTime, LocalDateTime.now())
                 .update();
     }
 

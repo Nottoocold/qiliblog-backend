@@ -14,6 +14,7 @@ import io.mybatis.mapper.fn.Fn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -52,6 +53,7 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         baseMapper.wrapper()
                 .eq(Tag::getId, tagId)
                 .set(StrUtil.format("{} = {} {} {}", column, column, operator, Math.abs(delta)))
+                .set(Tag::getUpdateTime, LocalDateTime.now())
                 .update();
     }
 
