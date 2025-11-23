@@ -10,7 +10,7 @@ import com.zqqiliyc.framework.web.security.SecurityUtils;
 import com.zqqiliyc.framework.web.token.TokenBean;
 import com.zqqiliyc.framework.web.token.TokenProvider;
 import com.zqqiliyc.module.auth.bean.AuthResult;
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 import com.zqqiliyc.module.auth.manager.AuthManager;
 import com.zqqiliyc.module.auth.service.IAuthService;
 import com.zqqiliyc.module.auth.strategy.AuthStrategy;
@@ -37,7 +37,7 @@ public class AuthService implements IAuthService {
     private final ISysTokenService sysTokenService;
     private final AuthManager authManager;
 
-    public AuthResult login(LoginDto loginDto) {
+    public AuthResult login(LoginDTO loginDto) {
         AuthStrategy strategy = CollectionUtil.findOne(authStrategies, authStrategy -> authStrategy.support(loginDto.getLoginType()));
         if (null == strategy) {
             throw new ClientException(GlobalErrorDict.UNSUPPORTED_LOGIN_TYPE);

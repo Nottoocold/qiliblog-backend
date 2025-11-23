@@ -1,6 +1,6 @@
 package com.zqqiliyc.module.auth.strategy;
 
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 import com.zqqiliyc.module.auth.enums.LoginType;
 import com.zqqiliyc.module.auth.token.AuthRequestToken;
 import com.zqqiliyc.module.auth.token.UsernameAuthRequestToken;
@@ -22,7 +22,7 @@ public class UsernameAuthStrategy extends AbstractAuthStrategy {
     }
 
     @Override
-    public AuthRequestToken createToken(LoginDto loginDto) {
+    public AuthRequestToken createToken(LoginDTO loginDto) {
         return new UsernameAuthRequestToken(loginDto.getIdentifier(), loginDto.getCredential());
     }
 

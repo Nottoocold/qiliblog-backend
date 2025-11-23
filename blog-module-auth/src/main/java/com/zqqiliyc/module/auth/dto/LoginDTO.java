@@ -14,7 +14,7 @@ import java.util.StringJoiner;
  */
 @Getter
 @Setter
-public class LoginDto {
+public class LoginDTO {
     /**
      * 登录类型
      *
@@ -39,7 +39,7 @@ public class LoginDto {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", LoginDto.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", LoginDTO.class.getSimpleName() + "[", "]")
                 .add("loginType=" + loginType)
                 .add("principal='" + identifier + "'")
                 .toString();

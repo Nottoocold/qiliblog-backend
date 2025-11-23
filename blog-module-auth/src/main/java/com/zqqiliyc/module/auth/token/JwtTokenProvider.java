@@ -56,8 +56,6 @@ public class JwtTokenProvider extends AbstractTokenProvider {
 
         // 走到这里说明刷新令牌合法:
         // 生成新的一对token
-        //Map<String, Object> claims = JsonHelper.fromJson(oldSysToken.getAdditionalInfo(), new TypeReference<>() {
-        //});
         Map<String, Object> claims = oldSysToken.getAdditionalInfo();
         TokenBean tokenBean = generateToken(oldSysToken.getUserId(), claims);
         // 撤销旧的一对token

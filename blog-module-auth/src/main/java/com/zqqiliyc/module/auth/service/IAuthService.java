@@ -2,7 +2,7 @@ package com.zqqiliyc.module.auth.service;
 
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import com.zqqiliyc.module.auth.bean.AuthResult;
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 
 /**
  * @author qili
@@ -16,7 +16,7 @@ public interface IAuthService {
      * @param loginDto 登录信息
      * @return 登录结果
      */
-    AuthResult login(LoginDto loginDto);
+    AuthResult login(LoginDTO loginDto);
 
     /**
      * 登出

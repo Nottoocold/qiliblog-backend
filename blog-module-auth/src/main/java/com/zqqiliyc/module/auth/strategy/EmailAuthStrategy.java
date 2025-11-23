@@ -3,7 +3,7 @@ package com.zqqiliyc.module.auth.strategy;
 import cn.hutool.core.lang.Validator;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 import com.zqqiliyc.module.auth.enums.LoginType;
 import com.zqqiliyc.module.auth.token.AuthRequestToken;
 import com.zqqiliyc.module.auth.token.EmailAuthRequestToken;
@@ -25,7 +25,7 @@ public class EmailAuthStrategy extends AbstractAuthStrategy {
     }
 
     @Override
-    public AuthRequestToken createToken(LoginDto loginDto) {
+    public AuthRequestToken createToken(LoginDTO loginDto) {
         return new EmailAuthRequestToken(loginDto.getIdentifier(), loginDto.getCredential());
     }
 

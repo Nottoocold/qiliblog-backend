@@ -1,7 +1,7 @@
 package com.zqqiliyc.module.auth.strategy;
 
 import com.zqqiliyc.module.auth.bean.AuthResult;
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 import com.zqqiliyc.module.auth.enums.LoginType;
 import com.zqqiliyc.module.auth.token.AuthRequestToken;
 
@@ -26,7 +26,7 @@ public interface AuthStrategy {
      * @param loginDto 登录信息
      * @return 认证请求token
      */
-    AuthRequestToken createToken(LoginDto loginDto);
+    AuthRequestToken createToken(LoginDTO loginDto);
 
     /**
      * 认证

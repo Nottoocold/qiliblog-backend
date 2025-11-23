@@ -6,7 +6,7 @@ import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.controller.BaseController;
 import com.zqqiliyc.framework.web.http.ApiResult;
 import com.zqqiliyc.module.auth.bean.AuthResult;
-import com.zqqiliyc.module.auth.dto.LoginDto;
+import com.zqqiliyc.module.auth.dto.LoginDTO;
 import com.zqqiliyc.module.auth.service.IAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AuthController extends BaseController {
     private final IAuthService authService;
 
     @PostMapping("/login")
-    public ApiResult<AuthResult> login(@Valid @RequestBody LoginDto loginDto) {
+    public ApiResult<AuthResult> login(@Valid @RequestBody LoginDTO loginDto) {
         return ApiResult.success(authService.login(loginDto));
     }
 
