@@ -17,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,16 +48,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @PostConstruct
     public void init() {
-        List<RequestMatcher> matchers = new ArrayList<>();
-        for (String allowedUrl : securityProperties.getAllowedUrls()) {
-            matchers.add(new AntPathRequestMatcher(allowedUrl));
-        }
-        permitMatcher = new OrRequestMatcher(matchers);
+        List<RequestMatcher> matcherList = securityProperties.getAllowedUrls()
+                .stream().map(pp -> (RequestMatcher) PathPatternRequestMatcher.withDefaults().matcher(pp)).toList();
+        this.permitMatcher = new OrRequestMatcher(matcherList);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (isPermitUrl(request)) {
+        if (permitMatcher.matches(request)) {
             // url在白名单中，放行
             if (log.isDebugEnabled()) {
                 log.info("is permit url: {}", request.getRequestURI());
@@ -101,9 +98,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return token.substring(7);
         }
         return token;
-    }
-
-    private boolean isPermitUrl(HttpServletRequest request) {
-        return permitMatcher.matches(request);
     }
 }

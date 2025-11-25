@@ -7,7 +7,6 @@ import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.strategy.VerificationCacheService;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.index.qual.NonNegative;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +43,7 @@ public class AppConfig {
                     }
 
                     @Override
-                    public long expireAfterUpdate(Object key, Object value, long currentTime, @NonNegative long currentDuration) {
+                    public long expireAfterUpdate(Object key, Object value, long currentTime, long currentDuration) {
                         // 验证码更新后重置有效期
                         // 即每次重新发生验证码时都应该重置有效期，无论新验证码与旧验证码是否相同
                         if (log.isDebugEnabled()) {
@@ -54,7 +53,7 @@ public class AppConfig {
                     }
 
                     @Override
-                    public long expireAfterRead(Object key, Object value, long currentTime, @NonNegative long currentDuration) {
+                    public long expireAfterRead(Object key, Object value, long currentTime, long currentDuration) {
                         // 验证码读取后有效期不变
                         return currentDuration;
                     }
