@@ -2,9 +2,9 @@ spring:
   datasource:
     username: qiliblog_readwrite
     password: qiliblog@1
-    url: jdbc:postgresql://localhost:5432/qiliblog?currentSchema=qiliblog&TimeZone=Asia/Shanghai
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:qiliblog}?currentSchema=${DB_SCHEMA:qiliblog}&TimeZone=Asia/Shanghai
     hikari:
-      schema: qiliblog
+      schema: ${DB_SCHEMA:qiliblog}
 
   mail:
     username:  # 邮箱
@@ -21,10 +21,8 @@ logging:
     sql: debug
     org.springframework.transaction: debug
     org.springframework.security: info
-#    org.springframework.aop: trace
-#    org.springframework.cglib: trace
 mybatis:
   provider:
-    schema: qiliblog
+    schema: ${DB_SCHEMA:qiliblog}
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

@@ -16,9 +16,6 @@ logging:
     web: info
     root: warn
     sql: error
-  logback:
-    rollingpolicy:
-      clean-history-on-start: true
 
 mybatis:
   provider:

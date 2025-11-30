@@ -48,9 +48,6 @@ mybatis:
 
 
 logging:
-  logback:
-    rollingpolicy:
-      max-file-size: 1MB
   file:
     name: ./log/qiliblog-backend.log
 server:
