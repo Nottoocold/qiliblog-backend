@@ -1,6 +1,11 @@
 package com.zqqiliyc.framework.web.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
  * @author qili
@@ -9,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedisConfig extends BaseJacksonConfig {
 
-    /*@Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
@@ -18,12 +23,10 @@ public class RedisConfig extends BaseJacksonConfig {
         template.setKeySerializer(RedisSerializer.string());
         template.setHashKeySerializer(RedisSerializer.string());
 
-        // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value
-        Jackson2JsonRedisSerializer<Object> jsonSerializer = createJacksonSerializerForCacheUse(objectMapper);
-
-        template.setValueSerializer(jsonSerializer);
-        template.setHashValueSerializer(jsonSerializer);
-        template.afterPropertiesSet();
+        GenericJackson2JsonRedisSerializer jsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+        jsonRedisSerializer.configure(mapper -> mapper.registerModules(javaTimeModule()));
+        template.setValueSerializer(jsonRedisSerializer);
+        template.setHashValueSerializer(jsonRedisSerializer);
         return template;
-    }*/
+    }
 }
