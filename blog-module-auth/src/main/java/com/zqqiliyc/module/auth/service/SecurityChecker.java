@@ -1,6 +1,8 @@
 package com.zqqiliyc.module.auth.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
 import com.zqqiliyc.framework.web.config.prop.SecurityProperties;
 import com.zqqiliyc.framework.web.security.SecurityUtils;
@@ -47,7 +49,7 @@ public class SecurityChecker {
     public boolean hasPermissions(Set<String> permissions, boolean and) {
         check(permissions, "@PreAuthorize hasPermissions() must have at least one permission");
         // 当前用户持有的权限信息
-        String[] userHolders = getUserInfo().getPermissions();
+        Set<String> userHolders = getUserInfo().getPermissions();
         return assertAuthorized(permissions, userHolders, and);
     }
 
@@ -71,11 +73,11 @@ public class SecurityChecker {
     public boolean hasRoles(Set<String> roles, boolean and) {
         check(roles, "@PreAuthorize hasRoles() must have at least one role");
         // 当前用户持有的角色信息
-        String[] userHolders = getUserInfo().getRoles();
+        Set<String> userHolders = getUserInfo().getRoles();
         return assertAuthorized(roles, userHolders, and);
     }
 
-    private boolean assertAuthorized(Set<String> needs, String[] haves, boolean and) {
+    private boolean assertAuthorized(Set<String> needs, Set<String> haves, boolean and) {
         if (!securityProperties.getAuthorize()) {
             // 不进行权限校验
             return true;
@@ -96,12 +98,16 @@ public class SecurityChecker {
         }
     }
 
-    private boolean contains(String[] array, String value) {
+    private boolean contains(Set<String> array, String value) {
         if (securityProperties.getCaseSensitive()) {
-            return ArrayUtil.contains(array, value);
-        } else {
-            return ArrayUtil.containsIgnoreCase(array, value);
+            return CollUtil.contains(array, value);
         }
+        for (String str : array) {
+            if (StrUtil.containsIgnoreCase(str, value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void check(Set<String> set, String msg) {

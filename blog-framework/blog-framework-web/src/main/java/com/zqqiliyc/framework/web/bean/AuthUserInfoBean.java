@@ -1,6 +1,7 @@
 package com.zqqiliyc.framework.web.bean;
 
-import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,15 +39,15 @@ public class AuthUserInfoBean implements UserDetails {
     /**
      * 用户角色
      */
-    private String[] roles;
+    private Set<String> roles;
     /**
      * 用户权限
      */
-    private String[] permissions;
+    private Set<String> permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (permissions == null || permissions.length == 0) {
+        if (CollUtil.isEmpty(permissions)) {
             return Collections.emptySet();
         }
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -68,8 +69,47 @@ public class AuthUserInfoBean implements UserDetails {
                 .add("username='" + username + "'")
                 .add("nickname='" + nickname + "'")
                 .add("avatar='" + avatar + "'")
-                .add("role size=" + ArrayUtil.length(roles))
-                .add("permission size=" + ArrayUtil.length(permissions))
+                .add("role size=" + CollUtil.size(roles))
+                .add("permission size=" + CollUtil.size(permissions))
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthUserInfoBean that = (AuthUserInfoBean) o;
+        return getId() == that.getId()
+                && Objects.equals(getUsername(), that.getUsername())
+                && Objects.equals(getNickname(), that.getNickname())
+                && Objects.equals(getAvatar(), that.getAvatar())
+                && Objects.equals(getRoles(), that.getRoles())
+                && Objects.equals(getPermissions(), that.getPermissions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getNickname(), getAvatar(), getRoles(), getPermissions());
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", String.valueOf(id));
+        map.put("username", username);
+        map.put("nickname", nickname);
+        map.put("avatar", avatar);
+        map.put("roles", CollUtil.join(roles, ","));
+        map.put("permissions", CollUtil.join(permissions, ","));
+        return map;
+    }
+
+    public static AuthUserInfoBean fromMap(Map<Object, Object> map) {
+        AuthUserInfoBean bean = new AuthUserInfoBean();
+        bean.setId(MapUtil.getLong(map, "id"));
+        bean.setUsername(MapUtil.getStr(map, "username"));
+        bean.setNickname(MapUtil.getStr(map, "nickname"));
+        bean.setAvatar(MapUtil.getStr(map, "avatar"));
+        bean.setRoles(CollUtil.newHashSet(MapUtil.getStr(map, "roles").split("[\\s,]+")));
+        bean.setPermissions(CollUtil.newHashSet(MapUtil.getStr(map, "permissions").split("[\\s,]+")));
+        return bean;
     }
 }

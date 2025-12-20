@@ -1,13 +1,10 @@
 package com.zqqiliyc.redis;
 
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.zqqiliyc.BaseTestApp;
-import lombok.Getter;
-import lombok.Setter;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -21,6 +18,17 @@ import java.util.*;
 public class RedisTemplateTest extends BaseTestApp {
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
+
+    @BeforeEach
+    void setup() {
+        redisTemplate.delete("test");
+    }
+
+    @AfterEach
+    void tearDown() {
+        redisTemplate.delete("test");
+        Assertions.assertNull(redisTemplate.opsForValue().get("test"));
+    }
 
     @Test
     @Order(1)
@@ -45,8 +53,6 @@ public class RedisTemplateTest extends BaseTestApp {
         redisTemplate.opsForValue().set("test", nestedObject);
         storeValue = redisTemplate.opsForValue().get("test");
         Assertions.assertEquals(nestedObject, storeValue);
-        redisTemplate.delete("test");
-        Assertions.assertNull(redisTemplate.opsForValue().get("test"));
     }
 
     @Test
@@ -61,10 +67,50 @@ public class RedisTemplateTest extends BaseTestApp {
         map.put("key2", getTestObject());
         map.put("key3", false);
         map.put("key4", LocalDateTimeUtil.format(LocalDateTime.now(), "yyyy-MM-dd HH:mm:ss"));
-        map.put("key5", DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("key5", new Date());
         redisTemplate.opsForHash().putAll("test", map);
         Map<Object, Object> storeValue = redisTemplate.opsForHash().entries("test");
-        Assertions.assertEquals(map, storeValue);
+        Assertions.assertEquals(map.size(), storeValue.size());
+        map.forEach((k, v) -> {
+            if (v instanceof Date) {
+                // For Date objects, compare the time values instead of the objects themselves
+                Assertions.assertEquals(((Date) v).getTime(), ((Date) storeValue.get(k)).getTime());
+            } else {
+                Assertions.assertEquals(v, storeValue.get(k));
+            }
+        });
+    }
+
+    @Test
+    @Order(4)
+    public void testList() {
+        for (int i = 0; i < 10; i++) {
+            redisTemplate.opsForList().leftPush("test", "element" + i);
+        }
+        List<Object> storeValue = redisTemplate.opsForList().range("test", 0, -1);
+        Assertions.assertNotNull(storeValue);
+        Assertions.assertEquals(10, storeValue.size());
+    }
+
+    @Test
+    @Order(5)
+    public void testSessionUser() {
+        AuthUserInfoBean authUserInfoBean = new AuthUserInfoBean();
+        authUserInfoBean.setId(Long.MAX_VALUE);
+        authUserInfoBean.setUsername("jack chen");
+        authUserInfoBean.setNickname("jack chen");
+        authUserInfoBean.setAvatar("https://avatars.githubusercontent.com/u/10656201?v=4");
+        authUserInfoBean.setRoles(CollUtil.newHashSet("ROLE_USER"));
+        authUserInfoBean.setPermissions(CollUtil.newHashSet("WRITE", "READ", "DELETE"));
+        redisTemplate.opsForValue().set("authUser:" + authUserInfoBean.getId(), authUserInfoBean);
+        AuthUserInfoBean storeValue = (AuthUserInfoBean) redisTemplate.opsForValue().get("authUser:" + authUserInfoBean.getId());
+        Assertions.assertNotNull(storeValue);
+        Assertions.assertEquals(authUserInfoBean, storeValue);
+
+        redisTemplate.opsForHash().putAll("sessionUser:" + authUserInfoBean.getId(), authUserInfoBean.toMap());
+        Map<Object, Object> storeValueMap = redisTemplate.opsForHash().entries("sessionUser:" + authUserInfoBean.getId());
+        Assertions.assertNotNull(storeValueMap);
+        Assertions.assertEquals(authUserInfoBean, AuthUserInfoBean.fromMap(storeValueMap));
     }
 
     private TestObject getTestObject() {
@@ -82,70 +128,4 @@ public class RedisTemplateTest extends BaseTestApp {
         nestedObject.putNested("nested5", 18);
         return nestedObject;
      }
-}
-
-@Getter
-@Setter
-class TestObject {
-    private Long id;
-    private String name;
-    private Integer age;
-
-    public TestObject() {
-    }
-
-    public TestObject(Long id, String name, Integer age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TestObject that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getAge(), that.getAge());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getAge());
-    }
-}
-
-@Getter
-@Setter
-class TestNestedObject {
-    private Long id;
-    private String name;
-    private Integer age;
-    private Date date;
-    private LocalDateTime dateTime;
-    private Map<String, Object> nested;
-
-    public TestNestedObject() {
-    }
-
-    public TestNestedObject(Long id, String name, Integer age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
-    public void putNested(String key, Object value) {
-        if (nested == null) {
-            nested = new LinkedHashMap<>();
-        }
-        nested.put(key, value);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof TestNestedObject that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getAge(), that.getAge());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getAge());
-    }
 }

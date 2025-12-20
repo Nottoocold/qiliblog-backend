@@ -91,8 +91,8 @@ public class AuthManager implements UserDetailsService {
         authUserInfoBean.setUsername(sysUser.getUsername());
         authUserInfoBean.setNickname(sysUser.getNickname());
         authUserInfoBean.setAvatar(sysUser.getAvatar());
-        authUserInfoBean.setRoles(getRoles(sysUser.getId()).toArray(new String[0]));
-        authUserInfoBean.setPermissions(getPermissions(sysUser.getId()).toArray(new String[0]));
+        authUserInfoBean.setRoles(getRoles(sysUser.getId()));
+        authUserInfoBean.setPermissions(getPermissions(sysUser.getId()));
         return authUserInfoBean;
     }
 
