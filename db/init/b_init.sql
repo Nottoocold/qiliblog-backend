@@ -3,6 +3,8 @@
 -- 1. 创建数据库并切换
 CREATE DATABASE "qiliblog";
 -- 切换到数据库qiliblog, 或使用高权限账号重新连接到该数据库
+\c
+qiliblog;
 
 -- 2. 创建资源管理账号和相关的角色，并授权
 -- qiliblog_owner 是项目管理账号,此处密码仅为示例，请注意修改。
