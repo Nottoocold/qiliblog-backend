@@ -3,12 +3,12 @@
 # ============================
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 
-WORKDIR /workspace
+WORKDIR /build
 
-# ---- 1) 先复制所有 pom.xml 以利用 Docker 缓存（Docker 官方最佳实践） ----
+# ---- 1) 先复制所有 pom.xml 以利用 Docker 缓存 ----
 COPY pom.xml .
 
-# 复制一级模块的 pom.xml
+# 复制各个模块的 pom.xml
 COPY blog-framework/pom.xml ./blog-framework/pom.xml
 COPY blog-framework/blog-framework-common/pom.xml ./blog-framework/blog-framework-common/pom.xml
 COPY blog-framework/blog-framework-web/pom.xml ./blog-framework/blog-framework-web/pom.xml
@@ -35,15 +35,20 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-# 复制最终 JAR
-COPY --from=builder /workspace/blog-module-publish/target/*.jar app.jar
+RUN groupadd -r -g 1001 qiliblog && \
+    useradd -r -u 1001 -g qiliblog qiliblog
 
-# 新建用户组qiliblog和用户qiliblog
-RUN groupadd -r qiliblog && useradd -r -g qiliblog qiliblog
+# 复制最终 JAR
+COPY --from=builder --chown=qiliblog:qiliblog /build/blog-module-publish/target/*.jar ./
+COPY entrypoint.sh ./
 
 # 修改权限
-RUN chown -R qiliblog:qiliblog /app
+RUN chown -R qiliblog:qiliblog /app && \
+    chmod +x entrypoint.sh
+
+EXPOSE 8080
 
 USER qiliblog
-EXPOSE 8080
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75.0", "-jar", "/app/app.jar"]
+
+# 设置入口点
+ENTRYPOINT ["/app/entrypoint.sh"]

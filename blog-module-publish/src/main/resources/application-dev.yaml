@@ -20,7 +20,7 @@ logging:
     web: debug
     sql: debug
     org.springframework.transaction: debug
-    org.springframework.security: info
+    org.springframework.security: trace
 mybatis:
   provider:
     schema: ${DB_SCHEMA:qiliblog}
