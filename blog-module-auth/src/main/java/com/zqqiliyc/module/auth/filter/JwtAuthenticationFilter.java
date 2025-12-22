@@ -56,12 +56,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (permitMatcher.matches(request)) {
-            // url在白名单中，放行
+            // url在白名单中
             if (log.isDebugEnabled()) {
                 log.info("is permit url: {}", request.getRequestURI());
             }
-            filterChain.doFilter(request, response);
-            return;
+            //filterChain.doFilter(request, response);
+            //return;
         }
         String accessToken = getToken(request);
         if (StrUtil.isNotBlank(accessToken) && tokenProvider.verifyAccessToken(accessToken)) {
