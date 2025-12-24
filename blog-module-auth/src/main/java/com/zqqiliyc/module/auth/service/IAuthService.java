@@ -1,8 +1,8 @@
 package com.zqqiliyc.module.auth.service;
 
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
-import com.zqqiliyc.module.auth.bean.AuthResult;
-import com.zqqiliyc.module.auth.dto.LoginDTO;
+import com.zqqiliyc.module.auth.AuthResult;
+import com.zqqiliyc.module.auth.LoginDTO;
 
 /**
  * @author qili

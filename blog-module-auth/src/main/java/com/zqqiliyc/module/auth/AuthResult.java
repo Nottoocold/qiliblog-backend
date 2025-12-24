@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.auth.bean;
+package com.zqqiliyc.module.auth;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.auth.manager;
+package com.zqqiliyc.module.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;

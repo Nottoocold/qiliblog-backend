@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.auth.enums;
+package com.zqqiliyc.module.auth;
 
 import com.zqqiliyc.framework.web.constant.DictItem;
 import lombok.Getter;

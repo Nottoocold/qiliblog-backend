@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.auth.token;
+package com.zqqiliyc.module.auth;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;

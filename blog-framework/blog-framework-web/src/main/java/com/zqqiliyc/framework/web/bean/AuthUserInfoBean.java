@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ import java.util.*;
 @Setter
 @JsonIgnoreProperties(value = {"authorities", "password",
         "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
-public class AuthUserInfoBean implements UserDetails {
+public class AuthUserInfoBean implements UserDetails, CredentialsContainer {
     /**
      * 用户id
      */
@@ -28,6 +29,10 @@ public class AuthUserInfoBean implements UserDetails {
      * 用户名
      */
     private String username;
+    /**
+     * 密码
+     */
+    private String password;
     /**
      * 用户昵称
      */
@@ -59,7 +64,7 @@ public class AuthUserInfoBean implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
@@ -111,5 +116,10 @@ public class AuthUserInfoBean implements UserDetails {
         bean.setRoles(CollUtil.newHashSet(MapUtil.getStr(map, "roles").split("[\\s,]+")));
         bean.setPermissions(CollUtil.newHashSet(MapUtil.getStr(map, "permissions").split("[\\s,]+")));
         return bean;
+    }
+
+    @Override
+    public void eraseCredentials() {
+        setPassword("");
     }
 }

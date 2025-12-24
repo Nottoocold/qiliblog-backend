@@ -1,7 +1,6 @@
-package com.zqqiliyc.module.auth.dto;
+package com.zqqiliyc.module.auth;
 
 import com.zqqiliyc.framework.web.validator.DictValue;
-import com.zqqiliyc.module.auth.enums.LoginType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.auth.service;
+package com.zqqiliyc.module.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
