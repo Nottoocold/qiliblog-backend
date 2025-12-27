@@ -90,12 +90,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <!-- JWT -->
         <dependency>
             <groupId>com.nimbusds</groupId>
