@@ -1,6 +1,6 @@
 package com.zqqiliyc.module.biz.repository;
 
-import com.zqqiliyc.module.biz.entity.SysUser;
+import com.zqqiliyc.framework.web.domain.entity.SysUser;
 import com.zqqiliyc.module.svc.system.mapper.SysUserMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;

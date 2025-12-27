@@ -1,7 +1,7 @@
 package com.zqqiliyc.module.biz.repository;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.module.biz.entity.SysUser;
+import com.zqqiliyc.framework.web.domain.entity.SysUser;
 import com.zqqiliyc.module.svc.system.mapper.SysUserMapper;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
