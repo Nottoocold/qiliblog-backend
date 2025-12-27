@@ -9,11 +9,10 @@ spring:
   mail:
     username:  # 邮箱
     password:  # 授权码
-  docker:
-    compose:
-      enabled: false
 
 logging:
+  file:
+    name: ./log/${spring.application.name:qiliblog-server}.log
   level:
     com.zqqiliyc: debug
     io.mybatis: debug

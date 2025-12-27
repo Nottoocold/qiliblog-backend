@@ -11,6 +11,8 @@ spring:
     password:  # 授权码
 
 logging:
+  file:
+    name: /var/log/${spring.application.name}/${spring.application.name}.log
   level:
     com.zqqiliyc: info
     web: info
