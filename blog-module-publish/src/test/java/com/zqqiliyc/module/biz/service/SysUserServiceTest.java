@@ -1,9 +1,10 @@
 package com.zqqiliyc.module.biz.service;
 
 import cn.hutool.core.util.RandomUtil;
-import com.zqqiliyc.module.biz.dto.user.SysUserCreateDTO;
-import com.zqqiliyc.module.biz.dto.user.SysUserQueryDTO;
 import com.zqqiliyc.module.biz.entity.SysUser;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserCreateDTO;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserQueryDTO;
+import com.zqqiliyc.module.svc.system.service.ISysUserService;
 import io.mybatis.mapper.example.Example;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

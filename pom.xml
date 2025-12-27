@@ -16,7 +16,7 @@
         <module>blog-module-publish</module>
         <module>blog-module-auth</module>
         <module>blog-framework</module>
-        <module>blog-module-biz</module>
+        <module>blog-module-service</module>
         <module>blog-module-api</module>
     </modules>
 
@@ -70,7 +70,13 @@
 
             <dependency>
                 <groupId>com.zqqiliyc</groupId>
-                <artifactId>blog-module-biz</artifactId>
+                <artifactId>blog-module-service-system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.zqqiliyc</groupId>
+                <artifactId>blog-module-service-main</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

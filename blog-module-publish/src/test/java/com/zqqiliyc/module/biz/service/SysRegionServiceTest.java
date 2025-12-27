@@ -1,6 +1,7 @@
 package com.zqqiliyc.module.biz.service;
 
-import com.zqqiliyc.module.biz.entity.SysRegion;
+import com.zqqiliyc.module.svc.system.entity.SysRegion;
+import com.zqqiliyc.module.svc.system.service.IRegionService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

@@ -2,9 +2,9 @@ package com.zqqiliyc.module.auth.provider;
 
 import cn.hutool.core.convert.Convert;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
+import com.zqqiliyc.framework.web.domain.entity.SysUser;
 import com.zqqiliyc.module.auth.AuthManager;
 import com.zqqiliyc.module.auth.token.PasswordAuthenticationToken;
-import com.zqqiliyc.module.biz.entity.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

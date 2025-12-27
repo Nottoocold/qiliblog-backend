@@ -2,7 +2,7 @@ package com.zqqiliyc.module.api.admin.service;
 
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.module.api.admin.RegisterResult;
-import com.zqqiliyc.module.biz.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserRegisterDto;
 
 /**
  * @author hallo

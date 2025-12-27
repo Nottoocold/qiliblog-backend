@@ -2,7 +2,7 @@ package com.zqqiliyc.module.api.admin.strategy;
 
 import com.zqqiliyc.module.api.admin.RegisterResult;
 import com.zqqiliyc.module.api.admin.enums.RegistrationType;
-import com.zqqiliyc.module.biz.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserRegisterDto;
 
 /**
  * 注册策略接口。

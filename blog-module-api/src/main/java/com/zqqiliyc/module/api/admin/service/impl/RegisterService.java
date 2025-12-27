@@ -5,7 +5,7 @@ import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.module.api.admin.service.IRegisterService;
 import com.zqqiliyc.module.api.admin.strategy.RegistrationStrategy;
-import com.zqqiliyc.module.biz.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserRegisterDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

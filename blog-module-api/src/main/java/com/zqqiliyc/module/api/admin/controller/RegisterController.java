@@ -5,7 +5,7 @@ import com.zqqiliyc.framework.web.http.ApiResult;
 import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import com.zqqiliyc.module.api.admin.dto.EmailDto;
 import com.zqqiliyc.module.api.admin.service.IRegisterService;
-import com.zqqiliyc.module.biz.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.module.svc.system.dto.user.SysUserRegisterDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

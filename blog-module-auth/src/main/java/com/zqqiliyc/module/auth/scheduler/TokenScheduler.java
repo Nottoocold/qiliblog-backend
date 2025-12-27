@@ -1,6 +1,6 @@
 package com.zqqiliyc.module.auth.scheduler;
 
-import com.zqqiliyc.module.biz.service.ISysTokenService;
+import com.zqqiliyc.module.svc.system.service.ISysTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

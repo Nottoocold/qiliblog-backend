@@ -20,7 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.zqqiliyc</groupId>
-            <artifactId>blog-module-biz</artifactId>
+            <artifactId>blog-module-service-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zqqiliyc</groupId>
+            <artifactId>blog-module-service-main</artifactId>
         </dependency>
         <!-- Web -->
         <dependency>
