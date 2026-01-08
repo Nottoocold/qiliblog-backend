@@ -11,9 +11,13 @@ import com.zqqiliyc.framework.web.domain.dto.CreateDTO;
 import com.zqqiliyc.framework.web.domain.dto.QueryDTO;
 import com.zqqiliyc.framework.web.domain.dto.UpdateDTO;
 import com.zqqiliyc.framework.web.domain.entity.BaseEntity;
+import com.zqqiliyc.framework.web.domain.entity.Entity;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.event.EntityCreateEvent;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
+import com.zqqiliyc.framework.web.event.EntityUpdateEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
+import com.zqqiliyc.framework.web.json.JsonHelper;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
@@ -105,6 +109,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         beforeCreate(entity);
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
         afterCreate(entity);
+        SpringUtils.publishEvent(new EntityCreateEvent<>(this, entity));
         return entity;
     }
 
@@ -112,10 +117,12 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Override
     public T update(UpdateDTO<T> dto) {
         T entity = findById(dto.getId());
+        Entity old = JsonHelper.fromJson(JsonHelper.toJson(entity), entity.getClass());
         dto.fillEntity(entity);
         beforeUpdate(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         afterUpdate(entity);
+        SpringUtils.publishEvent(new EntityUpdateEvent<>(this, entity, old));
         return entity;
     }
 
