@@ -125,6 +125,36 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         relArticleTagService.deleteByArticleId(id);
     }
 
+    @Override
+    protected void beforeCreate(Article entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(Article entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(Article entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(Article entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(Article entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(Article entity) {
+
+    }
+
     /**
      * 生成唯一的 slug 标识
      * <p>

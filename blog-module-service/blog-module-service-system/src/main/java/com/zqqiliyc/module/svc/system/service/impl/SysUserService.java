@@ -57,4 +57,34 @@ public class SysUserService extends AbstractDeleteHardService<SysUser, Long, Sys
         }
         return wrapper().eq(SysUser::getPhone, phone).one().orElse(null);
     }
+
+    @Override
+    protected void beforeCreate(SysUser entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysUser entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysUser entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysUser entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysUser entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysUser entity) {
+
+    }
 }

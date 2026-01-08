@@ -2,8 +2,6 @@ package com.zqqiliyc.module.svc.main.service.impl;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.framework.web.domain.dto.CreateDTO;
-import com.zqqiliyc.framework.web.domain.dto.UpdateDTO;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.service.AbstractBaseService;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * @author qili
@@ -26,23 +23,37 @@ import java.util.Map;
 public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implements ITagService {
 
     @Override
-    public Tag create(CreateDTO<Tag> dto) {
-        Tag entity = dto.toEntity();
-        validateBeforeCreateWithDB(Map.of(Tag::getName, entity.getName()), "标签名称已存在");
-        validateBeforeCreateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在");
-        Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
-        return entity;
+    protected void beforeCreate(Tag entity) {
+        if (wrapper().eq(Tag::getName, entity.getName()).one().isPresent()) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "标签名称已存在");
+        }
+        if (wrapper().eq(Tag::getSlug, entity.getSlug()).one().isPresent()) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "标签 URL 友好标识符已存在");
+        }
     }
 
     @Override
-    public Tag update(UpdateDTO<Tag> dto) {
-        Tag entity = findById(dto.getId());
-        dto.fillEntity(entity);
-        Long[] excludeIds = {entity.getId()};
-        validateBeforeUpdateWithDB(Map.of(Tag::getName, entity.getName()), "标签名称已存在", excludeIds);
-        validateBeforeUpdateWithDB(Map.of(Tag::getSlug, entity.getSlug()), "标签 URL 友好标识符已存在", excludeIds);
-        Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
-        return entity;
+    protected void afterCreate(Tag entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(Tag entity) {
+        if (wrapper().eq(Tag::getName, entity.getName())
+                .ne(Tag::getId, entity.getId())
+                .one().isPresent()) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "标签名称已存在");
+        }
+        if (wrapper().eq(Tag::getSlug, entity.getSlug())
+                .ne(Tag::getId, entity.getId())
+                .one().isPresent()) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "标签 URL 友好标识符已存在");
+        }
+    }
+
+    @Override
+    protected void afterUpdate(Tag entity) {
+
     }
 
     @Override
@@ -60,5 +71,10 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
     @Override
     protected void beforeDelete(Tag tag) {
         Assert.isTrue(tag.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "标签下有文章，无法删除"));
+    }
+
+    @Override
+    protected void afterDelete(Tag entity) {
+
     }
 }

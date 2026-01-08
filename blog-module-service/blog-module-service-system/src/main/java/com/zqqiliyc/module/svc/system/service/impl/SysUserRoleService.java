@@ -44,4 +44,34 @@ public class SysUserRoleService extends AbstractBaseService<SysUserRole, Long, S
         }
         return wrapper().eq(SysUserRole::getUserId, userId).list();
     }
+
+    @Override
+    protected void beforeCreate(SysUserRole entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysUserRole entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysUserRole entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysUserRole entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysUserRole entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysUserRole entity) {
+
+    }
 }

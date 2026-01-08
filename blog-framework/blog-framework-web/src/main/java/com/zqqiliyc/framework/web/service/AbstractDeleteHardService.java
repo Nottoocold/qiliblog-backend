@@ -20,7 +20,11 @@ public abstract class AbstractDeleteHardService<T extends BaseEntityWithDel, I e
 
     @Override
     public int deleteHardById(I id) {
-        return baseMapper.deleteByPrimaryKey(id);
+        T entity = findById(id);
+        beforeDelete(entity);
+        int deleted = baseMapper.deleteByPrimaryKey(id);
+        afterDelete(entity);
+        return deleted;
     }
 
     @SuppressWarnings("unchecked")

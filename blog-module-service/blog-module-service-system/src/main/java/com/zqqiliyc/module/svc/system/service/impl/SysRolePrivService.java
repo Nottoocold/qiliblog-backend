@@ -58,4 +58,34 @@ public class SysRolePrivService extends AbstractBaseService<SysRolePriv, Long, S
         }
         return wrapper().in(SysRolePriv::getRoleId, ids).list();
     }
+
+    @Override
+    protected void beforeCreate(SysRolePriv entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysRolePriv entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysRolePriv entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysRolePriv entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysRolePriv entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysRolePriv entity) {
+
+    }
 }

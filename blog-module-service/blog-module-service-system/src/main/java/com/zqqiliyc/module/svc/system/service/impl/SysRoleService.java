@@ -52,4 +52,34 @@ public class SysRoleService extends AbstractBaseService<SysRole, Long, SysRoleMa
         List<Long> ids = userRoles.stream().map(SysUserRole::getRoleId).toList();
         return findByFieldList(SysRole::getId, ids);
     }
+
+    @Override
+    protected void beforeCreate(SysRole entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysRole entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysRole entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysRole entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysRole entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysRole entity) {
+
+    }
 }

@@ -30,6 +30,36 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
         return SpringUtils.getBean(this.getClass()).saveToCache(super.create(dto));
     }
 
+    @Override
+    protected void beforeCreate(SysToken entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysToken entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysToken entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysToken entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysToken entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysToken entity) {
+
+    }
+
     /**
      * 根据accessToken查询
      *

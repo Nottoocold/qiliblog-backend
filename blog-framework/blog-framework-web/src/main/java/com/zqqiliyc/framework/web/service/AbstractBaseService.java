@@ -102,7 +102,9 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Override
     public T create(CreateDTO<T> dto) {
         T entity = dto.toEntity();
+        beforeCreate(entity);
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
+        afterCreate(entity);
         return entity;
     }
 
@@ -111,7 +113,9 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     public T update(UpdateDTO<T> dto) {
         T entity = findById(dto.getId());
         dto.fillEntity(entity);
+        beforeUpdate(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
+        afterUpdate(entity);
         return entity;
     }
 
@@ -121,8 +125,8 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         T entity = findById(id);
         SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
         beforeDelete(entity);
-        int count = baseMapper.deleteByPrimaryKey(id);
-        Assert.isTrue(count == 1, "delete failed");
+        Assert.isTrue(baseMapper.deleteByPrimaryKey(id) == 1, "delete failed");
+        afterDelete(entity);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -175,6 +179,15 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         }
     }
 
-    protected void beforeDelete(T entity) {
-    }
+    protected abstract void beforeCreate(T entity);
+
+    protected abstract void afterCreate(T entity);
+
+    protected abstract void beforeUpdate(T entity);
+
+    protected abstract void afterUpdate(T entity);
+
+    protected abstract void beforeDelete(T entity);
+
+    protected abstract void afterDelete(T entity);
 }

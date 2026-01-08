@@ -62,4 +62,34 @@ public class SysPermissionService extends AbstractBaseService<SysPermission, Lon
         Set<Long> privIds = sysRolePrivs.stream().map(SysRolePriv::getPrivId).collect(Collectors.toUnmodifiableSet());
         return findByFieldList(SysPermission::getId, privIds);
     }
+
+    @Override
+    protected void beforeCreate(SysPermission entity) {
+
+    }
+
+    @Override
+    protected void afterCreate(SysPermission entity) {
+
+    }
+
+    @Override
+    protected void beforeUpdate(SysPermission entity) {
+
+    }
+
+    @Override
+    protected void afterUpdate(SysPermission entity) {
+
+    }
+
+    @Override
+    protected void beforeDelete(SysPermission entity) {
+
+    }
+
+    @Override
+    protected void afterDelete(SysPermission entity) {
+
+    }
 }
