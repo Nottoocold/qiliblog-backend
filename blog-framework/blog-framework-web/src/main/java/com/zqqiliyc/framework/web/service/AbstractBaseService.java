@@ -7,17 +7,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zqqiliyc.framework.web.bean.PageResult;
-import com.zqqiliyc.framework.web.domain.dto.CreateDTO;
 import com.zqqiliyc.framework.web.domain.dto.QueryDTO;
-import com.zqqiliyc.framework.web.domain.dto.UpdateDTO;
 import com.zqqiliyc.framework.web.domain.entity.BaseEntity;
-import com.zqqiliyc.framework.web.domain.entity.Entity;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityCreateEvent;
 import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.event.EntityUpdateEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.json.JsonHelper;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
@@ -104,8 +100,7 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public T create(CreateDTO<T> dto) {
-        T entity = dto.toEntity();
+    public T create(T entity) {
         beforeCreate(entity);
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
         afterCreate(entity);
@@ -114,15 +109,15 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @SuppressWarnings("unchecked")
     @Override
-    public T update(UpdateDTO<T> dto) {
-        T entity = findById(dto.getId());
-        Entity old = JsonHelper.fromJson(JsonHelper.toJson(entity), entity.getClass());
-        dto.fillEntity(entity);
+    public T update(T entity) {
+        T old = findById((I) entity.getId());
+        EntityUpdateEvent<T> event = new EntityUpdateEvent<>(this, entity, old);
+        SpringUtils.publishEvent(event);
         beforeUpdate(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         afterUpdate(entity);
-        SpringUtils.publishEvent(new EntityUpdateEvent<>(this, entity, old));
         return entity;
     }
 

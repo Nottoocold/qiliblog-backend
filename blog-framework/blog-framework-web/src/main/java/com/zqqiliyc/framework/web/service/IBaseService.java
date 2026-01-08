@@ -34,9 +34,19 @@ public interface IBaseService<T extends BaseEntity, I extends Serializable> {
 
     <F> List<T> findByFieldList(Fn<T, F> field, Collection<F> fieldValueList);
 
-    T create(CreateDTO<T> dto);
+    default T create(CreateDTO<T> dto) {
+        return create(dto.toEntity());
+    }
 
-    T update(UpdateDTO<T> dto);
+    T create(T entity);
+
+    default T update(UpdateDTO<T> dto) {
+        T entity = findById(dto.getId());
+        dto.fillEntity(entity);
+        return update(entity);
+    }
+
+    T update(T entity);
 
     void deleteById(I id);
 
