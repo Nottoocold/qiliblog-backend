@@ -6,7 +6,6 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.event.EntityCreateEvent;
-import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.service.AbstractBaseService;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
@@ -114,17 +113,6 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         return article;
     }
 
-
-    @Override
-    public void deleteById(Long id) {
-        final Article article = findById(id);
-        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, article));
-        int deleted = baseMapper.deleteByPrimaryKey(id);
-        Assert.isTrue(deleted == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "删除文章失败"));
-        categoryService.updateCategoryPostCount(article.getCategoryId(), -1);
-        relArticleTagService.deleteByArticleId(id);
-    }
-
     @Override
     protected void beforeCreate(Article entity) {
 
@@ -152,7 +140,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     protected void afterDelete(Article entity) {
-
+        categoryService.updateCategoryPostCount(entity.getCategoryId(), -1);
+        relArticleTagService.deleteByArticleId(entity.getId());
     }
 
     /**
