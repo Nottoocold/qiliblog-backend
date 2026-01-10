@@ -17,6 +17,7 @@ import com.zqqiliyc.module.svc.main.mapper.ArticleMapper;
 import com.zqqiliyc.module.svc.main.service.IArticleService;
 import com.zqqiliyc.module.svc.main.service.ICategoryService;
 import com.zqqiliyc.module.svc.main.service.IRelArticleTagService;
+import com.zqqiliyc.module.svc.main.service.ITagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ import java.util.List;
 public class ArticleService extends AbstractBaseService<Article, Long, ArticleMapper> implements IArticleService {
     private final IRelArticleTagService relArticleTagService;
     private final ICategoryService categoryService;
+    private final ITagService tagService;
 
     @Override
     public Article findBySlug(String slug) {
@@ -66,9 +68,13 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         // 1. 创建文章
         SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
         Assert.isTrue(baseMapper.insert(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "创建文章失败"));
-        // 2. 保存文章标签
+        // 2. 保存文章标签并更新计数
         List<Long> tagIds = draftSaveDTO.getTagIds();
-        relArticleTagService.save(article.getId(), tagIds);
+        if (tagIds != null && !tagIds.isEmpty()) {
+            relArticleTagService.save(article.getId(), tagIds);
+            // 更新标签文章计数
+            tagIds.forEach(tagId -> tagService.updateTagPostCount(tagId, 1));
+        }
         // 3. 更新分类文章计数
         categoryService.updateCategoryPostCount(article.getCategoryId(), 1);
         return article;
@@ -111,6 +117,38 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         }
 
         return article;
+    }
+
+    @Override
+    public void publishArticle(Long articleId) {
+        // 1. 查询文章是否存在
+        Article article = findById(articleId);
+        if (article == null) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
+        }
+
+        // 2. 检查文章状态是否为草稿
+        if (article.getStatus() != ArticleStatus.DRAFT.intVal()) {
+            return;
+        }
+
+        // 3. 更新文章状态为已发布
+        article.setStatus(ArticleStatus.PUBLISHED.intVal());
+        article.setPublishedTime(LocalDateTime.now());
+        article.setPublishAt(null); // 清空定时发布时间
+
+        // 4. 更新文章
+        Assert.isTrue(baseMapper.updateByPrimaryKey(article) == 1,
+            () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "发布文章失败"));
+    }
+
+    @Override
+    public List<Article> findPendingPublishArticles() {
+        return wrapper()
+            .eq(Article::getStatus, ArticleStatus.DRAFT.intVal())
+            .isNotNull(Article::getPublishAt)
+            .le(Article::getPublishAt, LocalDateTime.now())
+            .list();
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.zqqiliyc.module.svc.main.domain.dto.article.ArticleDraftCreateDTO;
 import com.zqqiliyc.module.svc.main.domain.dto.article.ArticleUpdateDTO;
 import com.zqqiliyc.module.svc.main.domain.entity.Article;
 
+import java.util.List;
+
 /**
  * @author qili
  * @date 2025-06-02
@@ -67,4 +69,28 @@ public interface IArticleService extends IBaseService<Article, Long> {
      * @return 更新后的文章实体
      */
     Article updateArticle(ArticleUpdateDTO updateDTO);
+
+    /**
+     * 发布文章（定时任务调用）
+     * <p>
+     * 将文章状态从草稿(DRAFT)更新为已发布(PUBLISHED)，并设置发布时间
+     * </p>
+     *
+     * @param articleId 文章 ID
+     */
+    void publishArticle(Long articleId);
+
+    /**
+     * 获取待发布的草稿文章列表
+     * <p>
+     * 查询所有满足以下条件的草稿文章：
+     * <ul>
+     *   <li>文章状态为草稿(DRAFT, status=0)</li>
+     *   <li>定时发布时间(publish_at)已到达且不为空</li>
+     * </ul>
+     * </p>
+     *
+     * @return 待发布的文章列表
+     */
+    List<Article> findPendingPublishArticles();
 }
