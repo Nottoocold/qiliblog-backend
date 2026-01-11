@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # 设置默认JVM参数
 DEFAULT_JVM_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"

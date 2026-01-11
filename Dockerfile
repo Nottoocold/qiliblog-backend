@@ -1,3 +1,5 @@
+ARG BUILD_TZ=Asia/Shanghai
+
 # ============================
 # 1. Build Stage
 # ============================
@@ -7,15 +9,16 @@ WORKDIR /build
 
 # ---- 1) 先复制所有 pom.xml 以利用 Docker 缓存 ----
 COPY pom.xml .
-
 # 复制各个模块的 pom.xml
 COPY blog-framework/pom.xml ./blog-framework/pom.xml
 COPY blog-framework/blog-framework-common/pom.xml ./blog-framework/blog-framework-common/pom.xml
 COPY blog-framework/blog-framework-web/pom.xml ./blog-framework/blog-framework-web/pom.xml
-
 COPY blog-module-api/pom.xml ./blog-module-api/pom.xml
 COPY blog-module-auth/pom.xml ./blog-module-auth/pom.xml
-COPY blog-module-biz/pom.xml ./blog-module-biz/pom.xml
+COPY blog-module-service/pom.xml ./blog-module-service/pom.xml
+COPY blog-module-service/blog-module-service-main/pom.xml ./blog-module-service/blog-module-service-main/pom.xml
+COPY blog-module-service/blog-module-service-system/pom.xml ./blog-module-service/blog-module-service-system/pom.xml
+COPY blog-module-service/blog-module-service-test/pom.xml ./blog-module-service/blog-module-service-test/pom.xml
 COPY blog-module-publish/pom.xml ./blog-module-publish/pom.xml
 
 # ---- 2) 下载所有依赖（只依赖 pom.xml，构建快） ----
@@ -31,7 +34,14 @@ RUN mvn -q -DskipTests -pl blog-module-publish -am package
 # ============================
 # 2. Run Stage (JRE)
 # ============================
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine
+
+ARG BUILD_TZ
+ENV TZ=$BUILD_TZ
+
+RUN apk add --no-cache tzdata shadow  && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && apk del tzdata
 
 WORKDIR /app
 
@@ -40,11 +50,10 @@ RUN groupadd -r -g 1001 qiliblog && \
 
 # 复制最终 JAR
 COPY --from=builder --chown=qiliblog:qiliblog /build/blog-module-publish/target/*.jar ./
-COPY entrypoint.sh ./
 
-# 修改权限
-RUN chown -R qiliblog:qiliblog /app && \
-    chmod +x entrypoint.sh
+# 复制入口脚本并设置权限
+COPY --from=builder --chown=qiliblog:qiliblog /build/entrypoint.sh ./
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8080
 
