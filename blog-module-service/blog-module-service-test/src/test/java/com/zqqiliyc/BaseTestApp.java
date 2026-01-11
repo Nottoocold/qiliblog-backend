@@ -5,6 +5,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.function.Supplier;
 
@@ -19,6 +20,8 @@ public class BaseTestApp {
     protected ApplicationContext applicationContext;
     @Autowired
     protected SqlSessionTemplate sqlSessionTemplate;
+    @Autowired
+    protected TransactionTemplate transactionTemplate;
 
     @BeforeEach
     @Order(Integer.MIN_VALUE)

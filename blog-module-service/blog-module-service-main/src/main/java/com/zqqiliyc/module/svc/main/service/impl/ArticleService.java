@@ -53,6 +53,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             if (draftSaveDTO.getPublishAt().isBefore(LocalDateTime.now())) {
                 throw new ClientException(GlobalErrorDict.PARAM_ERROR, "发布时间不能早于当前时间");
             }
+            // 格式化发布时间
+            draftSaveDTO.setPublishAt(draftSaveDTO.getPublishAt().withNano(0).withSecond(0));
         }
         Article article = draftSaveDTO.toEntity();
         article.setWordCount(article.getContent().length());
@@ -134,10 +136,13 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         }
 
         // 3. 更新文章状态为已发布
+        LocalDateTime now = LocalDateTime.now();
         int updated = wrapper()
                 .set(Article::getStatus, ArticleStatus.PUBLISHED.intVal())
-                .set(Article::getPublishedTime, LocalDateTime.now())
+                .set(Article::getPublishedTime, now)
                 .set(Article::getPublishAt, null)
+                .set(Article::getModifiedTime, now)
+                .set(Article::getUpdateTime, now)
                 .eq(Article::getId, articleId).update();
         Assert.isTrue(updated == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "发布文章失败"));
     }
@@ -147,7 +152,7 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         return wrapper()
             .eq(Article::getStatus, ArticleStatus.DRAFT.intVal())
             .isNotNull(Article::getPublishAt)
-            .le(Article::getPublishAt, LocalDateTime.now())
+                .le(Article::getPublishAt, LocalDateTime.now().withNano(0).withSecond(0))
             .list();
     }
 
