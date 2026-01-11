@@ -1,10 +1,9 @@
--- 创建测试账号
-CREATE USER qiliblog_tester WITH LOGIN PASSWORD 'qiliblog@1';
-GRANT qiliblog_role_readwrite TO qiliblog_tester;
-
--- 创建测试schema
-CREATE SCHEMA qiliblog_test AUTHORIZATION qiliblog_owner;
-
--- 授权ROLE相关SCHEMA访问权限。
-GRANT USAGE ON SCHEMA qiliblog_test TO qiliblog_role_readwrite;
-GRANT USAGE ON SCHEMA qiliblog_test TO qiliblog_role_readonly;
+-- 删除测试数据库
+DROP DATABASE IF EXISTS qiliblog_test;
+-- 创建测试数据库
+CREATE DATABASE qiliblog_test;
+-- 创建测试数据库用户
+CREATE USER qiliblog_test WITH LOGIN PASSWORD 'qiliblog_test@1';
+-- 创建测试数据库模式, 并授权给测试数据库用户
+\c qiliblog_test;
+CREATE SCHEMA qiliblog_test AUTHORIZATION qiliblog_test;

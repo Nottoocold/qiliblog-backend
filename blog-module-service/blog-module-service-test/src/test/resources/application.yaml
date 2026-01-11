@@ -1,8 +1,8 @@
 spring:
   application:
-    name: qiliblog-backend
+    name: qiliblog-backend-test
   profiles:
-    active: dev
+    active: test
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
@@ -52,14 +52,14 @@ logging:
     rollingpolicy:
       max-file-size: 1MB
   file:
-    name: ./log/qiliblog-backend.log
+    name: /log/${spring.application.name}.log
 server:
   port: 8080
   servlet:
     encoding:
       force: true
       charset: UTF-8
-    application-display-name: qiliblog-backend
+    application-display-name: ${spring.application.name}
     context-path: /
   error:
     include-path: never

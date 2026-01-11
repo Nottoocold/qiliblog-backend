@@ -1,8 +1,8 @@
 spring:
   datasource:
-    username: qiliblog_tester
-    password: qiliblog@1
-    url: jdbc:postgresql://localhost:5432/qiliblog?currentSchema=qiliblog_test&TimeZone=Asia/Shanghai
+    username: qiliblog_test
+    password: qiliblog_test@1
+    url: jdbc:postgresql://localhost:5432/qiliblog_test?currentSchema=qiliblog_test&TimeZone=Asia/Shanghai
     hikari:
       schema: qiliblog_test
 
