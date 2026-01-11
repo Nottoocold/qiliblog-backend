@@ -14,6 +14,7 @@
     <modules>
         <module>blog-module-service-system</module>
         <module>blog-module-service-main</module>
+        <module>blog-module-service-test</module>
     </modules>
 
     <properties>

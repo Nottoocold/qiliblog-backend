@@ -130,5 +130,5 @@ public class RedisTemplateTest extends BaseTestApp {
         nestedObject.putNested("nested4", true);
         nestedObject.putNested("nested5", 18);
         return nestedObject;
-     }
+    }
 }
