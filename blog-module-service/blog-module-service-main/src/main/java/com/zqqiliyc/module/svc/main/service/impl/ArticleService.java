@@ -17,7 +17,6 @@ import com.zqqiliyc.module.svc.main.mapper.ArticleMapper;
 import com.zqqiliyc.module.svc.main.service.IArticleService;
 import com.zqqiliyc.module.svc.main.service.ICategoryService;
 import com.zqqiliyc.module.svc.main.service.IRelArticleTagService;
-import com.zqqiliyc.module.svc.main.service.ITagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author qili
@@ -34,9 +34,9 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
 public class ArticleService extends AbstractBaseService<Article, Long, ArticleMapper> implements IArticleService {
+    private static final Pattern PATTERN_SLUG = Pattern.compile("^[a-zA-Z0-9-]+$");
     private final IRelArticleTagService relArticleTagService;
     private final ICategoryService categoryService;
-    private final ITagService tagService;
 
     @Override
     public Article findBySlug(String slug) {
@@ -61,19 +61,17 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         if (StrUtil.isBlank(article.getSlug())) {
             // 自动生成唯一的 slug 标识
             article.setSlug(generateUniqueSlug());
-        } else if (!article.getSlug().matches("^[a-zA-Z0-9-]+$")) {
+        } else if (!PATTERN_SLUG.matcher(article.getSlug()).matches()) {
             // slug 只允许包含字母、数字和连字符
             throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
         }
         // 1. 创建文章
         SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
         Assert.isTrue(baseMapper.insert(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "创建文章失败"));
-        // 2. 保存文章标签并更新计数
+        // 2. 保存文章标签, 方法内部会自动更新标签的文章计数
         List<Long> tagIds = draftSaveDTO.getTagIds();
         if (tagIds != null && !tagIds.isEmpty()) {
             relArticleTagService.save(article.getId(), tagIds);
-            // 更新标签文章计数
-            tagIds.forEach(tagId -> tagService.updateTagPostCount(tagId, 1));
         }
         // 3. 更新分类文章计数
         categoryService.updateCategoryPostCount(article.getCategoryId(), 1);
@@ -127,19 +125,21 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
         }
 
-        // 2. 检查文章状态是否为草稿
+        // 2. 检查文章状态
         if (article.getStatus() != ArticleStatus.DRAFT.intVal()) {
+            return;
+        }
+        if (article.getStatus() == ArticleStatus.PUBLISHED.intVal()) {
             return;
         }
 
         // 3. 更新文章状态为已发布
-        article.setStatus(ArticleStatus.PUBLISHED.intVal());
-        article.setPublishedTime(LocalDateTime.now());
-        article.setPublishAt(null); // 清空定时发布时间
-
-        // 4. 更新文章
-        Assert.isTrue(baseMapper.updateByPrimaryKey(article) == 1,
-            () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "发布文章失败"));
+        int updated = wrapper()
+                .set(Article::getStatus, ArticleStatus.PUBLISHED.intVal())
+                .set(Article::getPublishedTime, LocalDateTime.now())
+                .set(Article::getPublishAt, null)
+                .eq(Article::getId, articleId).update();
+        Assert.isTrue(updated == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "发布文章失败"));
     }
 
     @Override
