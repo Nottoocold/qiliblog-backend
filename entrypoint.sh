@@ -23,11 +23,16 @@ echo "Found jar file: $JAR_FILE"
 # 设置JVM参数
 JVM_OPTS=${JVM_OPTS:-$DEFAULT_JVM_OPTS}
 
+# 打印环境变量信息，方便调试
+echo "===== 环境变量信息 ====="
+env | sort
+echo "======================="
+
 # 打印启动信息
 echo "Starting application with JVM options: $JVM_OPTS"
 
 # 构建并打印完整启动命令
-STARTUP_COMMAND="java $JVM_OPTS -jar \"$JAR_FILE\""
+STARTUP_COMMAND="java $JVM_OPTS -jar $JAR_FILE"
 echo "Full startup command: $STARTUP_COMMAND $@"
 
 # 启动应用

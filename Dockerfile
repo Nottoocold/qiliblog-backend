@@ -34,14 +34,16 @@ RUN mvn -q -DskipTests -pl blog-module-publish -am package
 # ============================
 # 2. Run Stage (JRE)
 # ============================
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre-noble
 
 ARG BUILD_TZ
-ENV TZ=$BUILD_TZ
+ENV TZ=$BUILD_TZ \
+    DEBIAN_FRONTEND=noninteractive
 
-RUN apk add --no-cache tzdata shadow  && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo ${TZ} > /etc/timezone \
-    && apk del tzdata
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
