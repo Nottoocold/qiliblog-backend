@@ -9,6 +9,9 @@ spring:
   mail:
     username:  # 邮箱
     password:  # 授权码
+  liquibase:
+    enabled: false
+    default-schema: ${DB_SCHEMA:qiliblog}
 
 logging:
   file:

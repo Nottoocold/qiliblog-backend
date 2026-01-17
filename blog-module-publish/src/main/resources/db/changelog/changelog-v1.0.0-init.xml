@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        logicalFilePath="db/changelog/changelog-v1.0.0-init.xml">
+
+    <!-- 版本 1.0.0: 初始化数据库表结构 -->
+
+    <!-- 角色表 -->
+    <changeSet id="1.0.0-roles" author="system">
+        <createTable tableName="sys_role">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sort" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="remark" type="TEXT"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_role IS '角色表';
+            COMMENT
+            ON COLUMN sys_role.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_role.code IS '角色编码';
+            COMMENT
+            ON COLUMN sys_role.name IS '角色名称';
+            COMMENT
+            ON COLUMN sys_role.sort IS '排序';
+            COMMENT
+            ON COLUMN sys_role.state IS '状态 0-启用 1-禁用';
+            COMMENT
+            ON COLUMN sys_role.remark IS '备注';
+            COMMENT
+            ON COLUMN sys_role.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN sys_role.update_time IS '更新时间';
+        </sql>
+        <createIndex tableName="sys_role" indexName="idx_code">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 权限表 -->
+    <changeSet id="1.0.0-permissions" author="system">
+        <createTable tableName="sys_permission">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sort" type="INT" defaultValueNumeric="0"/>
+            <column name="state" type="INT" defaultValueNumeric="0"/>
+            <column name="remark" type="TEXT"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_permission IS '权限表';
+            COMMENT
+            ON COLUMN sys_permission.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_permission.code IS '权限标识';
+            COMMENT
+            ON COLUMN sys_permission.name IS '权限名称';
+            COMMENT
+            ON COLUMN sys_permission.parent_id IS '父级权限ID, 0表示顶级权限';
+            COMMENT
+            ON COLUMN sys_permission.sort IS '排序';
+            COMMENT
+            ON COLUMN sys_permission.state IS '状态 0:正常 1:禁用';
+            COMMENT
+            ON COLUMN sys_permission.remark IS '备注';
+            COMMENT
+            ON COLUMN sys_permission.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN sys_permission.update_time IS '更新时间';
+        </sql>
+        <createIndex tableName="sys_permission" indexName="idx_permission_code">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 系统用户表 -->
+    <changeSet id="1.0.0-users" author="system">
+        <createTable tableName="sys_user">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nickname" type="VARCHAR(255)"/>
+            <column name="state" type="INT" defaultValueNumeric="0"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(20)"/>
+            <column name="avatar" type="VARCHAR(255)"/>
+            <column name="dept_id" type="BIGINT" defaultValueNumeric="-1"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="del_flag" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_user IS '系统用户表';
+            COMMENT
+            ON COLUMN sys_user.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_user.username IS '用户名 登录名';
+            COMMENT
+            ON COLUMN sys_user.password IS '密码 加密';
+            COMMENT
+            ON COLUMN sys_user.nickname IS '昵称';
+            COMMENT
+            ON COLUMN sys_user.state IS '状态 0:正常 1:禁用';
+            COMMENT
+            ON COLUMN sys_user.email IS '邮箱';
+            COMMENT
+            ON COLUMN sys_user.phone IS '手机号';
+            COMMENT
+            ON COLUMN sys_user.avatar IS '头像URL';
+            COMMENT
+            ON COLUMN sys_user.dept_id IS '部门ID';
+            COMMENT
+            ON COLUMN sys_user.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN sys_user.update_time IS '更新时间';
+            COMMENT
+            ON COLUMN sys_user.del_flag IS '删除标志 0:未删除 1:已删除';
+        </sql>
+        <createIndex tableName="sys_user" indexName="idx_username">
+            <column name="del_flag"/>
+            <column name="username"/>
+        </createIndex>
+        <createIndex tableName="sys_user" indexName="idx_email">
+            <column name="del_flag"/>
+            <column name="email"/>
+        </createIndex>
+        <createIndex tableName="sys_user" indexName="idx_phone">
+            <column name="del_flag"/>
+            <column name="phone"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 用户角色关联表 -->
+    <changeSet id="1.0.0-user-roles" author="system">
+        <createTable tableName="sys_user_role">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_user_role IS '用户角色关联表';
+            COMMENT
+            ON COLUMN sys_user_role.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_user_role.user_id IS '用户ID';
+            COMMENT
+            ON COLUMN sys_user_role.role_id IS '角色ID';
+            COMMENT
+            ON COLUMN sys_user_role.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN sys_user_role.update_time IS '更新时间';
+        </sql>
+        <createIndex tableName="sys_user_role" indexName="idx_user_role">
+            <column name="user_id"/>
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 角色权限关联表 -->
+    <changeSet id="1.0.0-role-permissions" author="system">
+        <createTable tableName="sys_role_permission">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_role_permission IS '角色权限关联表';
+            COMMENT
+            ON COLUMN sys_role_permission.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_role_permission.role_id IS '角色ID';
+            COMMENT
+            ON COLUMN sys_role_permission.permission_id IS '权限ID';
+            COMMENT
+            ON COLUMN sys_role_permission.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN sys_role_permission.update_time IS '更新时间';
+        </sql>
+        <createIndex tableName="sys_role_permission" indexName="idx_role_permission">
+            <column name="role_id"/>
+            <column name="permission_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 分类表 -->
+    <changeSet id="1.0.0-categories" author="system">
+        <createTable tableName="blog_category">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_count" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE blog_category IS '文章分类表';
+            COMMENT
+            ON COLUMN blog_category.id IS '主键';
+            COMMENT
+            ON COLUMN blog_category.name IS '分类名称 (必须唯一，如 "技术", "生活")';
+            COMMENT
+            ON COLUMN blog_category.slug IS '分类 URL 友好标识符 (必须唯一，如 "tech", "life")';
+            COMMENT
+            ON COLUMN blog_category.post_count IS '文章数, 用于统计分类下文章数';
+            COMMENT
+            ON COLUMN blog_category.description IS '分类描述';
+            COMMENT
+            ON COLUMN blog_category.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN blog_category.update_time IS '最后更新时间';
+        </sql>
+        <createIndex tableName="blog_category" indexName="idx_category_name">
+            <column name="name"/>
+        </createIndex>
+        <createIndex tableName="blog_category" indexName="idx_category_slug">
+            <column name="slug"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 标签表 -->
+    <changeSet id="1.0.0-tags" author="system">
+        <createTable tableName="blog_tags">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_count" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE blog_tags IS '文章标签表';
+            COMMENT
+            ON COLUMN blog_tags.id IS '标签唯一标识符 (主键)';
+            COMMENT
+            ON COLUMN blog_tags.name IS '标签名称 (必须唯一，如 "Java", "Spring Boot")';
+            COMMENT
+            ON COLUMN blog_tags.slug IS '标签 URL 友好标识符 (必须唯一，如 "java", "spring-boot")';
+            COMMENT
+            ON COLUMN blog_tags.post_count IS '文章数, 用于统计标签下文章数';
+            COMMENT
+            ON COLUMN blog_tags.description IS '标签描述';
+            COMMENT
+            ON COLUMN blog_tags.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN blog_tags.update_time IS '最后更新时间';
+        </sql>
+        <createIndex tableName="blog_tags" indexName="idx_tag_name">
+            <column name="name"/>
+        </createIndex>
+        <createIndex tableName="blog_tags" indexName="idx_tag_slug">
+            <column name="slug"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 文章表 -->
+    <changeSet id="1.0.0-articles" author="system">
+        <createTable tableName="blog_article">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="summary" type="TEXT"/>
+            <column name="cover_image" type="VARCHAR(255)"/>
+            <column name="status" type="SMALLINT" defaultValueNumeric="0"/>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_top" type="SMALLINT" defaultValueNumeric="0"/>
+            <column name="is_recommend" type="SMALLINT" defaultValueNumeric="0"/>
+            <column name="is_commentable" type="SMALLINT" defaultValueNumeric="1"/>
+            <column name="publish_at" type="TIMESTAMP"/>
+            <column name="published_time" type="TIMESTAMP"/>
+            <column name="modified_time" type="TIMESTAMP"/>
+            <column name="view_count" type="INT" defaultValueNumeric="0"/>
+            <column name="like_count" type="INT" defaultValueNumeric="0"/>
+            <column name="word_count" type="INT" defaultValueNumeric="0"/>
+            <column name="read_time" type="VARCHAR(64)"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE blog_article IS '文章核心信息表';
+            COMMENT
+            ON COLUMN blog_article.id IS '文章唯一标识符 (主键)';
+            COMMENT
+            ON COLUMN blog_article.title IS '文章标题';
+            COMMENT
+            ON COLUMN blog_article.slug IS '文章 URL 友好标识符 (必须唯一，用于生成永久链接)';
+            COMMENT
+            ON COLUMN blog_article.content IS '文章详细内容 (支持 Markdown/HTML)';
+            COMMENT
+            ON COLUMN blog_article.summary IS '文章摘要 (用于列表页预览)';
+            COMMENT
+            ON COLUMN blog_article.cover_image IS '文章封面图片 URL';
+            COMMENT
+            ON COLUMN blog_article.status IS '文章状态: draft(0草稿), published(1已发布), private(2私密)';
+            COMMENT
+            ON COLUMN blog_article.category_id IS '外键，关联分类表 id (文章所属主分类)';
+            COMMENT
+            ON COLUMN blog_article.author_id IS '外键，关联用户表 id (文章作者)';
+            COMMENT
+            ON COLUMN blog_article.is_top IS '是否置顶: 1(是), 0(否)';
+            COMMENT
+            ON COLUMN blog_article.is_recommend IS '是否推荐: 1(是), 0(否)';
+            COMMENT
+            ON COLUMN blog_article.is_commentable IS '是否允许评论: 1(允许), 0(不允许)';
+            COMMENT
+            ON COLUMN blog_article.publish_at IS '文章需要定时发布时设置';
+            COMMENT
+            ON COLUMN blog_article.published_time IS '文章发布时间 (当状态变为 published 时设置)';
+            COMMENT
+            ON COLUMN blog_article.modified_time IS '文章内容修改时间(当状态为 published 时, 每次修改时设置)';
+            COMMENT
+            ON COLUMN blog_article.view_count IS '文章阅读次数';
+            COMMENT
+            ON COLUMN blog_article.like_count IS '文章点赞次数';
+            COMMENT
+            ON COLUMN blog_article.word_count IS '文章字数统计';
+            COMMENT
+            ON COLUMN blog_article.read_time IS '预计阅读时间';
+            COMMENT
+            ON COLUMN blog_article.create_time IS '记录创建时间';
+            COMMENT
+            ON COLUMN blog_article.update_time IS '记录最后更新时间';
+        </sql>
+        <createIndex tableName="blog_article" indexName="idx_article_slug">
+            <column name="slug"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 文章标签关联表 -->
+    <changeSet id="1.0.0-article-tags" author="system">
+        <createTable tableName="rel_article_tag">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="article_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE rel_article_tag IS '文章标签关联表';
+            COMMENT
+            ON COLUMN rel_article_tag.id IS '主键ID';
+            COMMENT
+            ON COLUMN rel_article_tag.article_id IS '文章ID';
+            COMMENT
+            ON COLUMN rel_article_tag.tag_id IS '标签ID';
+            COMMENT
+            ON COLUMN rel_article_tag.create_time IS '创建时间';
+            COMMENT
+            ON COLUMN rel_article_tag.update_time IS '更新时间';
+        </sql>
+    </changeSet>
+
+    <!-- 系统令牌表 -->
+    <changeSet id="1.0.0-tokens" author="system">
+        <createTable tableName="sys_token">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="access_token" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refresh_token" type="VARCHAR(512)"/>
+            <column name="token_style" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="issued_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refresh_expired_at" type="TIMESTAMP"/>
+            <column name="revoked" type="SMALLINT" defaultValueNumeric="0"/>
+            <column name="revoked_at" type="TIMESTAMP"/>
+            <column name="ip_address" type="VARCHAR(45)"/>
+            <column name="additional_info" type="JSON"/>
+            <column name="create_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_time" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_token IS '系统令牌表';
+            COMMENT
+            ON COLUMN sys_token.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_token.access_token IS '访问令牌字符串';
+            COMMENT
+            ON COLUMN sys_token.refresh_token IS '刷新令牌字符串';
+            COMMENT
+            ON COLUMN sys_token.token_style IS '令牌风格';
+            COMMENT
+            ON COLUMN sys_token.user_id IS '关联用户ID';
+            COMMENT
+            ON COLUMN sys_token.issued_at IS '颁发时间';
+            COMMENT
+            ON COLUMN sys_token.expired_at IS '过期时间';
+            COMMENT
+            ON COLUMN sys_token.refresh_expired_at IS '刷新令牌过期时间';
+            COMMENT
+            ON COLUMN sys_token.revoked IS '是否已撤销（1-是，0-否）';
+            COMMENT
+            ON COLUMN sys_token.revoked_at IS '撤销时间';
+            COMMENT
+            ON COLUMN sys_token.ip_address IS '客户端IP';
+            COMMENT
+            ON COLUMN sys_token.additional_info IS '扩展信息（JSON格式）';
+            COMMENT
+            ON COLUMN sys_token.create_time IS '记录创建时间';
+            COMMENT
+            ON COLUMN sys_token.update_time IS '记录最后更新时间';
+        </sql>
+        <createIndex tableName="sys_token" indexName="uk_access_token">
+            <column name="access_token"/>
+        </createIndex>
+        <createIndex tableName="sys_token" indexName="uk_refresh_token">
+            <column name="refresh_token"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 系统区域表 -->
+    <changeSet id="1.0.0-regions" author="system">
+        <createTable tableName="sys_region">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pcode" type="VARCHAR(32)"/>
+            <column name="level" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql>
+            COMMENT
+            ON TABLE sys_region IS '系统区域表';
+            COMMENT
+            ON COLUMN sys_region.id IS '主键ID';
+            COMMENT
+            ON COLUMN sys_region.code IS '编码';
+            COMMENT
+            ON COLUMN sys_region.name IS '名称';
+            COMMENT
+            ON COLUMN sys_region.pcode IS '父级编码';
+            COMMENT
+            ON COLUMN sys_region.level IS '区域类型;1-省级,2-市级,3-区县级,4-乡镇级,5-村级';
+        </sql>
+        <createIndex tableName="sys_region" indexName="uk_region_code">
+            <column name="code"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

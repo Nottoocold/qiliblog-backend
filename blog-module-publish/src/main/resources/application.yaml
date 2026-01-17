@@ -37,7 +37,8 @@ spring:
       fail-on-empty-beans: false # 序列化没有属性的对象时不报错
     deserialization:
       fail-on-unknown-properties: false # 反序列化时允许未知属性
-
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
 mybatis:
   configuration:
