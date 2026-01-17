@@ -17,6 +17,7 @@ import com.zqqiliyc.module.svc.main.mapper.ArticleMapper;
 import com.zqqiliyc.module.svc.main.service.IArticleService;
 import com.zqqiliyc.module.svc.main.service.ICategoryService;
 import com.zqqiliyc.module.svc.main.service.IRelArticleTagService;
+import io.mybatis.mapper.fn.Fn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,7 +150,14 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     public List<Article> findPendingPublishArticles() {
+        Class<Article> entityClass = baseMapper.entityClass();
         return wrapper()
+                .select(Fn.field(entityClass, Article::getId),
+                        Fn.field(entityClass, Article::getCreateTime),
+                        Fn.field(entityClass, Article::getUpdateTime),
+                        Fn.field(entityClass, Article::getTitle),
+                        Fn.field(entityClass, Article::getStatus),
+                        Fn.field(entityClass, Article::getPublishAt))
             .eq(Article::getStatus, ArticleStatus.DRAFT.intVal())
             .isNotNull(Article::getPublishAt)
                 .le(Article::getPublishAt, LocalDateTime.now().withNano(0).withSecond(0))

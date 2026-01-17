@@ -81,7 +81,7 @@ public interface IArticleService extends IBaseService<Article, Long> {
     void publishArticle(Long articleId);
 
     /**
-     * 获取待发布的草稿文章列表
+     * 获取待发布的草稿文章列表, 注意: 查询的文章结果不是全字段, 仅包含文章 ID、标题等基本信息
      * <p>
      * 查询所有满足以下条件的草稿文章：
      * <ul>
