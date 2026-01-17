@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.svc.main.domain.dto.cate;
+package com.zqqiliyc.module.svc.main.domain.dto.category;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
