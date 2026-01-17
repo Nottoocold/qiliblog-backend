@@ -34,7 +34,7 @@ public class ArticleScheduler {
      * </ul>
      * </p>
      */
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "1 * * * * ?")
     public void publishScheduledArticles() {
         try {
             // 查询所有需要发布的草稿文章
