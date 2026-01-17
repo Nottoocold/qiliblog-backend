@@ -1,4 +1,4 @@
-package com.zqqiliyc.module.svc.main.domain.tag;
+package com.zqqiliyc.module.svc.main.domain.dto.tag;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
