@@ -21,11 +21,6 @@
             <groupId>io.github.biezhi</groupId>
             <artifactId>TinyPinyin</artifactId>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 </project>
