@@ -52,7 +52,7 @@ logging:
     rollingpolicy:
       max-file-size: 1MB
   file:
-    name: /log/${spring.application.name}.log
+    name: ./log/${spring.application.name}.log
 server:
   port: 8080
   servlet:
