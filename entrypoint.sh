@@ -26,5 +26,9 @@ JVM_OPTS=${JVM_OPTS:-$DEFAULT_JVM_OPTS}
 # 打印启动信息
 echo "Starting application with JVM options: $JVM_OPTS"
 
+# 构建并打印完整启动命令
+STARTUP_COMMAND="java $JVM_OPTS -jar \"$JAR_FILE\""
+echo "Full startup command: $STARTUP_COMMAND $@"
+
 # 启动应用
 exec java $JVM_OPTS -jar "$JAR_FILE" "$@"
