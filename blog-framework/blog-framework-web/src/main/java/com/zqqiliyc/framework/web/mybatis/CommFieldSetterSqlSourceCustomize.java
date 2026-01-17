@@ -1,5 +1,6 @@
 package com.zqqiliyc.framework.web.mybatis;
 
+import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.common.utils.SnowFlakeUtils;
 import com.zqqiliyc.framework.web.domain.entity.BaseEntity;
 import io.mybatis.provider.EntityTable;
@@ -61,7 +62,8 @@ public class CommFieldSetterSqlSourceCustomize implements SqlSourceCustomize {
             }
         } catch (BindingException ignored) {
             if (log.isDebugEnabled()) {
-                String msg = metaObject.getOriginalObject().getClass().getName() + ":" + field + " is not exist";
+                String msg = String.format("when call %s.set%s, maybe %s is not exist",
+                        metaObject.getOriginalObject().getClass().getName(), StrUtil.upperFirst(field), field);
                 log.warn(msg);
             }
         } catch (Exception e) {
