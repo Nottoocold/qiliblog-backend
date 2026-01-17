@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -122,17 +123,22 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     public void publishArticle(Long articleId) {
+        Class<Article> entityClass = baseMapper.entityClass();
         // 1. 查询文章是否存在
-        Article article = findById(articleId);
-        if (article == null) {
+        Optional<Article> article = wrapper()
+                .select(Fn.field(entityClass, Article::getId),
+                        Fn.field(entityClass, Article::getTitle),
+                        Fn.field(entityClass, Article::getStatus))
+                .eq(Article::getId, articleId).one();
+        if (article.isEmpty()) {
             throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
         }
 
         // 2. 检查文章状态
-        if (article.getStatus() != ArticleStatus.DRAFT.intVal()) {
+        if (article.get().getStatus() != ArticleStatus.DRAFT.intVal()) {
             return;
         }
-        if (article.getStatus() == ArticleStatus.PUBLISHED.intVal()) {
+        if (article.get().getStatus() == ArticleStatus.PUBLISHED.intVal()) {
             return;
         }
 
