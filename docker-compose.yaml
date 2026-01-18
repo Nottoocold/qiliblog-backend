@@ -1,0 +1,38 @@
+name: qiliblog
+
+include:
+  - ./docker-compose-middleware.yaml
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qiliblog-api-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: qiliblog
+      DB_SCHEMA: qiliblog
+      DB_USER: qiliblog_readwrite
+      DB_PASSWORD: qiliblog@1
+      DB_OWNER_USER: qiliblog_owner
+      DB_OWNER_PASSWORD: qiliblog@1
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SERVER_PORT: 11020
+    volumes:
+      - ./log:/app/log
+    restart: unless-stopped
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

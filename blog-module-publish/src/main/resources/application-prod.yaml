@@ -5,6 +5,11 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:qiliblog}?currentSchema=${DB_SCHEMA:qiliblog}&TimeZone=Asia/Shanghai
     hikari:
       schema: ${DB_SCHEMA:qiliblog}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
 
   mail:
     username:  # 邮箱
@@ -12,6 +17,8 @@ spring:
   liquibase:
     enabled: true
     default-schema: ${DB_SCHEMA:qiliblog}
+    user: ${DB_OWNER_USER:qiliblog_owner}
+    password: ${DB_OWNER_PASSWORD:qiliblog@1}
 
 logging:
   file:

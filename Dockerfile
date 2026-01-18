@@ -34,7 +34,7 @@ RUN mvn -q -DskipTests -pl blog-module-publish -am package
 # ============================
 # 2. Run Stage (JRE)
 # ============================
-FROM eclipse-temurin:17-jre-noble
+FROM eclipse-temurin:17-jre-noble AS runner
 
 ARG BUILD_TZ
 ENV TZ=$BUILD_TZ \

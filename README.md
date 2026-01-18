@@ -96,6 +96,14 @@ docker build -t qiliblog-api -f Dockerfile .
 docker run -d -p 8080:8080 --name qiliblog qiliblog-api
 ```
 
+### Docker Compose部署
+
+1. 一键启动后端服务
+
+```bash
+docker compose up -d
+```
+
 ## ⚙️ 配置说明
 
 ### 主要配置项

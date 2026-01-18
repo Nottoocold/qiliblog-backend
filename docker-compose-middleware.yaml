@@ -1,0 +1,46 @@
+name: qiliblog-middleware
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: qiliblog-postgres-service
+    environment:
+      POSTGRES_PASSWORD: qiliblog_db_root
+      TZ: Asia/Shanghai
+    volumes:
+      - ./db/init/postgres-init-scripts:/docker-entrypoint-initdb.d:ro
+      - postgres_data:/var/lib/postgresql
+    restart: unless-stopped
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      interval: 10s
+
+  redis:
+    image: redis:7
+    container_name: qiliblog-redis-service
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - backend
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      interval: 10s
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  backend:
+    driver: bridge
