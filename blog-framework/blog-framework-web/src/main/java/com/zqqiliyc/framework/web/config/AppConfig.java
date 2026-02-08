@@ -12,8 +12,11 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Configuration
+@EnableAsync
 @EnableScheduling
 @EnableAspectJAutoProxy
 @EnableConfigurationProperties({TokenProperties.class, VerificationProperties.class})
@@ -67,5 +71,16 @@ public class AppConfig {
 
         CaffeineCache caffeineCache = new CaffeineCache("verification_code_cache", cache);
         return new VerificationCacheService(caffeineCache);
+    }
+
+    @Bean
+    public static ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(Runtime.getRuntime().availableProcessors());
+        executor.setMaxPoolSize(executor.getCorePoolSize() * 2);
+        executor.setQueueCapacity(executor.getMaxPoolSize() * 10);
+        executor.setThreadNamePrefix("TaskExecutor-");
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        return executor;
     }
 }
