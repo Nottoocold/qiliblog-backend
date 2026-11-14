@@ -1,13 +1,13 @@
-package com.zqqiliyc.framework.web.strategy.impl;
+package com.zqqiliyc.module.svc.system.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.framework.web.config.prop.VerificationProperties;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.strategy.VerificationCacheService;
-import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
+import com.zqqiliyc.module.svc.system.config.prop.VerificationProperties;
+import com.zqqiliyc.module.svc.system.service.VerificationCacheService;
+import com.zqqiliyc.module.svc.system.service.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,10 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 /**
- * 基于邮件 + Redis 的验证码服务实现
+ * 基于邮件 + Caffeine 本地缓存的验证码服务实现
+ *
+ * <p>验证码只存在当前实例的本地缓存里，多实例部署时各实例不共享，
+ * 验证码仅在生成它的那个实例上可校验，故本实现以单实例部署为前提。</p>
  *
  * @author hallo
  * @datetime 2025-07-12 19:05

@@ -2,10 +2,10 @@ package com.zqqiliyc.module.api.admin.controller;
 
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.http.ApiResult;
-import com.zqqiliyc.framework.web.strategy.VerificationCodeService;
 import com.zqqiliyc.module.api.admin.dto.EmailDto;
-import com.zqqiliyc.module.api.admin.service.IRegisterService;
 import com.zqqiliyc.module.svc.system.dto.user.SysUserRegisterDto;
+import com.zqqiliyc.module.svc.system.service.ISysUserRegisterService;
+import com.zqqiliyc.module.svc.system.service.VerificationCodeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(WebApiConstants.API_ADMIN_PREFIX + "/register")
 public class RegisterController {
 
-    private final IRegisterService registerService;
+    private final ISysUserRegisterService registerService;
 
     private final VerificationCodeService verificationCodeService;
 

@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web.config.prop;
+package com.zqqiliyc.module.svc.system.config.prop;
 
 import lombok.Getter;
 import lombok.Setter;

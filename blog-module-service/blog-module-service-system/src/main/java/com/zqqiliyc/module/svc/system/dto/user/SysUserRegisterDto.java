@@ -49,9 +49,7 @@ public class SysUserRegisterDto {
     private String code;
 
     /**
-     * 注册类型
-     *
-     * @see com.zqqiliyc.module.api.admin.enums.RegistrationType
+     * 注册类型，当前仅支持 0-邮箱注册
      */
     @NotNull(message = "注册类型不能为空")
     private Integer registerType;

@@ -1,10 +1,10 @@
-package com.zqqiliyc.framework.web.strategy;
+package com.zqqiliyc.module.svc.system.service;
 
 /**
  * 验证码服务接口
  *
- * <p>该接口定义了生成、发送验证码以及验证用户输入验证码的核心功能。
- * 支持多种验证码接收方式（如邮箱、手机号等），具体实现由策略模式动态决定。</p>
+ * <p>该接口定义了生成、发送验证码以及验证用户输入验证码的核心功能，
+ * 当前实现为邮箱验证码，见 {@link com.zqqiliyc.module.svc.system.service.impl.EmailVerificationCodeService}。</p>
  *
  * @author hallo
  * @datetime 2025-7-12 19:37

@@ -11,9 +11,9 @@
 | `blog-framework/blog-framework-common` | 纯工具类（Hutool 补充、拼音等） |
 | `blog-framework/blog-framework-web` | 框架基座：ApiResult、异常、security/token、BaseEntity、DTO/VO 基类、AbstractBaseService |
 | `blog-module-service/blog-module-service-main` | 博客业务：文章/分类/标签的 entity、mapper、service |
-| `blog-module-service/blog-module-service-system` | 系统业务：用户/地区等 |
-| `blog-module-api` | 后台管理 Controller（`api.admin`）+ 前台公开接口（`api.pub`） |
-| `blog-module-auth` | 登录/注册/token 刷新，含自己的 Controller 与策略 |
+| `blog-module-service/blog-module-service-system` | 系统业务：用户（含注册、邮箱验证码）/地区等 |
+| `blog-module-api` | 后台管理 Controller（`api.admin`，含注册入口）+ 前台公开接口（`api.pub`） |
+| `blog-module-auth` | 登录/登出/用户信息/token 刷新，含自己的 Controller 与认证策略 |
 | `blog-module-publish` | 启动模块 `BlogApplication` + 全部 application 配置 + Liquibase changelog |
 | `blog-module-service/blog-module-service-test` | 集成测试专用模块 |
 
