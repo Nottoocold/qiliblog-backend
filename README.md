@@ -1,6 +1,6 @@
 # Qiliblog 后端
 
-Qiliblog 是一个博客系统后端，基于 Spring Boot 3.5.8 构建
+Qiliblog 是一个博客系统后端，基于 Spring Boot 4.1.2 构建
 
 ## 🌟 功能特性
 
@@ -14,7 +14,7 @@ Qiliblog 是一个博客系统后端，基于 Spring Boot 3.5.8 构建
 
 ## 🛠 技术栈
 
-- **核心框架**: Spring Boot 3.5.8
+- **核心框架**: Spring Boot 4.1.2
 - **安全框架**: Spring Security + JWT (nimbus-jose-jwt)
 - **数据持久层**: MyBatis + 通用 Mapper
 - **数据库**: PostgreSQL
@@ -34,9 +34,11 @@ qiliblog-backend/
 ├── blog-module-auth/         # 认证授权模块
 ├── blog-module-service/      # 业务服务模块
 │   ├── blog-module-service-main    # 主要业务逻辑
-│   └── blog-module-service-system  # 系统服务
+│   ├── blog-module-service-system  # 系统服务
+│   └── blog-module-service-test    # 集成测试模块
 ├── blog-module-publish/      # 应用启动模块
 ├── db/init/                  # 数据库初始化脚本
+├── docker-compose-middleware.yaml # 中间件一键启动（PostgreSQL + Redis）
 ├── Dockerfile                # Docker 构建文件
 ├── entrypoint.sh             # 容器启动脚本
 └── pom.xml                   # 项目依赖配置
@@ -59,13 +61,15 @@ git clone https://github.com/zqqiliyc/qiliblog-backend.git
 cd qiliblog-backend
 ```
 
-2. 创建数据库并执行初始化脚本：
+2. 启动中间件（推荐，首次自动创建数据库/账号/schema）：
 
-```sql
--- 在 PostgreSQL 中创建数据库并执行 db/init/ 目录下的 SQL 脚本
+```bash
+docker compose -f docker-compose-middleware.yaml up -d    # PostgreSQL 18 + Redis 7
 ```
 
-3. 修改配置文件：
+也可手动创建数据库并执行 `db/init/` 目录下的 SQL 脚本。
+
+3. 修改配置文件（使用中间件 compose 的默认账号时可跳过）：
 
 ```yaml
 # blog-module-publish/src/main/resources/application-dev.yaml
