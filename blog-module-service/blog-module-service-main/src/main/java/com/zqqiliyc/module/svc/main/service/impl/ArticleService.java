@@ -1,6 +1,5 @@
 package com.zqqiliyc.module.svc.main.service.impl;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -46,17 +45,6 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     public Article createDraft(ArticleDraftCreateDTO draftSaveDTO) {
-        if (draftSaveDTO.isDelayPublish()) {
-            // 延迟发布
-            if (draftSaveDTO.getPublishAt() == null) {
-                throw new ClientException(GlobalErrorDict.PARAM_ERROR, "请选择发布时间");
-            }
-            if (draftSaveDTO.getPublishAt().isBefore(LocalDateTime.now())) {
-                throw new ClientException(GlobalErrorDict.PARAM_ERROR, "发布时间不能早于当前时间");
-            }
-            // 格式化发布时间
-            draftSaveDTO.setPublishAt(draftSaveDTO.getPublishAt().withNano(0).withSecond(0));
-        }
         Article article = draftSaveDTO.toEntity();
         // 基类创建：beforeCreate 钩子负责 slug、字数、状态等实体准备
         create(article);
@@ -77,6 +65,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         }
         Long oldCategoryId = article.getCategoryId();
         updateDTO.fillEntity(article);
+        // 定时发布时间全量替换：null 表示取消定时发布
+        article.setPublishAt(updateDTO.getPublishAt());
         // 基类更新：beforeUpdate 钩子负责字数与修改时间
         update(article);
         syncCategoryCount(oldCategoryId, article.getCategoryId());
@@ -105,11 +95,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         if (article.get().getStatus() != ArticleStatus.DRAFT.intVal()) {
             return;
         }
-        if (article.get().getStatus() == ArticleStatus.PUBLISHED.intVal()) {
-            return;
-        }
 
-        // 3. 更新文章状态为已发布
+        // 3. 带状态守卫更新：仅草稿可发布
         LocalDateTime now = LocalDateTime.now();
         int updated = wrapper()
                 .set(Article::getStatus, ArticleStatus.PUBLISHED.intVal())
@@ -117,8 +104,13 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
                 .set(Article::getPublishAt, null)
                 .set(Article::getModifiedTime, now)
                 .set(Article::getUpdateTime, now)
-                .eq(Article::getId, articleId).update();
-        Assert.isTrue(updated == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "发布文章失败"));
+                .eq(Article::getId, articleId)
+                .eq(Article::getStatus, ArticleStatus.DRAFT.intVal())
+                .update();
+        if (updated == 0) {
+            // 并发下已被发布，幂等跳过
+            return;
+        }
     }
 
     @Override
@@ -142,10 +134,10 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         if (StrUtil.isBlank(entity.getSlug())) {
             // 自动生成唯一的 slug 标识
             entity.setSlug(generateUniqueSlug());
-        } else if (!PATTERN_SLUG.matcher(entity.getSlug()).matches()) {
-            // slug 只允许包含字母、数字和连字符
-            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
+        } else {
+            validateSlug(entity.getSlug(), null);
         }
+        validateAndTruncatePublishAt(entity);
         entity.setWordCount(entity.getContent().length());
         entity.setModifiedTime(LocalDateTime.now());
         entity.setStatus(ArticleStatus.DRAFT.intVal());
@@ -153,6 +145,8 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
 
     @Override
     protected void beforeUpdate(Article entity) {
+        validateSlug(entity.getSlug(), entity.getId());
+        validateAndTruncatePublishAt(entity);
         if (entity.getContent() != null) {
             entity.setWordCount(entity.getContent().length());
         }
@@ -172,6 +166,32 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
         if (newCategoryId != null) {
             categoryService.updateCategoryPostCount(newCategoryId, 1);
         }
+    }
+
+    /**
+     * slug 格式与唯一性校验，excludeId 为需排除的自身 id（创建时传 null）
+     */
+    private void validateSlug(String slug, Long excludeId) {
+        if (!PATTERN_SLUG.matcher(slug).matches()) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
+        }
+        Article existing = findBySlug(slug);
+        if (existing != null && !existing.getId().equals(excludeId)) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 已存在");
+        }
+    }
+
+    /**
+     * 定时发布时间校验：可选；设置时必须是将来时间，精度截断到分钟
+     */
+    private void validateAndTruncatePublishAt(Article entity) {
+        if (entity.getPublishAt() == null) {
+            return;
+        }
+        if (entity.getPublishAt().isBefore(LocalDateTime.now())) {
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "发布时间不能早于当前时间");
+        }
+        entity.setPublishAt(entity.getPublishAt().withNano(0).withSecond(0));
     }
     @Override
     protected void afterDelete(Article entity) {

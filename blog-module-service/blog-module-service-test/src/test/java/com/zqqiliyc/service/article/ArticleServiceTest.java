@@ -37,12 +37,8 @@ public class ArticleServiceTest extends BaseBlogService {
     @Test
     @Order(0)
     public void testCreateDraftException() {
-        // 延迟发布必须指定发布时间
-        ArticleDraftCreateDTO dto = baseDto();
-        dto.setDelayPublish(true);
-        Assertions.assertThrowsExactly(ClientException.class, () -> articleService.createDraft(dto));
-
         // 发布时间不能早于当前时间
+        ArticleDraftCreateDTO dto = baseDto();
         dto.setPublishAt(LocalDateTime.now().minusHours(3));
         Assertions.assertThrowsExactly(ClientException.class, () -> articleService.createDraft(dto));
     }
@@ -51,7 +47,6 @@ public class ArticleServiceTest extends BaseBlogService {
     @Order(1)
     public void testPublishArticle() {
         ArticleDraftCreateDTO dto = baseDto();
-        dto.setDelayPublish(true);
         dto.setPublishAt(LocalDateTime.now().plusMinutes(1));
         Article draft = articleService.createDraft(dto);
         Assertions.assertEquals(ArticleStatus.DRAFT.intVal(), draft.getStatus());
@@ -74,7 +69,6 @@ public class ArticleServiceTest extends BaseBlogService {
     @Order(2)
     public void testScheduledPublish() {
         ArticleDraftCreateDTO dto = baseDto();
-        dto.setDelayPublish(true);
         dto.setPublishAt(LocalDateTime.now().plusMinutes(1));
         Article draft = articleService.createDraft(dto);
 
@@ -145,6 +139,70 @@ public class ArticleServiceTest extends BaseBlogService {
         Assertions.assertEquals(t10, tagService.findById(t1.getId()).getPostCount());
         Assertions.assertEquals(t20, tagService.findById(t2.getId()).getPostCount());
         Assertions.assertEquals(t30, tagService.findById(t3.getId()).getPostCount());
+    }
+
+    @Test
+    @Order(4)
+    public void testDraftWithoutPublishAtNeverPending() {
+        // publishAt 是定时发布的唯一事实：不设置就永不进入待发布列表
+        Article draft = articleService.createDraft(baseDto());
+        Assertions.assertNull(draft.getPublishAt());
+        Assertions.assertTrue(articleService.findPendingPublishArticles().stream()
+                .noneMatch(a -> a.getId().equals(draft.getId())));
+        articleService.deleteById(draft.getId());
+    }
+
+    @Test
+    @Order(5)
+    public void testSlugValidation() {
+        Article a1 = articleService.createDraft(baseDto());
+        Article a2 = articleService.createDraft(baseDto());
+
+        // 创建时指定重复 slug → 友好 400（此前 DuplicateKeyException 穿透为 500）
+        ArticleDraftCreateDTO dupCreate = baseDto();
+        dupCreate.setSlug(a1.getSlug());
+        Assertions.assertThrowsExactly(ClientException.class, () -> articleService.createDraft(dupCreate));
+
+        // 更新为已存在的 slug → 拒绝
+        ArticleUpdateDTO dup = new ArticleUpdateDTO();
+        dup.setId(a2.getId());
+        dup.setSlug(a1.getSlug());
+        Assertions.assertThrowsExactly(ClientException.class, () -> articleService.updateArticle(dup));
+
+        // 更新为非法格式 → 拒绝
+        ArticleUpdateDTO bad = new ArticleUpdateDTO();
+        bad.setId(a2.getId());
+        bad.setSlug("非法 slug!");
+        Assertions.assertThrowsExactly(ClientException.class, () -> articleService.updateArticle(bad));
+
+        // 自身 slug 不变可正常更新
+        ArticleUpdateDTO ok = new ArticleUpdateDTO();
+        ok.setId(a2.getId());
+        ok.setSlug(a2.getSlug());
+        Assertions.assertDoesNotThrow(() -> articleService.updateArticle(ok));
+
+        articleService.deleteById(a1.getId());
+        articleService.deleteById(a2.getId());
+    }
+
+    @Test
+    @Order(6)
+    public void testUpdateClearsPublishAt() {
+        ArticleDraftCreateDTO dto = baseDto();
+        dto.setPublishAt(LocalDateTime.now().plusMinutes(1));
+        Article draft = articleService.createDraft(dto);
+        Assertions.assertNotNull(draft.getPublishAt());
+
+        // 全量更新语义：publishAt=null 取消定时发布
+        ArticleUpdateDTO u = new ArticleUpdateDTO();
+        u.setId(draft.getId());
+        u.setPublishAt(null);
+        articleService.updateArticle(u);
+        Assertions.assertNull(articleService.findById(draft.getId()).getPublishAt());
+        Assertions.assertTrue(articleService.findPendingPublishArticles().stream()
+                .noneMatch(a -> a.getId().equals(draft.getId())));
+
+        articleService.deleteById(draft.getId());
     }
 
     private ArticleDraftCreateDTO baseDto() {

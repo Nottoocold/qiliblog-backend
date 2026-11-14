@@ -15,9 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ArticleDraftCreateDTO extends ArticleCreateDTO {
-    @Schema(description = "是否延迟发布: false否, true是")
-    private boolean delayPublish;
 
-    @Schema(description = "延迟发布时间, 需要延迟发布时设置")
+    @Schema(description = "定时发布时间（分钟精度）, 设置后到点自动发布, null 表示不定时")
     private LocalDateTime publishAt;
 }
