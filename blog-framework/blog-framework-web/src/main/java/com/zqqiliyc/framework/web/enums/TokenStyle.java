@@ -5,5 +5,5 @@ package com.zqqiliyc.framework.web.enums;
  * @date 2025-11-22
  */
 public enum TokenStyle {
-    JWT, UUID
+    JWT
 }

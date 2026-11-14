@@ -10,11 +10,7 @@ import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.domain.dto.QueryDTO;
 import com.zqqiliyc.framework.web.domain.entity.BaseEntity;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
-import com.zqqiliyc.framework.web.event.EntityCreateEvent;
-import com.zqqiliyc.framework.web.event.EntityDeleteEvent;
-import com.zqqiliyc.framework.web.event.EntityUpdateEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.spring.SpringUtils;
 import io.mybatis.mapper.BaseMapper;
 import io.mybatis.mapper.example.Example;
 import io.mybatis.mapper.example.ExampleWrapper;
@@ -104,17 +100,12 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         beforeCreate(entity);
         Assert.isTrue(baseMapper.insert(entity) == 1, "insert failed");
         afterCreate(entity);
-        SpringUtils.publishEvent(new EntityCreateEvent<>(this, entity));
         return entity;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @SuppressWarnings("unchecked")
     @Override
     public T update(T entity) {
-        T old = findById((I) entity.getId());
-        EntityUpdateEvent<T> event = new EntityUpdateEvent<>(this, entity, old);
-        SpringUtils.publishEvent(event);
         beforeUpdate(entity);
         Assert.isTrue(baseMapper.updateByPrimaryKey(entity) == 1, "update failed");
         afterUpdate(entity);
@@ -125,7 +116,6 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
     @Override
     public void deleteById(I id) {
         T entity = findById(id);
-        SpringUtils.publishEvent(new EntityDeleteEvent<>(this, entity));
         beforeDelete(entity);
         Assert.isTrue(baseMapper.deleteByPrimaryKey(id) == 1, "delete failed");
         afterDelete(entity);

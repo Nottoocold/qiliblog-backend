@@ -5,10 +5,8 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
-import com.zqqiliyc.framework.web.event.EntityCreateEvent;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.service.AbstractBaseService;
-import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.module.svc.main.dict.ArticleStatus;
 import com.zqqiliyc.module.svc.main.domain.dto.article.ArticleDraftCreateDTO;
 import com.zqqiliyc.module.svc.main.domain.dto.article.ArticleUpdateDTO;
@@ -70,7 +68,6 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
         }
         // 1. 创建文章
-        SpringUtils.publishEvent(new EntityCreateEvent<>(this, article));
         Assert.isTrue(baseMapper.insert(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "创建文章失败"));
         // 2. 保存文章标签, 方法内部会自动更新标签的文章计数
         List<Long> tagIds = draftSaveDTO.getTagIds();
