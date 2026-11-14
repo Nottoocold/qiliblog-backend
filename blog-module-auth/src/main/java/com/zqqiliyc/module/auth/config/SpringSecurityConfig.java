@@ -54,7 +54,7 @@ public class SpringSecurityConfig {
                         // 其他资源需要认证
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), securityProperties), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
         http.formLogin(AbstractHttpConfigurer::disable) // 禁用默认登录页面
                 .csrf(AbstractHttpConfigurer::disable) // 禁用CSRF保护

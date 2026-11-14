@@ -1,5 +1,6 @@
 package com.zqqiliyc.module.auth.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
@@ -15,8 +16,6 @@ import com.zqqiliyc.module.auth.LoginDTO;
 import com.zqqiliyc.module.auth.LoginType;
 import com.zqqiliyc.module.auth.service.IAuthService;
 import com.zqqiliyc.module.auth.strategy.AuthConverter;
-import com.zqqiliyc.module.svc.system.entity.SysToken;
-import com.zqqiliyc.module.svc.system.service.ISysTokenService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,6 @@ public class AuthService implements IAuthService {
     private final AuthenticationManager authenticationManager;
     private final List<AuthConverter> authConverters;
     private final TokenProvider tokenProvider;
-    private final ISysTokenService sysTokenService;
     private final AuthManager authManager;
     private final Map<LoginType, AuthConverter> converterMap = new EnumMap<>(LoginType.class);
 
@@ -66,19 +64,23 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public void logout(String accessToken) {
-        SecurityUtils.clearAuthentication();
+    public void logout() {
+        Authentication authentication = requireAuthentication();
+        long userId = ((AuthUserInfoBean) authentication.getPrincipal()).getId();
+        String accessToken = Convert.toStr(authentication.getCredentials());
         if (StrUtil.isBlank(accessToken)) {
-            return;
+            throw new ClientException(GlobalErrorDict.INVALID_TOKEN, "认证结果中没有访问令牌，无法登出");
         }
-        authManager.clearCache(sysTokenService.findByAccessToken(cleanToken(accessToken)).getUserId());
-        tokenProvider.revokeToken(cleanToken(accessToken));
+        SecurityUtils.clearAuthentication();
+        authManager.clearCache(userId);
+        tokenProvider.revokeToken(accessToken);
     }
 
     @Override
-    public AuthUserInfoBean userinfo(String accessToken) {
-        SysToken sysToken = sysTokenService.findByAccessToken(cleanToken(accessToken));
-        return authManager.getUserInfo(sysToken.getUserId());
+    public AuthUserInfoBean userinfo() {
+        Authentication authentication = requireAuthentication();
+        long userId = ((AuthUserInfoBean) authentication.getPrincipal()).getId();
+        return authManager.getUserInfo(userId);
     }
 
     @Override
@@ -96,7 +98,17 @@ public class AuthService implements IAuthService {
         return authResult;
     }
 
-    private String cleanToken(String accessToken) {
-        return accessToken.startsWith("Bearer ") ? accessToken.substring(7) : accessToken;
+    /**
+     * 认证结果由 JwtAuthenticationFilter 建立，业务只消费它，不再手工解析令牌；
+     * 缺少认证时按未认证处理，避免空指针
+     *
+     * @return 携带用户信息的认证结果
+     */
+    private Authentication requireAuthentication() {
+        Authentication authentication = SecurityUtils.getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof AuthUserInfoBean)) {
+            throw new ClientException(GlobalErrorDict.NOT_AUTHENTICATED, "未认证，请先登录");
+        }
+        return authentication;
     }
 }

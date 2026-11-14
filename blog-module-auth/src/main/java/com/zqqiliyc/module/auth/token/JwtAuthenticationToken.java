@@ -32,8 +32,16 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
         return new JwtAuthenticationToken(jwtToken, null);
     }
 
-    public static JwtAuthenticationToken authenticated(UserDetails userDetails) {
-        return new JwtAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    /**
+     * 认证成功的结果：principal 是用户信息，credentials 保留原始令牌串，
+     * 撤销令牌等后续操作从认证结果取令牌，不再重复解析请求
+     *
+     * @param userDetails 用户信息
+     * @param accessToken 已校验的访问令牌
+     * @return 已认证的令牌
+     */
+    public static JwtAuthenticationToken authenticated(UserDetails userDetails, String accessToken) {
+        return new JwtAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
     }
 
     @Override

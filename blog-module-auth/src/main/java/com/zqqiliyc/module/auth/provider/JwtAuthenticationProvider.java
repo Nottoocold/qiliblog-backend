@@ -40,7 +40,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             Map<String, Object> claims = tokenProvider.getClaims(accessToken);
             Long userId = Convert.toLong(claims.get(SystemConstants.CLAIM_SUBJECT));
             AuthUserInfoBean userDetails = authManager.getUserInfo(userId);
-            return JwtAuthenticationToken.authenticated(userDetails);
+            return JwtAuthenticationToken.authenticated(userDetails, accessToken);
         }
 
         throw new BadCredentialsException("invalid token");

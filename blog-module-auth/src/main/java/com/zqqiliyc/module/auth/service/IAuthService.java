@@ -19,18 +19,16 @@ public interface IAuthService {
     AuthResult login(LoginDTO loginDto);
 
     /**
-     * 登出
-     *
-     * @param accessToken 访问令牌
+     * 登出：撤销当前认证所用的令牌并清除认证上下文，用户与令牌均取自认证结果
      */
-    void logout(String accessToken);
+    void logout();
 
     /**
-     * 获取用户信息
+     * 获取当前认证用户的信息
      *
      * @return 用户信息
      */
-    AuthUserInfoBean userinfo(String accessToken);
+    AuthUserInfoBean userinfo();
 
     /**
      * 刷新令牌
