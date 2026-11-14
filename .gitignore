@@ -2,6 +2,8 @@ target/
 /gen/
 /**/log/
 !.mvn/wrapper/maven-wrapper.jar
+# mvnd 本地 daemon 配置（含本机 JDK/安装路径，机器强耦合，不提交）
+.mvn/mvnd.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
 

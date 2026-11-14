@@ -47,7 +47,7 @@ qiliblog-backend/
 ### 环境要求
 
 - JDK 17+
-- Maven 3.6+
+- Maven 3.6+（或直接用仓库自带 `./mvnw`，无需预装 Maven）
 - PostgreSQL 15+
 
 ### 本地开发
@@ -79,7 +79,7 @@ spring:
 4. 启动应用：
 
 ```bash
-mvn spring-boot:run -pl blog-module-publish
+./mvnw spring-boot:run -pl blog-module-publish
 ```
 
 ### Docker 部署
