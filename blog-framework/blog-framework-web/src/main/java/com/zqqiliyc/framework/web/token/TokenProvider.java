@@ -1,8 +1,5 @@
 package com.zqqiliyc.framework.web.token;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationEventPublisherAware;
-
 import java.util.Map;
 
 /**
@@ -11,7 +8,7 @@ import java.util.Map;
  * @author qili
  * @date 2025-07-13
  */
-public interface TokenProvider extends ApplicationEventPublisherAware, InitializingBean {
+public interface TokenProvider {
 
     /**
      * 使用userId和自定义信息生成token

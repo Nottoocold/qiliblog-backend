@@ -9,11 +9,13 @@ import com.zqqiliyc.module.svc.system.mapper.SysTokenMapper;
 import com.zqqiliyc.module.svc.system.service.ISysTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author qili
@@ -71,14 +73,15 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
         }
     }
 
+    /**
+     * 每 2 小时清理无效令牌：已撤销，或刷新令牌已过期（刷新令牌恒晚于访问令牌过期）
+     */
+    @Scheduled(fixedRate = 2, timeUnit = TimeUnit.HOURS)
     @Override
     public void cleanToken() {
         LocalDateTime now = LocalDateTime.now();
         List<SysToken> deleted = wrapper()
                 .eq(SysToken::getRevoked, 1)
-                .or()
-                .lt(SysToken::getExpiredAt, now)
-                .lt(SysToken::getRefreshExpiredAt, now)
                 .or()
                 .lt(SysToken::getRefreshExpiredAt, now)
                 .list();
@@ -86,7 +89,7 @@ public class SysTokenService extends AbstractBaseService<SysToken, Long, SysToke
             baseMapper.deleteByFieldList(SysToken::getId, deleted.stream().map(SysToken::getId).toList());
             SysTokenService tokenService = SpringUtils.getBean(this.getClass());
             deleted.forEach(tokenService::clearCache);
-            log.info("清楚无效token数量: {}", deleted.size());
+            log.info("清理无效token数量: {}", deleted.size());
         }
     }
 

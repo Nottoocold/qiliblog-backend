@@ -26,6 +26,10 @@
             <groupId>com.zqqiliyc</groupId>
             <artifactId>blog-module-service-main</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zqqiliyc</groupId>
+            <artifactId>blog-module-auth</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

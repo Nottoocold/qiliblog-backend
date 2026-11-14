@@ -1,5 +1,6 @@
 package com.zqqiliyc.module.auth;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
@@ -11,14 +12,19 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.zqqiliyc.framework.web.config.prop.TokenProperties;
 import com.zqqiliyc.framework.web.enums.TokenStyle;
-import com.zqqiliyc.framework.web.token.AbstractTokenProvider;
 import com.zqqiliyc.framework.web.token.TokenBean;
+import com.zqqiliyc.framework.web.token.TokenProvider;
+import com.zqqiliyc.module.svc.system.dto.token.SysTokenCreateDTO;
 import com.zqqiliyc.module.svc.system.entity.SysToken;
 import com.zqqiliyc.module.svc.system.service.ISysTokenService;
-import jakarta.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -27,44 +33,26 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * @author qili
- * @date 2025-07-13
+ * JWT 风格的令牌提供者
+ * <p>
+ * 令牌生命周期（生成落库、校验、刷新、撤销）在此一处完成，落库与撤销状态共用 ISysTokenService
  */
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "qiliblog.token", name = "style", havingValue = "JWT")
-public class JwtTokenProvider extends AbstractTokenProvider {
-    @Resource
-    private TokenProperties tokenProperties;
-    @Resource
-    private ISysTokenService tokenService;
+@RequiredArgsConstructor
+public class JwtTokenProvider implements TokenProvider {
+    private final TokenProperties tokenProperties;
+    private final ISysTokenService tokenService;
 
-    @Override
-    protected void init() {
+    @PostConstruct
+    public void init() {
         Assert.notBlank(tokenProperties.getSecret(), "JWT secret must be provided");
         Assert.isTrue(tokenProperties.getExpire() > 0, "JWT expire must be greater than zero");
     }
 
     @Override
-    public TokenBean refreshToken(String refreshToken) {
-        // 检查刷新令牌本身是否合法
-        SysToken oldSysToken = tokenService.findByRefreshToken(refreshToken);
-        if (oldSysToken == null || !verifyRefreshToken(oldSysToken.getRefreshToken())) {
-            log.warn("Refresh token is invalid, can't refresh");
-            return null;
-        }
-
-        // 走到这里说明刷新令牌合法:
-        // 生成新的一对token
-        Map<String, Object> claims = oldSysToken.getAdditionalInfo();
-        TokenBean tokenBean = generateToken(oldSysToken.getUserId(), claims);
-        // 撤销旧的一对token
-        revokeToken(oldSysToken.getAccessToken());
-        return tokenBean;
-    }
-
-    @Override
-    protected TokenBean doGenerateToken(Long userId, Map<String, Object> claims) {
+    public TokenBean generateToken(Long userId, Map<String, Object> claims) {
         String subject = String.valueOf(userId);
         long now = System.currentTimeMillis();
         Date issuedAt = new Date(now);
@@ -86,7 +74,36 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         tokenBean.setExpiredAt(DateUtil.toLocalDateTime(expiresAt_ak));
         tokenBean.setRefreshExpiredAt(DateUtil.toLocalDateTime(expiresAt_rk));
         tokenBean.setAdditionalInfo(claims);
+
+        // 签发的同时落库，撤销状态才有据可查
+        SysTokenCreateDTO dto = new SysTokenCreateDTO();
+        BeanUtil.copyProperties(tokenBean, dto);
+        dto.setIpAddress(currentRequestIp());
+        tokenService.create(dto);
         return tokenBean;
+    }
+
+    @Override
+    public TokenBean refreshToken(String refreshToken) {
+        // 检查刷新令牌本身是否合法
+        SysToken oldSysToken = tokenService.findByRefreshToken(refreshToken);
+        if (oldSysToken == null || !verifyRefreshToken(oldSysToken.getRefreshToken())) {
+            log.warn("Refresh token is invalid, can't refresh");
+            return null;
+        }
+
+        // 走到这里说明刷新令牌合法:
+        // 生成新的一对token
+        Map<String, Object> claims = oldSysToken.getAdditionalInfo();
+        TokenBean tokenBean = generateToken(oldSysToken.getUserId(), claims);
+        // 撤销旧的一对token
+        revokeToken(oldSysToken.getAccessToken());
+        return tokenBean;
+    }
+
+    @Override
+    public void revokeToken(String accessToken) {
+        tokenService.revoke(accessToken);
     }
 
     @Override
@@ -107,6 +124,19 @@ public class JwtTokenProvider extends AbstractTokenProvider {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 取当前请求的来源 IP；非 web 上下文（如调度任务、命令行）没有请求，返回 null
+     *
+     * @return 来源 IP，无请求时为 null
+     */
+    private String currentRequestIp() {
+        RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+        if (attributes instanceof ServletRequestAttributes servletAttributes) {
+            return servletAttributes.getRequest().getRemoteAddr();
+        }
+        return null;
     }
 
     private boolean verify(String token, Supplier<SysToken> supplier) {
