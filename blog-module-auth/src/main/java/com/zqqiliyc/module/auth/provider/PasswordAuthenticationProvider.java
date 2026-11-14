@@ -2,7 +2,7 @@ package com.zqqiliyc.module.auth.provider;
 
 import cn.hutool.core.convert.Convert;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.module.auth.AuthManager;
 import com.zqqiliyc.module.auth.token.PasswordAuthenticationToken;
 import lombok.RequiredArgsConstructor;

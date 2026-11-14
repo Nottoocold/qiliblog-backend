@@ -1,7 +1,7 @@
 package com.zqqiliyc.module.svc.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.service.AbstractDeleteHardService;
 import com.zqqiliyc.module.svc.system.mapper.SysUserMapper;
 import com.zqqiliyc.module.svc.system.service.ISysUserService;
@@ -58,33 +58,9 @@ public class SysUserService extends AbstractDeleteHardService<SysUser, Long, Sys
         return wrapper().eq(SysUser::getPhone, phone).one().orElse(null);
     }
 
-    @Override
-    protected void beforeCreate(SysUser entity) {
 
-    }
 
-    @Override
-    protected void afterCreate(SysUser entity) {
 
-    }
 
-    @Override
-    protected void beforeUpdate(SysUser entity) {
 
-    }
-
-    @Override
-    protected void afterUpdate(SysUser entity) {
-
-    }
-
-    @Override
-    protected void beforeDelete(SysUser entity) {
-
-    }
-
-    @Override
-    protected void afterDelete(SysUser entity) {
-
-    }
 }

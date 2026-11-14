@@ -2,7 +2,7 @@ package com.zqqiliyc.starter;
 
 import com.zqqiliyc.framework.common.generater.VirtualPhoneGenerator;
 import com.zqqiliyc.framework.web.constant.SystemConstants;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.module.svc.system.dto.priv.SysPermissionCreateDTO;
 import com.zqqiliyc.module.svc.system.dto.priv.SysRolePrivCreateDTO;
 import com.zqqiliyc.module.svc.system.dto.priv.SysUserRoleCreateDTO;

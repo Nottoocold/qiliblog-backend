@@ -2,7 +2,7 @@ package com.zqqiliyc.module.biz;
 
 import cn.hutool.core.util.RandomUtil;
 import com.zqqiliyc.framework.web.bean.PageResult;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.module.svc.system.dto.user.SysUserCreateDTO;
 import com.zqqiliyc.module.svc.system.dto.user.SysUserQueryDTO;

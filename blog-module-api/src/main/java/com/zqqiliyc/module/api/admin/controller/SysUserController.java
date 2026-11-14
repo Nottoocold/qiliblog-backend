@@ -3,7 +3,7 @@ package com.zqqiliyc.module.api.admin.controller;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.controller.BaseController;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.http.ApiResult;
 import com.zqqiliyc.module.svc.system.dto.user.SysUserCreateDTO;
 import com.zqqiliyc.module.svc.system.dto.user.SysUserQueryDTO;

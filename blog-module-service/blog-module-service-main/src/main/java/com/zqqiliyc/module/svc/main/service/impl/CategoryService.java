@@ -32,10 +32,6 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
         }
     }
 
-    @Override
-    protected void afterCreate(Category entity) {
-
-    }
 
     @Override
     protected void beforeUpdate(Category entity) {
@@ -47,10 +43,6 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
         }
     }
 
-    @Override
-    protected void afterUpdate(Category entity) {
-
-    }
 
     @Override
     public void updateCategoryPostCount(Long categoryId, int delta) {
@@ -69,8 +61,4 @@ public class CategoryService extends AbstractBaseService<Category, Long, Categor
         Assert.isTrue(category.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "该分类下有文章，无法删除"));
     }
 
-    @Override
-    protected void afterDelete(Category entity) {
-
-    }
 }

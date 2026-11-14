@@ -1,8 +1,6 @@
 package com.zqqiliyc.framework.web.service;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.TypeUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,9 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * @author qili
@@ -127,59 +122,22 @@ public abstract class AbstractBaseService<T extends BaseEntity, I extends Serial
         return baseMapper.deleteByFieldList(field, fieldValueList);
     }
 
-    /**
-     * 创建时，检查唯一性约束，这是默认行为；
-     * 子类可重写该方法，进行自定义的校验
-     *
-     * @param conditions 查询条件
-     * @param message    唯一性约束检查失败时的错误信息
-     */
-    protected void validateBeforeCreateWithDB(Map<Fn<T, Object>, Object> conditions, String message) {
-        validateWithDB(conditions, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, message), null);
+    // 钩子默认空实现，子类按需重写；调用时机见 create/update/deleteById
+    protected void beforeCreate(T entity) {
     }
 
-    /**
-     * 更新时，检查唯一性约束，这是默认行为；
-     * 子类可重写该方法，进行自定义的校验
-     *
-     * @param conditions 唯一性约束条件
-     * @param message    唯一性约束检查失败时的错误信息
-     * @param excludeIds 检查时需排除的实体id列表
-     */
-    protected void validateBeforeUpdateWithDB(Map<Fn<T, Object>, Object> conditions, String message, I[] excludeIds) {
-        validateWithDB(conditions, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, message), List.of(excludeIds));
+    protected void afterCreate(T entity) {
     }
 
-    @SuppressWarnings("unchecked")
-    private void validateWithDB(Map<Fn<T, Object>, Object> conditions,
-                                Supplier<? extends RuntimeException> supplier,
-                                List<I> excludeIds) {
-        Objects.requireNonNull(conditions);
-        Objects.requireNonNull(supplier);
-        ExampleWrapper<T, I> exampleWrapper = wrapper();
-        for (Map.Entry<Fn<T, Object>, Object> entry : conditions.entrySet()) {
-            exampleWrapper.eq(entry.getKey(), entry.getValue());
-        }
-        if (CollUtil.isEmpty(excludeIds)
-                && exampleWrapper.first().isPresent()) {
-            throw supplier.get();
-        }
-        Class<T> entityClass = (Class<T>) TypeUtil.getClass(TypeUtil.getTypeArgument(getClass(), 0));
-        if (CollUtil.isNotEmpty(excludeIds)
-                && exampleWrapper.notIn(Fn.field(entityClass, "id"), excludeIds).first().isPresent()) {
-            throw supplier.get();
-        }
+    protected void beforeUpdate(T entity) {
     }
 
-    protected abstract void beforeCreate(T entity);
+    protected void afterUpdate(T entity) {
+    }
 
-    protected abstract void afterCreate(T entity);
+    protected void beforeDelete(T entity) {
+    }
 
-    protected abstract void beforeUpdate(T entity);
-
-    protected abstract void afterUpdate(T entity);
-
-    protected abstract void beforeDelete(T entity);
-
-    protected abstract void afterDelete(T entity);
+    protected void afterDelete(T entity) {
+    }
 }

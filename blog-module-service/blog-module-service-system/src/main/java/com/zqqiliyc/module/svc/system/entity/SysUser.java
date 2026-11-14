@@ -1,5 +1,6 @@
-package com.zqqiliyc.framework.web.domain.entity;
+package com.zqqiliyc.module.svc.system.entity;
 
+import com.zqqiliyc.framework.web.domain.entity.BaseEntityWithDel;
 import io.mybatis.provider.Entity;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,6 +53,3 @@ public class SysUser extends BaseEntityWithDel {
         setState(0);
     }
 }
-
-
-

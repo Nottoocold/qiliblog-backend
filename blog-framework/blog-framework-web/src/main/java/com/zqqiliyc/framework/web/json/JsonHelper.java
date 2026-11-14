@@ -17,15 +17,14 @@ public class JsonHelper {
 
     }
 
-    public static JsonHelper getInstance(ObjectMapper mapper) {
+    /**
+     * 由 Spring 配置在 ObjectMapper 就绪后调用一次；
+     * PostgreSQLJsonTypeHandler 等非 Spring 组件通过静态方法使用本门面
+     */
+    public static void init(ObjectMapper mapper) {
         JsonHelper.mapper = mapper;
-        return new JsonHelper();
     }
 
-    public static ObjectMapper newMapper() {
-        // Jackson 3 的 ObjectMapper 不可变，copy() 由 rebuild().build() 替代
-        return mapper.rebuild().build();
-    }
 
     public static String toJson(Object obj) {
         return mapper.writeValueAsString(obj);

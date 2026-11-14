@@ -1,6 +1,6 @@
 package com.zqqiliyc.module.svc.system.mapper;
 
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.mapper.Dao;
 import com.zqqiliyc.framework.web.mapper.IDeleteMapper;
 import com.zqqiliyc.framework.web.mybatis.LogicalOptimizeSqlWrapper;

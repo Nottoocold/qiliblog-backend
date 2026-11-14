@@ -63,33 +63,9 @@ public class SysPermissionService extends AbstractBaseService<SysPermission, Lon
         return findByFieldList(SysPermission::getId, privIds);
     }
 
-    @Override
-    protected void beforeCreate(SysPermission entity) {
 
-    }
 
-    @Override
-    protected void afterCreate(SysPermission entity) {
 
-    }
 
-    @Override
-    protected void beforeUpdate(SysPermission entity) {
 
-    }
-
-    @Override
-    protected void afterUpdate(SysPermission entity) {
-
-    }
-
-    @Override
-    protected void beforeDelete(SysPermission entity) {
-
-    }
-
-    @Override
-    protected void afterDelete(SysPermission entity) {
-
-    }
 }

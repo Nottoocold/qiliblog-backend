@@ -81,33 +81,9 @@ public class RelArticleTagService extends AbstractBaseService<RelArticleTag, Lon
         }
     }
 
-    @Override
-    protected void beforeCreate(RelArticleTag entity) {
 
-    }
 
-    @Override
-    protected void afterCreate(RelArticleTag entity) {
 
-    }
 
-    @Override
-    protected void beforeUpdate(RelArticleTag entity) {
 
-    }
-
-    @Override
-    protected void afterUpdate(RelArticleTag entity) {
-
-    }
-
-    @Override
-    protected void beforeDelete(RelArticleTag entity) {
-
-    }
-
-    @Override
-    protected void afterDelete(RelArticleTag entity) {
-
-    }
 }

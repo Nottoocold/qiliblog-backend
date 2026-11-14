@@ -49,7 +49,7 @@ docker compose -f docker-compose-middleware.yaml up -d    # 起 PostgreSQL 18 + 
 
 1. entity 继承 `BaseEntity`（自带 id/createTime/updateTime），`@Entity.Table("blog_xxx")` + `@Entity.Column` 标注（`io.mybatis.provider.Entity`）。
 2. mapper 接口 `extends BaseMapper<T, Long>, Dao`（Dao 是扫描标记接口），无需实现。
-3. `IXxxService extends IBaseService<T, Long>`；`XxxService extends AbstractBaseService<T, Long, XxxMapper>`，唯一性校验和业务断言写在 `beforeCreate/beforeUpdate/beforeDelete` 钩子里——CRUD 事务由基类负责，不要自行重写 CRUD。
+3. `IXxxService extends IBaseService<T, Long>`；`XxxService extends AbstractBaseService<T, Long, XxxMapper>`，唯一性校验和业务断言写在 `beforeCreate/beforeUpdate/beforeDelete` 钩子里（默认空实现，按需重写）——CRUD 事务由基类负责，不要自行重写 CRUD。
 4. DTO 三件套：`XxxCreateDTO implements CreateDTO<T>`、`XxxUpdateDTO`、`XxxQueryDTO`（转 Example）；出参 `XxxVo` + `XxxVoConvertor implements ViewVoConvertor<Entity, Vo>`（属性拷贝自动，特殊字段重写 `customize` 钩子）。
 5. Controller 返回 `ApiResult.success(...)`，入参 `@Validated`，类上 SpringDoc 中文 `@Tag`、方法 `@Operation`。
 

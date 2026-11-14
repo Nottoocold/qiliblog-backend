@@ -2,7 +2,7 @@ package com.zqqiliyc.module.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import com.zqqiliyc.framework.web.bean.AuthUserInfoBean;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.spring.SpringUtils;
 import com.zqqiliyc.module.svc.system.entity.SysPermission;
 import com.zqqiliyc.module.svc.system.entity.SysRole;

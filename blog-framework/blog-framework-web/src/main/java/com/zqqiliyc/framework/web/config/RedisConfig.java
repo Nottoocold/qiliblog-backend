@@ -1,5 +1,6 @@
 package com.zqqiliyc.framework.web.config;
 
+import com.zqqiliyc.framework.web.json.JacksonModules;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,7 +15,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date 2025-07-15
  */
 @Configuration
-public class RedisConfig extends BaseJacksonConfig {
+public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
@@ -33,7 +34,7 @@ public class RedisConfig extends BaseJacksonConfig {
                 .build();
         GenericJacksonJsonRedisSerializer jsonRedisSerializer = GenericJacksonJsonRedisSerializer.builder()
                 .enableDefaultTyping(typeValidator)
-                .customize(builder -> builder.addModule(javaTimeModule()))
+                .customize(builder -> builder.addModule(JacksonModules.javaTimeModule()))
                 .build();
         template.setValueSerializer(jsonRedisSerializer);
         template.setHashValueSerializer(jsonRedisSerializer);

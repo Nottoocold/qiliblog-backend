@@ -1,6 +1,6 @@
 package com.zqqiliyc.module.svc.system.service;
 
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import com.zqqiliyc.framework.web.service.IBaseDeleteHardService;
 import com.zqqiliyc.framework.web.service.IBaseService;
 

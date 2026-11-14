@@ -1,7 +1,7 @@
 package com.zqqiliyc.module.svc.system.dto.user;
 
 import com.zqqiliyc.framework.web.domain.dto.CreateDTO;
-import com.zqqiliyc.framework.web.domain.entity.SysUser;
+import com.zqqiliyc.module.svc.system.entity.SysUser;
 import lombok.Getter;
 import lombok.Setter;
 

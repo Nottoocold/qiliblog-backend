@@ -1,4 +1,4 @@
-package com.zqqiliyc.framework.web.config;
+package com.zqqiliyc.framework.web.json;
 
 import tools.jackson.databind.JacksonModule;
 import tools.jackson.databind.ext.javatime.deser.*;
@@ -10,13 +10,17 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 /**
- * @author qili
- * @date 2025-09-24
+ * Jackson 模块工具：自定义时间格式与 Long 字符串序列化
  */
-public abstract class BaseJacksonConfig {
+public final class JacksonModules {
 
-    protected JacksonModule javaTimeModule() {
-        // Jackson 3 已内置 java.time 支持，此模块仅用于覆盖为自定义格式
+    private JacksonModules() {
+    }
+
+    /**
+     * Jackson 3 已内置 java.time 支持，此模块仅用于覆盖为自定义格式
+     */
+    public static JacksonModule javaTimeModule() {
         SimpleModule javaTimeModule = new SimpleModule();
         // jdk8时间类型序列化器
         DateTimeFormatter f1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -38,35 +42,14 @@ public abstract class BaseJacksonConfig {
         return javaTimeModule;
     }
 
-    protected JacksonModule simpleModule() {
+    /**
+     * Long 序列化为字符串，避免前端精度丢失
+     */
+    public static JacksonModule simpleModule() {
         SimpleModule simpleModule = new SimpleModule();
         // 序列化long类型为字符串
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(long.class, ToStringSerializer.instance);
         return simpleModule;
     }
-
-    /*protected Jackson2JsonRedisSerializer<Object> createJacksonSerializerForCacheUse(ObjectMapper objectMapper) {
-        ObjectMapper copiedMapper = objectMapper.copy();
-        // 指定要序列化的域、getter/setter 以及修饰符范围，ANY 是包括 private 和 public
-        copiedMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // 激活默认类型，类型校验宽松，
-        //copiedMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
-        BasicPolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
-                // 允许所有集合的基类型
-                .allowIfBaseType(Collection.class)
-                // 允许所有映射的基类型
-                .allowIfBaseType(Map.class)
-                // 允许所有数组的基类型
-                .allowIfBaseType(Object[].class)
-                // 允许本项目下的所有类
-                .allowIfSubType("com.zqqiliyc")
-                .allowIfSubType("java.util")
-                .allowIfSubType("java.lang")
-                .allowIfSubType("com.fasterxml.jackson.databind.node")
-                .allowIfSubType(Node.class)
-                .build();
-        copiedMapper.activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
-        return new Jackson2JsonRedisSerializer<>(copiedMapper, Object.class);
-    }*/
 }

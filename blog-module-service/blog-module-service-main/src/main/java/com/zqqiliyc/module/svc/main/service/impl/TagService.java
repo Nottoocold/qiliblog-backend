@@ -32,10 +32,6 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         }
     }
 
-    @Override
-    protected void afterCreate(Tag entity) {
-
-    }
 
     @Override
     protected void beforeUpdate(Tag entity) {
@@ -51,10 +47,6 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         }
     }
 
-    @Override
-    protected void afterUpdate(Tag entity) {
-
-    }
 
     @Override
     public void updateTagPostCount(Long tagId, int delta) {
@@ -73,8 +65,4 @@ public class TagService extends AbstractBaseService<Tag, Long, TagMapper> implem
         Assert.isTrue(tag.getPostCount() == 0, () -> new ClientException(GlobalErrorDict.PARAM_ERROR, "标签下有文章，无法删除"));
     }
 
-    @Override
-    protected void afterDelete(Tag entity) {
-
-    }
 }
