@@ -205,6 +205,24 @@ public class ArticleServiceTest extends BaseBlogService {
         articleService.deleteById(draft.getId());
     }
 
+    @Test
+    @Order(7)
+    public void testUpdateReadTime() {
+        ArticleDraftCreateDTO dto = baseDto();
+        dto.setReadTime("3分钟");
+        Article article = articleService.createDraft(dto);
+        Assertions.assertEquals("3分钟", article.getReadTime());
+
+        // readTime 创建后可编辑（此前 UpdateDTO 缺字段，永远改不了）
+        ArticleUpdateDTO u = new ArticleUpdateDTO();
+        u.setId(article.getId());
+        u.setReadTime("5分钟");
+        articleService.updateArticle(u);
+        Assertions.assertEquals("5分钟", articleService.findById(article.getId()).getReadTime());
+
+        articleService.deleteById(article.getId());
+    }
+
     private ArticleDraftCreateDTO baseDto() {
         ArticleDraftCreateDTO dto = new ArticleDraftCreateDTO();
         dto.setTitle("测试文章-" + RandomUtil.randomString(6));

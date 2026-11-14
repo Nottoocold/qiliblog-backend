@@ -64,6 +64,9 @@ public class ArticleUpdateDTO implements UpdateDTO<Article> {
     @Schema(description = "是否允许评论: 0不允许, 1允许")
     private Integer allowComment;
 
+    @Schema(description = "预计阅读时间,如：少于1分钟，3分钟，多于30分钟等")
+    private String readTime;
+
     @Schema(description = "定时发布时间, 需要定时发布时设置")
     private LocalDateTime publishAt;
 
