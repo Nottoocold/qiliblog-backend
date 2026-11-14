@@ -1,11 +1,10 @@
 package com.zqqiliyc.framework.web.config;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.*;
-import com.fasterxml.jackson.datatype.jsr310.ser.*;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.ext.javatime.deser.*;
+import tools.jackson.databind.ext.javatime.ser.*;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -16,8 +15,9 @@ import java.time.format.DateTimeFormatter;
  */
 public abstract class BaseJacksonConfig {
 
-    protected Module javaTimeModule() {
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
+    protected JacksonModule javaTimeModule() {
+        // Jackson 3 已内置 java.time 支持，此模块仅用于覆盖为自定义格式
+        SimpleModule javaTimeModule = new SimpleModule();
         // jdk8时间类型序列化器
         DateTimeFormatter f1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter f2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -38,11 +38,11 @@ public abstract class BaseJacksonConfig {
         return javaTimeModule;
     }
 
-    protected Module simpleModule() {
+    protected JacksonModule simpleModule() {
         SimpleModule simpleModule = new SimpleModule();
         // 序列化long类型为字符串
-        simpleModule.addSerializer(Long.class, new ToStringSerializer());
-        simpleModule.addSerializer(long.class, new ToStringSerializer());
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(long.class, ToStringSerializer.instance);
         return simpleModule;
     }
 

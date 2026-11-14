@@ -15,7 +15,7 @@ public class PasswordAuthenticationToken extends AbstractAuthenticationToken {
     private final Object credentials;
 
     private PasswordAuthenticationToken(Object principal, Object credentials) {
-        super(null);
+        super((Collection<? extends GrantedAuthority>) null);
         this.principal = principal;
         this.credentials = credentials;
         setAuthenticated(false);

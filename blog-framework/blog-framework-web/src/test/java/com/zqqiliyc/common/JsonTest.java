@@ -1,23 +1,22 @@
 package com.zqqiliyc.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.*;
-import com.fasterxml.jackson.datatype.jsr310.ser.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.ext.javatime.deser.*;
+import tools.jackson.databind.ext.javatime.ser.*;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -36,18 +35,7 @@ public class JsonTest {
 
     @BeforeAll
     public static void setup() {
-        mapper = new ObjectMapper();
-        // 忽略对象字段值为null的字段
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        // 序列化没有属性的对象时不报错
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        // 反序列化时忽略未知字段
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        SimpleModule javaTimeModule = new SimpleModule();
         // jdk8时间类型序列化器
         DateTimeFormatter f1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter f2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -68,20 +56,30 @@ public class JsonTest {
 
         SimpleModule simpleModule = new SimpleModule();
         // 序列化long类型为字符串
-        simpleModule.addSerializer(Long.class, new ToStringSerializer());
-        simpleModule.addSerializer(long.class, new ToStringSerializer());
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(long.class, ToStringSerializer.instance);
 
-        // 注册模块
-        mapper.registerModules(simpleModule, new Jdk8Module(), javaTimeModule);
-
-        // 格式化序列化后的字符串
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        mapper.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Shanghai")));
+        // Jackson 3 的 ObjectMapper 不可变，统一通过 builder 配置；Jdk8/JavaTime 类型支持已内置
+        mapper = JsonMapper.builder()
+                // 忽略对象字段值为null的字段
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                // 序列化没有属性的对象时不报错
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                // 反序列化时忽略未知字段
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .defaultDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                // 注册模块
+                .addModule(simpleModule)
+                .addModule(javaTimeModule)
+                // 格式化序列化后的字符串
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .defaultTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Shanghai")))
+                .build();
     }
 
     @Test
-    public void test0() throws JsonProcessingException {
+    public void test0() {
         // 创建嵌套的JSON结构
         ObjectNode order = JsonNodeFactory.instance.objectNode();
         order.put("orderId", "ORD-12345");
@@ -105,7 +103,7 @@ public class JsonTest {
     }
 
     @Test
-    public void test1() throws JsonProcessingException {
+    public void test1() {
         TestBean bean = getBean();
         System.out.println(mapper.writeValueAsString(bean));
     }

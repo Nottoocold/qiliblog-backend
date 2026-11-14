@@ -1,10 +1,10 @@
 package com.zqqiliyc.framework.web.config;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zqqiliyc.framework.web.json.JsonHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * @author qili
@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 public class JsonConfig extends BaseJacksonConfig {
 
     @Bean
-    public Module javaTimeModule() {
+    public JacksonModule javaTimeModule() {
         return super.javaTimeModule();
     }
 
     @Bean
-    public Module simpleModule() {
+    public JacksonModule simpleModule() {
         return super.simpleModule();
     }
 

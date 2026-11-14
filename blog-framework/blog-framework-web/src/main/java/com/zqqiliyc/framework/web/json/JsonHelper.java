@@ -1,7 +1,7 @@
 package com.zqqiliyc.framework.web.json;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,62 +23,35 @@ public class JsonHelper {
     }
 
     public static ObjectMapper newMapper() {
-        return mapper.copy();
+        // Jackson 3 的 ObjectMapper 不可变，copy() 由 rebuild().build() 替代
+        return mapper.rebuild().build();
     }
 
     public static String toJson(Object obj) {
-        try {
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.writeValueAsString(obj);
     }
 
     public static byte[] toBytes(Object obj) {
-        try {
-            return mapper.writeValueAsBytes(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.writeValueAsBytes(obj);
     }
 
     public static void toJson(Object obj, OutputStream os) {
-        try {
-            mapper.writeValue(os, obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mapper.writeValue(os, obj);
     }
 
     public static <T> T fromJson(String content, Class<T> clazz) {
-        try {
-            return mapper.readValue(content, clazz);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(content, clazz);
     }
 
     public static <T> T fromJson(String content, TypeReference<T> typeReference) {
-        try {
-            return mapper.readValue(content, typeReference);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(content, typeReference);
     }
 
     public static <T> T fromJson(InputStream is, Class<T> clazz) {
-        try {
-            return mapper.readValue(is, clazz);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(is, clazz);
     }
 
     public static <T> T fromJson(InputStream is, TypeReference<T> typeReference) {
-        try {
-            return mapper.readValue(is, typeReference);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return mapper.readValue(is, typeReference);
     }
 }
