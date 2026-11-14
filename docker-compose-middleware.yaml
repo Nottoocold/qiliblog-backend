@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:18
     container_name: qiliblog-postgres-service
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: qiliblog_db_root
       TZ: Asia/Shanghai
@@ -23,6 +25,8 @@ services:
   redis:
     image: redis:7
     container_name: qiliblog-redis-service
+    ports:
+      - "6379:6379"
     environment:
       TZ: Asia/Shanghai
     volumes:
