@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -57,64 +58,33 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             draftSaveDTO.setPublishAt(draftSaveDTO.getPublishAt().withNano(0).withSecond(0));
         }
         Article article = draftSaveDTO.toEntity();
-        article.setWordCount(article.getContent().length());
-        article.setModifiedTime(LocalDateTime.now());
-        article.setStatus(ArticleStatus.DRAFT.intVal());
-        if (StrUtil.isBlank(article.getSlug())) {
-            // 自动生成唯一的 slug 标识
-            article.setSlug(generateUniqueSlug());
-        } else if (!PATTERN_SLUG.matcher(article.getSlug()).matches()) {
-            // slug 只允许包含字母、数字和连字符
-            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
-        }
-        // 1. 创建文章
-        Assert.isTrue(baseMapper.insert(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "创建文章失败"));
-        // 2. 保存文章标签, 方法内部会自动更新标签的文章计数
+        // 基类创建：beforeCreate 钩子负责 slug、字数、状态等实体准备
+        create(article);
+        // 保存文章标签, 方法内部会自动更新标签的文章计数
         List<Long> tagIds = draftSaveDTO.getTagIds();
         if (tagIds != null && !tagIds.isEmpty()) {
             relArticleTagService.save(article.getId(), tagIds);
         }
-        // 3. 更新分类文章计数
-        categoryService.updateCategoryPostCount(article.getCategoryId(), 1);
+        syncCategoryCount(null, article.getCategoryId());
         return article;
     }
 
     @Override
     public Article updateArticle(ArticleUpdateDTO updateDTO) {
-        // 1. 查询文章是否存在
         Article article = findById(updateDTO.getId());
         if (article == null) {
             throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
         }
-
-        // 2. 检查分类是否变更，更新分类文章计数
         Long oldCategoryId = article.getCategoryId();
-        Long newCategoryId = updateDTO.getCategoryId();
-        if (newCategoryId != null && !newCategoryId.equals(oldCategoryId)) {
-            categoryService.updateCategoryPostCount(oldCategoryId, -1);
-            categoryService.updateCategoryPostCount(newCategoryId, 1);
-        }
-
-        // 3. 填充更新字段
         updateDTO.fillEntity(article);
-
-        // 4. 重新计算字数
-        if (updateDTO.getContent() != null) {
-            article.setWordCount(updateDTO.getContent().length());
-        }
-
-        // 5. 更新内容修改时间
-        article.setModifiedTime(LocalDateTime.now());
-
-        // 6. 更新文章
-        Assert.isTrue(baseMapper.updateByPrimaryKey(article) == 1, () -> new ClientException(GlobalErrorDict.SERVER_ERROR, "更新文章失败"));
-
-        // 7. 更新文章标签关联
+        // 基类更新：beforeUpdate 钩子负责字数与修改时间
+        update(article);
+        syncCategoryCount(oldCategoryId, article.getCategoryId());
+        // 更新文章标签关联, 方法内部会自动更新标签的文章计数
         List<Long> tagIds = updateDTO.getTagIds();
         if (tagIds != null && !tagIds.isEmpty()) {
             relArticleTagService.save(article.getId(), tagIds);
         }
-
         return article;
     }
 
@@ -167,14 +137,45 @@ public class ArticleService extends AbstractBaseService<Article, Long, ArticleMa
             .list();
     }
 
-
-
-
-
+    @Override
+    protected void beforeCreate(Article entity) {
+        if (StrUtil.isBlank(entity.getSlug())) {
+            // 自动生成唯一的 slug 标识
+            entity.setSlug(generateUniqueSlug());
+        } else if (!PATTERN_SLUG.matcher(entity.getSlug()).matches()) {
+            // slug 只允许包含字母、数字和连字符
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "slug 只允许包含字母、数字和连字符");
+        }
+        entity.setWordCount(entity.getContent().length());
+        entity.setModifiedTime(LocalDateTime.now());
+        entity.setStatus(ArticleStatus.DRAFT.intVal());
+    }
 
     @Override
+    protected void beforeUpdate(Article entity) {
+        if (entity.getContent() != null) {
+            entity.setWordCount(entity.getContent().length());
+        }
+        entity.setModifiedTime(LocalDateTime.now());
+    }
+
+    /**
+     * 分类文章计数守恒：文章在分类间迁移（含创建/删除）时调用，旧分类 -1、新分类 +1，null 表示无
+     */
+    private void syncCategoryCount(Long oldCategoryId, Long newCategoryId) {
+        if (Objects.equals(oldCategoryId, newCategoryId)) {
+            return;
+        }
+        if (oldCategoryId != null) {
+            categoryService.updateCategoryPostCount(oldCategoryId, -1);
+        }
+        if (newCategoryId != null) {
+            categoryService.updateCategoryPostCount(newCategoryId, 1);
+        }
+    }
+    @Override
     protected void afterDelete(Article entity) {
-        categoryService.updateCategoryPostCount(entity.getCategoryId(), -1);
+        syncCategoryCount(entity.getCategoryId(), null);
         relArticleTagService.deleteByArticleId(entity.getId());
     }
 
