@@ -3,6 +3,7 @@ package com.zqqiliyc.module.api.admin.controller;
 import com.zqqiliyc.framework.web.bean.PageResult;
 import com.zqqiliyc.framework.web.constant.WebApiConstants;
 import com.zqqiliyc.framework.web.enums.GlobalErrorDict;
+import com.zqqiliyc.framework.web.exception.ClientException;
 import com.zqqiliyc.framework.web.http.ApiResult;
 import com.zqqiliyc.framework.web.security.SecurityUtils;
 import com.zqqiliyc.module.svc.main.domain.dto.article.ArticleDraftCreateDTO;
@@ -54,7 +55,7 @@ public class ArticleController {
     public ApiResult<ArticleVo> getArticleById(@PathVariable Long id) {
         Article article = articleService.findById(id);
         if (article == null) {
-            return ApiResult.error(GlobalErrorDict.PARAM_ERROR.getCode(), "文章不存在");
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
         }
         return ApiResult.success(articleVoConvertor.toViewVo(article));
     }
@@ -64,7 +65,7 @@ public class ArticleController {
     public ApiResult<ArticleVo> getArticleBySlug(@PathVariable String slug) {
         Article article = articleService.findBySlug(slug);
         if (article == null) {
-            return ApiResult.error(GlobalErrorDict.PARAM_ERROR.getCode(), "文章不存在");
+            throw new ClientException(GlobalErrorDict.PARAM_ERROR, "文章不存在");
         }
         return ApiResult.success(articleVoConvertor.toViewVo(article));
     }

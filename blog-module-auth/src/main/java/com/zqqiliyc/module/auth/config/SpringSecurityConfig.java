@@ -1,6 +1,7 @@
 package com.zqqiliyc.module.auth.config;
 
 import com.zqqiliyc.framework.web.config.prop.SecurityProperties;
+import com.zqqiliyc.framework.web.http.ApiErrorRenderer;
 import com.zqqiliyc.module.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +34,11 @@ public class SpringSecurityConfig {
     private final SecurityProperties securityProperties;
     private final UserDetailsService userDetailsService;
     private final List<AuthenticationProvider> authenticationProviders;
+    private final ApiErrorRenderer apiErrorRenderer;
 
     @Bean
     public JwtAuthczHandler jwtAuthczHandler() {
-        return new JwtAuthczHandler();
+        return new JwtAuthczHandler(apiErrorRenderer);
     }
 
     @Bean

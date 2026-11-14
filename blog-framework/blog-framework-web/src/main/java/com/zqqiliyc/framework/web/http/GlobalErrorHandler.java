@@ -1,8 +1,8 @@
 package com.zqqiliyc.framework.web.http;
 
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
 import jakarta.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,18 +21,20 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalErrorHandler {
+    private final ApiErrorRenderer apiErrorRenderer;
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ApiResult<?> handleException(AuthenticationException e) {
-        return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? e.getMessage() : "认证失败");
+        return apiErrorRenderer.render(HttpStatus.UNAUTHORIZED.value(), e, "认证失败");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public ApiResult<?> handleException(AccessDeniedException e) {
-        return ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? e.getMessage() : "无权限访问");
+        return apiErrorRenderer.render(HttpStatus.FORBIDDEN.value(), e, "无权限访问");
     }
 
     @ExceptionHandler(ClientException.class)
@@ -57,17 +59,13 @@ public class GlobalErrorHandler {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ApiResult<?> handleValidationException(ValidationException exception) {
-        return ApiResult.error(HttpStatus.BAD_REQUEST.value(), isDev() ? exception.getMessage() : "参数错误");
+        return apiErrorRenderer.render(HttpStatus.BAD_REQUEST.value(), exception, "参数错误");
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResult<?> handleException(Exception ex) {
         log.error("[GlobalErrorHandler] handleException", ex);
-        return ApiResult.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), isDev() ? ex.getMessage() : "服务器异常");
-    }
-
-    private boolean isDev() {
-        return SpringEnvUtils.isDev();
+        return apiErrorRenderer.render(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex, "服务器异常");
     }
 }

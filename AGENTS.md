@@ -42,6 +42,7 @@ docker compose -f docker-compose-middleware.yaml up -d    # 起 PostgreSQL 18 + 
 - **Lombok 白名单**：只允许 `@Getter` `@Setter` `@RequiredArgsConstructor` `@Slf4j`，其余注解被 `lombok.config` 以 ERROR 禁用（用了直接编译失败）。依赖注入用 `@RequiredArgsConstructor` + `private final`。
 - 注释、错误消息、Swagger 描述一律中文。
 - **错误处理**：业务失败抛 `ClientException(GlobalErrorDict.XXX, "中文消息")`，由 GlobalErrorHandler 统一转 `ApiResult`；新错误码加进 `GlobalErrorDict`（400xxx 客户端 / 401xxx 认证 / 500xxx 服务端）。
+  对外错误文案的环境分支只允许写在 `ApiErrorRenderer`（dev 露异常细节，test/prod 一律中文兜底）：GlobalErrorHandler、GlobalErrorController、JwtAuthczHandler 都委托它渲染，Controller 不要自己 `ApiResult.error(...)` 兜底。
 - **查询**：用 io.mybatis 的 `wrapper()` / `Example` + `Fn` 方法引用，不手写 SQL；分页走 `QueryDTO` + `findPageInfo`（PageHelper）。
 - URL 前缀用 `WebApiConstants`（`/api/admin`、`/api/auth`、`/api/public`）；新增免认证接口必须同步加进 `qiliblog.security.allowed-urls` 白名单。
 

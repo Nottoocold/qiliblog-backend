@@ -2,10 +2,10 @@ package com.zqqiliyc.framework.web.http;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import com.zqqiliyc.framework.web.exception.ClientException;
-import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
+@RequiredArgsConstructor
 public class GlobalErrorController implements ErrorController {
+    private final ApiErrorRenderer apiErrorRenderer;
 
     @ResponseBody
     @SuppressWarnings("unchecked")
@@ -34,23 +36,17 @@ public class GlobalErrorController implements ErrorController {
         String requestUri = (String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
         HttpStatus httpStatus = HttpStatus.resolve(status);
 
-        boolean prodEnv = SpringEnvUtils.isProd();
-        if (!prodEnv) {
-            log.error("When request uri: {}, status: {}, exception: {}", requestUri, status,
-                    ex != null ? ExceptionUtil.stacktraceToString(ex) :
-                            httpStatus != null ? httpStatus.getReasonPhrase() : "异常信息暂无");
-        } else {
-            log.error("When request uri: {}, status: {}, message: {}", requestUri, status, ExceptionUtil.getMessage(ex));
-        }
+        // 服务端日志一律记录完整堆栈，对外文案的环境差异由 ApiErrorRenderer 决定
+        log.error("错误请求 uri: {}, status: {}", requestUri, status, ex);
 
         if (ExceptionUtil.isCausedBy(ex, AuthenticationException.class)) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             AuthenticationException exception = (AuthenticationException) ExceptionUtil.getCausedBy(ex, AuthenticationException.class);
-            return ApiResult.error(HttpStatus.UNAUTHORIZED.value(), getErrorMessage(exception, "认证失败"));
+            return apiErrorRenderer.render(HttpStatus.UNAUTHORIZED.value(), exception, "认证失败");
         } else if (ExceptionUtil.isCausedBy(ex, AccessDeniedException.class)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             AccessDeniedException exception = (AccessDeniedException) ExceptionUtil.getCausedBy(ex, AccessDeniedException.class);
-            return ApiResult.error(HttpStatus.FORBIDDEN.value(), getErrorMessage(exception, "无权限访问"));
+            return apiErrorRenderer.render(HttpStatus.FORBIDDEN.value(), exception, "无权限访问");
         } else if (ExceptionUtil.isCausedBy(ex, ClientException.class)) {
             response.setStatus(HttpStatus.OK.value());
             ClientException exception = (ClientException) ExceptionUtil.getCausedBy(ex, ClientException.class);
@@ -58,15 +54,8 @@ public class GlobalErrorController implements ErrorController {
         }
 
         if (null != httpStatus) {
-            return ApiResult.error(status, (ex != null && prodEnv) ? ex.getMessage() : httpStatus.getReasonPhrase());
+            return apiErrorRenderer.render(status, ex, httpStatus.getReasonPhrase());
         }
         return ApiResult.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-    }
-
-    private String getErrorMessage(Throwable ex, String defaultMsg) {
-        if (null == ex) {
-            return defaultMsg;
-        }
-        return !SpringEnvUtils.isProd() ? ExceptionUtil.getSimpleMessage(ex) : defaultMsg;
     }
 }

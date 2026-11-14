@@ -1,11 +1,11 @@
 package com.zqqiliyc.module.auth.config;
 
-import com.zqqiliyc.framework.web.http.ApiResult;
+import com.zqqiliyc.framework.web.http.ApiErrorRenderer;
 import com.zqqiliyc.framework.web.json.JsonHelper;
-import com.zqqiliyc.framework.web.spring.SpringEnvUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,7 +25,9 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthczHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
+    private final ApiErrorRenderer apiErrorRenderer;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -34,7 +36,7 @@ public class JwtAuthczHandler implements AuthenticationEntryPoint, AccessDeniedH
         }
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=utf-8");
-        JsonHelper.toJson(ApiResult.error(HttpStatus.UNAUTHORIZED.value(), isDev() ? authException.getMessage() : "认证失败"), response.getOutputStream());
+        JsonHelper.toJson(apiErrorRenderer.render(HttpStatus.UNAUTHORIZED.value(), authException, "认证失败"), response.getOutputStream());
     }
 
     @Override
@@ -44,10 +46,6 @@ public class JwtAuthczHandler implements AuthenticationEntryPoint, AccessDeniedH
         }
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json;charset=utf-8");
-        JsonHelper.toJson(ApiResult.error(HttpStatus.FORBIDDEN.value(), isDev() ? accessDeniedException.getMessage() : "无权限访问"), response.getOutputStream());
-    }
-
-    private boolean isDev() {
-        return SpringEnvUtils.isDev();
+        JsonHelper.toJson(apiErrorRenderer.render(HttpStatus.FORBIDDEN.value(), accessDeniedException, "无权限访问"), response.getOutputStream());
     }
 }
