@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -194,6 +195,8 @@ public class JwtTokenProvider implements TokenProvider {
         for (Map.Entry<String, Object> entry : claims.entrySet()) {
             clainsBuilder.claim(entry.getKey(), entry.getValue());
         }
+        // jti 保证同秒签发的令牌唯一（sub/iat/exp/claims 相同时不再撞唯一索引）
+        clainsBuilder.claim("jti", UUID.randomUUID().toString());
         JWTClaimsSet claimsSet = clainsBuilder.build();
         byte[] secret = Base64.decode(tokenProperties.getSecret());
         // 创建 JWS 对象

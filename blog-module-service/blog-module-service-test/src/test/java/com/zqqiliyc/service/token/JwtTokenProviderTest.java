@@ -24,8 +24,12 @@ public class JwtTokenProviderTest extends BaseTestApp {
 
     @Test
     @Order(0)
-    public void testTokenLifecycle() throws InterruptedException {
+    public void testTokenLifecycle() {
         TokenBean generated = tokenProvider.generateToken(1L, Map.of("role", "USER"));
+        // 同秒连续签发的令牌必须唯一（jti 保证），否则撞 access_token 唯一索引
+        TokenBean second = tokenProvider.generateToken(1L, Map.of("role", "USER"));
+        Assertions.assertNotEquals(generated.getAccessToken(), second.getAccessToken());
+        Assertions.assertTrue(tokenProvider.verifyAccessToken(second.getAccessToken()));
         Assertions.assertTrue(StrUtil.isNotBlank(generated.getAccessToken()));
         Assertions.assertTrue(StrUtil.isNotBlank(generated.getRefreshToken()));
         Assertions.assertTrue(tokenProvider.verifyAccessToken(generated.getAccessToken()));
@@ -40,9 +44,6 @@ public class JwtTokenProviderTest extends BaseTestApp {
         // web 请求内签发时记录来源 IP
         Assertions.assertTrue(StrUtil.isNotBlank(stored.getIpAddress()));
 
-        // JWT 的 iat/exp 只有秒精度：同一秒内给同一用户签发相同 claims 会得到逐字节相同的令牌，
-        // 撞上 access_token 唯一索引（既有实现约束）。等到下一秒再刷新，保证测试稳定。
-        Thread.sleep(1100);
 
         // 刷新：新令牌对有效，旧令牌对整体失效
         TokenBean refreshed = tokenProvider.refreshToken(generated.getRefreshToken());
@@ -54,6 +55,7 @@ public class JwtTokenProviderTest extends BaseTestApp {
 
         tokenProvider.revokeToken(refreshed.getAccessToken());
         Assertions.assertFalse(tokenProvider.verifyAccessToken(refreshed.getAccessToken()));
+        tokenProvider.revokeToken(second.getAccessToken());
 
         // 附加信息可从令牌本身取回，不依赖落库记录
         Assertions.assertEquals("USER", tokenProvider.getClaims(refreshed.getAccessToken()).get("role"));
